@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane id="AnchorPane" prefHeight="800.0" prefWidth="653.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/8" fx:controller="com.pc.retail.ui.controller.InvoiceGridFormController">
+     <children>
+         <HBox layoutX="200" layoutY="20" spacing="5">
+             <Label prefHeight="22.0" prefWidth="80.0" text="Invoice Status" />
+             <ComboBox fx:id="invoiceStatusCB" prefHeight="23.0" prefWidth="153.0"/>
+             <Label prefHeight="22.0" prefWidth="10.0" text=" " />
+             <Label prefHeight="22.0" prefWidth="40.0" text="From Date" />
+             <DatePicker fx:id="fromInvoiceDateDP" prefHeight="23.0" prefWidth="153.0"/>
+             <Label prefHeight="22.0" prefWidth="40.0" text="To Date" />
+             <DatePicker fx:id="toInvoiceDateDP" prefHeight="23.0" prefWidth="153.0"/>
+
+             <Label prefHeight="22.0" prefWidth="10.0" text=" " />
+             <Label prefHeight="22.0" prefWidth="60.0" text="Supplier" />
+             <ComboBox fx:id="supplierCB" prefHeight="23.0" prefWidth="153.0"/>
+             <Button mnemonicParsing="false" text="Apply" onAction="#applyFilter"/>
+         </HBox>
+        <Pane layoutX="20" layoutY="60">
+            <TableView fx:id="invoiceMasterGrid" prefWidth="1000">
+                <columns>
+                </columns>
+            </TableView>
+        </Pane>
+   </children>
+</AnchorPane>

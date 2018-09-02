@@ -1,0 +1,12 @@
+.combo-box .arrow, .combo-box .arrow-button{
+    -fx-background-color: transparent;
+    -fx-shape: null;
+    -fx-opacity: 0.0;
+    -fx-cursor: text;
+}
+
+.combo-box-base
+{
+    -fx-skin: "com.sun.javafx.scene.control.skin.ComboBoxBaseSkin";
+    -fx-background-color: white;
+}

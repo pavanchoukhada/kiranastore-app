@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane id="AnchorPane" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.pc.retail.ui.main.MainFormController">
+   <children>
+      <BorderPane fx:id="borderPane" prefHeight="1200.0" prefWidth="1200.0">
+         <top>
+            <MenuBar BorderPane.alignment="CENTER" prefWidth="800" >
+              <menus>
+                <Menu mnemonicParsing="false" text="Billing">
+                  <items>
+                    <MenuItem mnemonicParsing="false" text="Billing Manager" />
+                        <MenuItem mnemonicParsing="false" text="Search Bill" />
+                        <MenuItem mnemonicParsing="false" text="New Bill" onAction="#launchBillingForm"/>
+                  </items>
+                </Menu>
+                <Menu mnemonicParsing="false" text="Inventory">
+                  <items>
+                      <MenuItem fx:id="productFormMI" mnemonicParsing="false" text="Add Product" accelerator="Shortcut+P" onAction="#launchProductForm"/>
+                      <MenuItem fx:id="productManagerMI" mnemonicParsing="false" text="Product Manager" onAction="#lauchProductMasterGrid"/>
+                      <MenuItem fx:id="invetoryManagerMI" mnemonicParsing="false" text="Inventory Manager"  onAction="#launchInvMasterGrid" />
+                      <MenuItem fx:id="addInventoryMI" mnemonicParsing="false" text="Add Inventory" accelerator="Shortcut+I"  onAction="#launchInvGrid" />
+                  </items>
+                </Menu>
+                  <Menu mnemonicParsing="false" text="Data Setup">
+                      <items>
+                          <MenuItem fx:id="gstFormMI" mnemonicParsing="false" text="Add GST Group" accelerator="Shortcut+P" onAction="#launchGSTForm"/>
+                          <MenuItem fx:id="gstGridMI" mnemonicParsing="false" text="GST Manager" accelerator="Shortcut+P" onAction="#launchGSTGrid"/>
+                          <MenuItem fx:id="productSupplierFormMI" mnemonicParsing="false" text="Add Supplier" onAction="#launchSupplierForm"/>
+                          <MenuItem fx:id="productSupplierGridMI" mnemonicParsing="false" text="Supplier Manager" onAction="#launchSupplierGrid"/>
+                          <MenuItem fx:id="productCategoryMI" mnemonicParsing="false" text="Inventory Manager"  onAction="#productCategoryForm" />
+                      </items>
+                  </Menu>
+                <Menu mnemonicParsing="false" text="Help">
+                  <items>
+                    <MenuItem mnemonicParsing="false" text="About" />
+                  </items>
+                </Menu>
+              </menus>
+            </MenuBar>
+         </top>
+          <center><Pane fx:id="centerPane" prefWidth="1200" maxWidth="1200" prefHeight="1200" maxHeight="1200"></Pane></center>
+      </BorderPane>
+   </children>
+</AnchorPane>

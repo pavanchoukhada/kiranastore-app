@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane id="AnchorPane" prefHeight="800.0" prefWidth="653.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/8" fx:controller="com.pc.retail.ui.controller.ProductInvEntryFormController">
+     <children>
+         <HBox layoutX="200" layoutY="20" spacing="5">
+             <Label prefHeight="22.0" prefWidth="60.0" text="Bar Code" />
+             <TextField fx:id="prdBarCodeTxt" prefHeight="23.0" prefWidth="153.0"/>
+             <Label prefHeight="22.0" prefWidth="10.0" text="" />
+             <Label prefHeight="22.0" prefWidth="70.0" text="Product Code" />
+             <TextField fx:id="productIdTxt" prefHeight="23.0" prefWidth="153.0"/>
+         </HBox>
+         <Pane prefHeight="350" prefWidth="221" layoutX="0.0" layoutY="50">
+        <Label contentDisplay="CENTER" layoutX="41.0" layoutY="11.0" prefHeight="20.0" prefWidth="400.0" text="Product Information" textFill="#1b108d" textOverrun="CLIP">
+           <font>
+              <Font size="24.0" />
+           </font>
+        </Label>
+        <GridPane hgap="5.0" layoutX="39.0" layoutY="65.0"  prefWidth="325.0" vgap="5.0">
+          <columnConstraints>
+              <ColumnConstraints hgrow="SOMETIMES" maxWidth="110.0" minWidth="10.0" prefWidth="100.0" />
+              <ColumnConstraints hgrow="SOMETIMES" maxWidth="300.0" minWidth="10.0" prefWidth="150.0" />
+          </columnConstraints>
+          <children>
+
+              <Label prefHeight="22.0" prefWidth="90.0" text="Short Code" GridPane.columnIndex="0" GridPane.rowIndex="0" />
+              <TextField fx:id="prdShortCodeTxt" prefHeight="23.0" prefWidth="70.0" GridPane.columnIndex="1" GridPane.rowIndex="0" />
+
+              <Label prefHeight="22.0" prefWidth="91.0" text="Desciption" GridPane.rowIndex="1" />
+              <TextField fx:id="prdDescriptionTxt" prefHeight="23.0" prefWidth="300.0" GridPane.columnIndex="1"  GridPane.rowIndex="1" />
+
+              <Label prefHeight="22.0" prefWidth="90.0" text="Search Key" GridPane.columnIndex="0" GridPane.rowIndex="2" />
+              <TextField fx:id="prdSearchKeyTxt" prefHeight="23.0" prefWidth="300.0" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+
+              <Label prefHeight="22.0" prefWidth="90.0" text="Category" GridPane.columnIndex="0" GridPane.rowIndex="3" />
+              <ComboBox fx:id="prdCategoryCB" prefWidth="150.0" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+
+              <Label prefHeight="22.0" prefWidth="90.0" text="Company" GridPane.columnIndex="0" GridPane.rowIndex="4" />
+              <ComboBox fx:id="prdCompanyCB" prefHeight="23.0" prefWidth="185.0" GridPane.columnIndex="1" GridPane.rowIndex="4" />
+              
+              <Label prefHeight="22.0" prefWidth="90.0" text="Measurement" GridPane.rowIndex="5" />
+              <Pane prefHeight="24.0" prefWidth="92.0" GridPane.columnIndex="1"  GridPane.rowIndex="5">
+                 <children>
+                     <fx:define>
+                         <ToggleGroup fx:id="prdMeasurementGroup"/>
+                     </fx:define>
+                    <RadioButton fx:id="weightToggle" layoutX="6.0" layoutY="5.0" mnemonicParsing="false" text="Weight" toggleGroup="$prdMeasurementGroup" userData="1"/>
+                    <RadioButton fx:id="countToggle" layoutX="85.0" layoutY="4.0" mnemonicParsing="false" text="Count" toggleGroup="$prdMeasurementGroup" userData="2" />
+                 </children>
+              </Pane>
+
+              <Label prefHeight="22.0" prefWidth="90.0" text="Weight" GridPane.columnIndex="0" GridPane.rowIndex="6" />
+              <Pane prefHeight="24.0" prefWidth="250.0" maxWidth="250" GridPane.columnIndex="1" GridPane.rowIndex="6">
+                  <children>
+                      <TextField fx:id="prdWeightTxt" prefHeight="23.0" prefWidth="50.0" maxWidth="60"/>
+                      <ComboBox fx:id="prdWeightUnitCB" prefHeight="23.0" prefWidth="80.0" maxWidth="70" layoutX="70"/>
+                  </children>
+              </Pane>
+
+              <Label prefHeight="22.0" prefWidth="90.0" text="Selling Price" GridPane.columnIndex="0" GridPane.rowIndex="7" />
+              <TextField fx:id="prdCSPTxt" prefWidth="150.0" GridPane.columnIndex="1" GridPane.rowIndex="7" />
+
+              <Label prefHeight="22.0" prefWidth="90.0" text="Price Unit" GridPane.columnIndex="0" GridPane.rowIndex="8" />
+              <ComboBox fx:id="prdPriceUOMCB" prefWidth="150.0" GridPane.columnIndex="1" GridPane.rowIndex="8" />
+
+              <Label prefHeight="22.0" prefWidth="90.0" text="GST Tax Group" GridPane.columnIndex="0" GridPane.rowIndex="9" />
+              <ComboBox fx:id="prdGSTTaxCB" prefWidth="150.0" GridPane.columnIndex="1" GridPane.rowIndex="9" />
+
+          </children>
+           <rowConstraints>
+              <RowConstraints />
+              <RowConstraints />
+              <RowConstraints />
+              <RowConstraints />
+              <RowConstraints />
+              <RowConstraints />
+              <RowConstraints />
+              <RowConstraints />
+              <RowConstraints />
+              <RowConstraints />
+           </rowConstraints>
+        </GridPane>
+    </Pane> 
+    
+    <Pane prefHeight="350" prefWidth="221" layoutX="41.0" layoutY="400.0" >
+        <Label contentDisplay="CENTER" prefHeight="31.0" prefWidth="301.0" text="Add Inventory" textFill="#1b108d" textOverrun="CLIP">
+           <font>
+              <Font size="24.0" />
+           </font>
+        </Label>
+        <GridPane hgap="5.0"  prefHeight="194.0" prefWidth="511.0" vgap="5.0" layoutX="0.0" layoutY="45.0" >
+          <columnConstraints>
+              <ColumnConstraints hgrow="SOMETIMES" maxWidth="110.0" minWidth="100.0" prefWidth="100.0" />
+              <ColumnConstraints minWidth="200.0" prefWidth="200.0" maxWidth="200"/>
+          </columnConstraints>
+          <children>
+              <Label prefHeight="22.0" prefWidth="90.0" text="Quantity" />
+              <TextField fx:id="prdQuantityTxt" prefHeight="23.0" prefWidth="100.0" maxWidth="100" minWidth="100" GridPane.columnIndex="1" />
+
+              <Label prefHeight="22.0" prefWidth="91.0" text="Expiry Date" GridPane.rowIndex="2" />
+              <TextField fx:id="prdExpiryDtTxt" prefHeight="23.0" prefWidth="50.0" GridPane.columnIndex="1"  GridPane.rowIndex="2" />
+
+              <Label prefHeight="22.0" prefWidth="90.0" text="MRP" GridPane.columnIndex="0" GridPane.rowIndex="3" />
+              <TextField fx:id="prdMRPTxt" prefHeight="23.0" prefWidth="50.0" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+
+              <Label prefHeight="22.0" prefWidth="90.0" text="Invoice Ref" GridPane.columnIndex="0" GridPane.rowIndex="5" />
+              <TextField fx:id="prdInvoiceRefTxt" prefHeight="23.0" prefWidth="185.0" GridPane.columnIndex="1" GridPane.rowIndex="5" />
+          </children>
+           <rowConstraints>
+              <RowConstraints />
+              <RowConstraints />
+              <RowConstraints />
+              <RowConstraints />
+              <RowConstraints />
+              <RowConstraints />
+           </rowConstraints>
+        </GridPane>
+    </Pane>
+     <HBox layoutX="100.0" layoutY="600.0" prefHeight="23.0" prefWidth="375.0" spacing="40.0">
+         <children>
+             <Button mnemonicParsing="false" text="Save Close" onAction="#submitFormAndClose"/>
+             <Button mnemonicParsing="false" text="Save Add More" onAction="#submitForm"/>
+             <Button fx:id="closeButton" cancelButton="true" mnemonicParsing="false" text="Cancel" onAction="#closeForm"/>
+             <Button fx:id="resetButton" cancelButton="true" mnemonicParsing="false" text="Reset" onAction="#resetForm"/>
+         </children>
+     </HBox>
+   </children>
+</AnchorPane>

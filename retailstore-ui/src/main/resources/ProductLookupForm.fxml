@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane id="AnchorPane" prefHeight="800.0" prefWidth="653.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/8" fx:controller="com.pc.retail.ui.controller.ProductLookupController">
+     <children>
+         <Pane layoutX="5.0" layoutY="5.0"  prefWidth="1300.0" style="-fx-border-color=#2e8b57; -fx-border-width=3; -fx-border-style: solid;">
+         <Pane layoutX="50" layoutY="80" prefHeight="150" prefWidth="1000.0"  style="-fx-border-color=#2e8b57; -fx-border-width=3; -fx-border-style: solid;" >
+
+             <Pane layoutX="15" layoutY="20" prefWidth="180" maxWidth="180" GridPane.columnIndex="2" GridPane.rowIndex="1" style="-fx-border-color=#2e8b57; -fx-border-width=3; -fx-border-style: solid;">
+                 <HBox spacing="3">
+                     <Label prefHeight="22.0" prefWidth="80.0" text="Barcode/Product Name" GridPane.columnIndex="0"/>
+                     <ComboBox fx:id="prdSearchTextTxt" editable="true"   prefHeight="23.0" prefWidth="280.0" GridPane.columnIndex="0" GridPane.rowIndex="1" stylesheets="ac_combobox.css"/>
+                 </HBox>
+             </Pane>
+
+             <GridPane hgap="10.0" layoutX="10.0" layoutY="80.0"  prefWidth="750.0" maxWidth="750.0" vgap="3.0" style="-fx-border-color=#2e8b57; -fx-border-width=3; -fx-border-style: solid;">
+                 <columnConstraints>
+                     <ColumnConstraints prefWidth="180.0" />
+                     <ColumnConstraints  prefWidth="140.0" />
+                     <ColumnConstraints  prefWidth="140.0" />
+                     <ColumnConstraints  prefWidth="140.0" />
+                 </columnConstraints>
+                 <children>
+                     <Label prefHeight="22.0" prefWidth="150.0" text="Last Scanned Item" GridPane.columnIndex="0"/>
+                     <Label prefHeight="22.0" prefWidth="100.0" text="Qty" GridPane.columnIndex="1"/>
+                     <Label prefHeight="22.0" prefWidth="75.0" text="Price Per Unit" GridPane.columnIndex="2"/>
+                     <Label prefHeight="22.0" prefWidth="85.0" text="Product Amount " GridPane.columnIndex="3"/>
+                     <TextField fx:id="productDescTxt" prefHeight="23.0" prefWidth="120.0" GridPane.columnIndex="0" GridPane.rowIndex="1" editable="false" />
+                     <Pane prefWidth="160" GridPane.columnIndex="1" GridPane.rowIndex="1" style="-fx-border-color=#2e8b57; -fx-border-width=3; -fx-border-style: solid;">
+                         <HBox spacing="3">
+                         <TextField fx:id="lastPrdQtyTxt" prefHeight="23.0" prefWidth="80.0" />
+                         <TextField fx:id="lastPrdQtyUoMTxt" prefHeight="23.0" prefWidth="60.0" editable="false"/>
+                         </HBox>
+                     </Pane>
+                     <Pane prefWidth="160" GridPane.columnIndex="2" GridPane.rowIndex="1" style="-fx-border-color=#2e8b57; -fx-border-width=3; -fx-border-style: solid;">
+                         <HBox spacing="3">
+                             <TextField fx:id="prdPriceTxt" prefHeight="23.0" prefWidth="80.0" />
+                             <TextField fx:id="prdPriceUoMTxt" prefHeight="23.0" prefWidth="60.0" editable="false"/>
+                         </HBox>
+                     </Pane>
+                     <TextField fx:id="prdTotalAmountTxt" prefHeight="23.0" prefWidth="60.0" GridPane.columnIndex="3" GridPane.rowIndex="1"/>
+                 </children>
+             </GridPane>
+            </Pane>
+         </Pane>
+   </children>
+</AnchorPane>
