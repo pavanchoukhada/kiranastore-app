@@ -15,7 +15,7 @@ public class ProductCurrentInvDetail {
     private String lastModifyDt;
 
     private ModificationStatus modificationStatus;
-    private String expiryDate;
+    private Date expiryDate;
 
     public String getLastModifyDt() {
         return lastModifyDt;
@@ -97,11 +97,11 @@ public class ProductCurrentInvDetail {
         this.modificationStatus = modificationStatus;
     }
 
-    public void setExpiryDate(String expiryDate) {
+    public void setExpiryDate(Date expiryDate) {
         this.expiryDate = expiryDate;
     }
 
-    public String getExpiryDate() {
+    public Date getExpiryDate() {
         return expiryDate;
     }
 }

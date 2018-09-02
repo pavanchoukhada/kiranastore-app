@@ -1,5 +1,7 @@
 package com.pc.retail.vo;
 
+import java.util.Date;
+
 /**
  * Created by pavanc on 7/29/17.
  */
@@ -13,7 +15,7 @@ public class GSTGroupModel {
     private double sGSTRate;
     private double cGSTRate;
 
-    private String effectiveDate;
+    private Date effectiveDate;
 
     public int getGstGroupId() {
         return gstGroupId;
@@ -39,11 +41,11 @@ public class GSTGroupModel {
         this.taxRate = taxRate;
     }
 
-    public String getEffectiveDate() {
+    public Date getEffectiveDate() {
         return effectiveDate;
     }
 
-    public void setEffectiveDate(String effectiveDate) {
+    public void setEffectiveDate(Date effectiveDate) {
         this.effectiveDate = effectiveDate;
     }
 

@@ -2,6 +2,8 @@ package com.pc.retail.vo;
 
 import com.pc.retail.interactor.MeasurementType;
 
+import java.util.Date;
+
 /**
  * saved in inventory cache
  * @author pavanc
@@ -83,7 +85,7 @@ public class ProductAndInvDetail {
         this.prdInvEntry.setMRP( MRP );
     }
 
-    public void setExpiryDate(String expiryDate) {
+    public void setExpiryDate(Date expiryDate) {
         this.prdInvEntry.setExpiryDate( expiryDate );
     }
 

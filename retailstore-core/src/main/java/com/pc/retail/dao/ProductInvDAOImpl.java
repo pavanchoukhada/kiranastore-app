@@ -164,7 +164,7 @@ public class ProductInvDAOImpl implements ProductInvDAO {
     private ProductInvoiceMaster generateInvoice(ProductInventory productInventory) {
         ProductInvoiceMaster productInvoiceMaster = new ProductInvoiceMaster();
         productInvoiceMaster.setInvoiceStatus(InvoiceStatus.NEW);
-        productInvoiceMaster.setInvoiceDate(DataUtil.getDate(LocalDate.now()));
+        productInvoiceMaster.setInvoiceDate(new Date(System.currentTimeMillis()));
         productInvoiceMaster.setInvoiceRefId( productInventory.getInvoiceRef());
         return productInvoiceMaster;
     }
@@ -236,7 +236,7 @@ public class ProductInvDAOImpl implements ProductInvDAO {
         }else{
             inventoryTransactionModel.setTransactionType(InventoryTransactionType.MODIFY_NEW_INVENTORY);
         }
-        inventoryTransactionModel.setTransDate(DataUtil.getDate(LocalDate.now()));
+        inventoryTransactionModel.setTransDate(new Date(System.currentTimeMillis()));
         inventoryTransactionModel.setExternalRef( productInventoryDetail.getPrdInvId());
         return inventoryTransactionModel;
     }

@@ -1,5 +1,6 @@
 package com.pc.retail.util;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -10,7 +11,7 @@ import java.util.Date;
  */
 public class DataUtil {
 
-    private static final SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyyMMdd");
+    private static final SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd--MM-yyyy");
 
     public static boolean isEmpty(String value){
         return value==null || "".equals(value);
@@ -30,11 +31,16 @@ public class DataUtil {
             return Double.valueOf(value.trim());
     }
 
-    public static String getDate(LocalDate localDate){
+    public static Date getDate(LocalDate localDate){
         if(localDate != null) {
-            return localDate.format(DateTimeFormatter.ofPattern("dd-MM-y"));
+            String dateStr = localDate.format(DateTimeFormatter.ofPattern("dd-MM-y"));
+            try {
+                simpleDateFormat.parse(dateStr);
+            } catch (ParseException e) {
+
+            }
         }
-        return "";
+        return new Date();
     }
 
     public static LocalDate parseDate(String date){
@@ -84,5 +90,13 @@ public class DataUtil {
 
     public static LocalDate getDateToLocalDate(Date invoiceDate) {
         return LocalDate.parse(simpleDateFormat.format(invoiceDate));
+    }
+
+    public static String getDateStr(LocalDate fromLocalDate) {
+        return fromLocalDate.format(DateTimeFormatter.ofPattern("dd-MM-y"));
+    }
+
+    public static String getDateStr(Date expiryDate) {
+        return simpleDateFormat.format(expiryDate);
     }
 }

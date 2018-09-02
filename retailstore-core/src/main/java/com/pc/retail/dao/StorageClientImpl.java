@@ -122,7 +122,7 @@ public class StorageClientImpl implements StorageClient {
             preparedStatement.setString(index++, inventoryTransactionModel.getBarCode());
             preparedStatement.setInt(index++, inventoryTransactionModel.getExternalRef());
             preparedStatement.setInt(index++, inventoryTransactionModel.getTransactionType().getId());
-            preparedStatement.setString(index++, inventoryTransactionModel.getTransDate());
+            preparedStatement.setDate(index++, new Date(inventoryTransactionModel.getTransDate().getTime()));
             preparedStatement.setString(index++, inventoryTransactionModel.getTransDesc());
             preparedStatement.setDouble(index++, inventoryTransactionModel.getTransPrice());
             preparedStatement.execute();
@@ -170,7 +170,7 @@ public class StorageClientImpl implements StorageClient {
                 productCurrentInvDetail.setMRP(resultSet.getDouble("mrp"));
                 productCurrentInvDetail.setCostPrice(resultSet.getDouble("per_unit_cost"));
                 productCurrentInvDetail.setLastModifyDt(resultSet.getString("last_trans_date"));
-                productCurrentInvDetail.setExpiryDate(resultSet.getString("expiry_date"));
+                productCurrentInvDetail.setExpiryDate(resultSet.getDate("expiry_date"));
                 productCurrentInvDetail.setModificationStatus(ModificationStatus.NO_CHANGE);
                 productCurrentInvDetailList.add(productCurrentInvDetail);
             }
@@ -208,8 +208,8 @@ public class StorageClientImpl implements StorageClient {
             preparedStatement.setDouble(index++, productCurrentInvDetail.getCostPrice());
             preparedStatement.setString(index++, productCurrentInvDetail.getQtyUomCd());
             preparedStatement.setString(index++, productCurrentInvDetail.getPriceUomCd());
-            preparedStatement.setString(index++, productCurrentInvDetail.getExpiryDate());
-            preparedStatement.setString(index++, DataUtil.getDate(LocalDate.now()));
+            preparedStatement.setDate(index++, new Date(productCurrentInvDetail.getExpiryDate().getTime()));
+            preparedStatement.setDate(index++, new Date(System.currentTimeMillis()));
             preparedStatement.execute();
         }
     }
@@ -226,7 +226,7 @@ public class StorageClientImpl implements StorageClient {
             preparedStatement.setDouble(index++, productCurrentInvDetail.getCostPrice());
             preparedStatement.setString(index++, productCurrentInvDetail.getQtyUomCd());
             preparedStatement.setString(index++, productCurrentInvDetail.getPriceUomCd());
-            preparedStatement.setString(index++, DataUtil.getDate(LocalDate.now()));
+            preparedStatement.setDate(index++, new Date(System.currentTimeMillis()));
             preparedStatement.setInt(index++, productCurrentInvDetail.getProductId());
             preparedStatement.execute();
         }
@@ -265,7 +265,7 @@ public class StorageClientImpl implements StorageClient {
             int index = 1;
             preparedStatement.setString(index++, productInvoiceMaster.getInvoiceRefId());
             preparedStatement.setInt(index++, productInvoiceMaster.getSupplierId());
-            preparedStatement.setString(index++, productInvoiceMaster.getInvoiceDate());
+            preparedStatement.setDate(index++, new Date(productInvoiceMaster.getInvoiceDate().getTime()));
             preparedStatement.setInt(index++, productInvoiceMaster.getInvoiceStatus().getInd());
             preparedStatement.setDouble(index++, productInvoiceMaster.getLumpsumCost());
             preparedStatement.setDouble(index++, productInvoiceMaster.getPrdInvAmt());
@@ -485,7 +485,7 @@ public class StorageClientImpl implements StorageClient {
                 productInvoiceMaster.setInvoiceRefId(resultSet.getString("invoice_ref"));
                 productInvoiceMaster.setSupplierId(resultSet.getInt("supplier_id"));
                 productInvoiceMaster.setInvoiceStatus(InvoiceStatus.valueOf(resultSet.getInt("invoice_status")));
-                productInvoiceMaster.setInvoiceDate(resultSet.getString("invoice_date"));
+                productInvoiceMaster.setInvoiceDate(resultSet.getDate("invoice_date"));
                 productInvoiceMaster.setLumpsumCost(resultSet.getDouble("lumpsum_cost"));
                 productInvoiceMaster.setPrdInvAmt(resultSet.getDouble("invoice_amount"));
                 productInvoiceMaster.setTotalInvAmt(resultSet.getDouble("total_amount"));
@@ -537,7 +537,7 @@ public class StorageClientImpl implements StorageClient {
                 productInventory.setProductId(resultSet.getInt("product_id"));
                 productInventory.setBarCode(resultSet.getString("barcode"));
                 productInventory.setInvoiceId(resultSet.getInt("invoice_id"));
-                productInventory.setExpiryDate(resultSet.getString("expiry_date"));
+                productInventory.setExpiryDate(resultSet.getDate("expiry_date"));
                 productInventory.setQuantity(resultSet.getDouble("quantity"));
                 productInventory.setMRP(resultSet.getDouble("mrp"));
                 productInventory.setStatus(resultSet.getInt("status"));
@@ -647,12 +647,12 @@ public class StorageClientImpl implements StorageClient {
             preparedStatement.setInt(index++, productInventoryDetail.getProductId());
             preparedStatement.setString(index++, productInventoryDetail.getBarCode());
             preparedStatement.setInt(index++, productInventoryDetail.getInvoiceId());
-            preparedStatement.setString(index++, productInventoryDetail.getExpiryDate());
+            preparedStatement.setDate(index++, new Date(productInventoryDetail.getExpiryDate().getTime()));
             preparedStatement.setDouble(index++, productInventoryDetail.getQuantity());
             preparedStatement.setDouble(index++, productInventoryDetail.getMRP());
             preparedStatement.setInt(index++, productInventoryDetail.getStatus());
             preparedStatement.setDouble(index++, productInventoryDetail.getPerUnitCost());
-            preparedStatement.setString(index++, DataUtil.getDate(LocalDate.now()));
+            preparedStatement.setDate(index++, new Date(System.currentTimeMillis()));
             preparedStatement.setDouble(index++, productInventoryDetail.getRemainingQuantity());
             preparedStatement.setString(index++, productInventoryDetail.getQtyUOM());
             preparedStatement.setDouble(index++, productInventoryDetail.getPerUnitCostIncludingGST());
@@ -687,13 +687,13 @@ public class StorageClientImpl implements StorageClient {
             preparedStatement.setInt(index++, productInventoryDetail.getProductId());
             preparedStatement.setString(index++, productInventoryDetail.getBarCode());
             preparedStatement.setInt(index++, productInventoryDetail.getInvoiceId());
-            preparedStatement.setString(index++, productInventoryDetail.getExpiryDate());
+            preparedStatement.setDate(index++, new Date(productInventoryDetail.getExpiryDate().getTime()));
             preparedStatement.setDouble(index++, productInventoryDetail.getQuantity());
             preparedStatement.setDouble(index++, productInventoryDetail.getMRP());
             preparedStatement.setInt(index++, productInventoryDetail.getStatus());
             preparedStatement.setDouble(index++, productInventoryDetail.getPerUnitCost());
             preparedStatement.setDouble(index++, productInventoryDetail.getRemainingQuantity());
-            preparedStatement.setString(index++, DataUtil.getDate(LocalDate.now()));
+            preparedStatement.setDate(index++, new Date(System.currentTimeMillis()));
             preparedStatement.setString(index++, productInventoryDetail.getQtyUOM());
             preparedStatement.setDouble(index++, productInventoryDetail.getPerUnitCostIncludingGST());
             preparedStatement.setDouble(index++, productInventoryDetail.getOtherCost());

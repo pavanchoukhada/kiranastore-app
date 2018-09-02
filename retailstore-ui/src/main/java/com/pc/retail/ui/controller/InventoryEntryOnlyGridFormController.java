@@ -114,7 +114,7 @@ public class InventoryEntryOnlyGridFormController implements Initializable, Upda
         prdCodeTxt.setText(productInventory.getProductCode());
         prdQtyTxt.setText(String.valueOf(productInventory.getQuantity()));
         qtyUOMCB.setValue(String.valueOf(productInventory.getQtyUOM()));
-        expiryDP.getEditor().setText(productInventory.getExpiryDate());
+        expiryDP.getEditor().setText(DataUtil.getDateStr(productInventory.getExpiryDate()));
         mrpTxt.setText(String.valueOf(productInventory.getQuantity()));
     }
 

@@ -8,11 +8,6 @@ import java.util.Map;
  */
 public class FilterModel {
 
-    public static final String PRODUCT_COMPANY = "PRODUCT_COMPANY";
-    public static final String PRODUCT_CATEGORY = "PRODUCT_CATEGORY";
-    public static final String PRODUCT_DESC  = "PRODUCT_DESC";
-    public static final String SEARCH_IN_ALL_ATTRIBUTES = "ALL_ATTRIBUTES";
-    public static final String BAR_CODE = "BAR_CODE";
 
     Map<String, String> filters = new HashMap<>();
 

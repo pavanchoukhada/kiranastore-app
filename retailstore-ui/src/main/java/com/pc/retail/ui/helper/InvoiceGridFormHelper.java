@@ -1,9 +1,9 @@
 package com.pc.retail.ui.helper;
 
+import com.pc.retail.api.FilterKeyConstants;
 import com.pc.retail.client.services.*;
 import com.pc.retail.dao.DataAccessException;
 import com.pc.retail.dao.InvoiceStatus;
-import com.pc.retail.dao.util.FilterKeyConstants;
 import com.pc.retail.dao.util.FilterModel;
 import com.pc.retail.interactor.KiranaAppResult;
 import com.pc.retail.interactor.KiranaStoreException;
@@ -58,7 +58,7 @@ public class InvoiceGridFormHelper {
         FilterModel filterModel = new FilterModel();
 
         LocalDate fromLocalDate = invoiceGridFormController.getFromInvoiceDateDP().getValue();
-        filterModel.addFilter(FilterKeyConstants.FROM_INVOICE_DATE, convertToStringFormat(fromLocalDate));
+        filterModel.addFilter(FilterKeyConstants.FROM_INVOICE_DATE, DataUtil.getDateStr(fromLocalDate));
 
         LocalDate toLocalDate = invoiceGridFormController.getToInvoiceDateDP().getValue();
         filterModel.addFilter(FilterKeyConstants.TO_INVOICE_DATE, convertToStringFormat(toLocalDate));
@@ -82,7 +82,7 @@ public class InvoiceGridFormHelper {
     }
 
     private String convertToStringFormat(LocalDate localDate) {
-        return DataUtil.getDate(localDate);
+        return DataUtil.getDateStr(localDate);
     }
 
 

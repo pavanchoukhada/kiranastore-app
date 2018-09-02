@@ -13,10 +13,7 @@ import com.pc.retail.vo.ProductUOM;
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 import static com.pc.retail.client.services.ReferenceDataConstants.*;
 
@@ -73,7 +70,7 @@ public class ReferenceDataDAOImpl implements ReferenceDataDAO {
 
     @Override
     public void saveGSTGroupModel(GSTGroupModel gstGroupModel) throws DataAccessException {
-        gstGroupModel.setEffectiveDate(DataUtil.getDate(LocalDate.now()));
+        gstGroupModel.setEffectiveDate(new Date(System.currentTimeMillis()));
         storageManager.getReferenceDataStorageClient().saveGSTGroupModel(gstGroupModel);
         GSTCache.getInstance().updateCache(gstGroupModel);
     }

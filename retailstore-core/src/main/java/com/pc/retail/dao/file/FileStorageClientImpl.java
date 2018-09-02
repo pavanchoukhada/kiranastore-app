@@ -1,7 +1,7 @@
 package com.pc.retail.dao.file;
 
+import com.pc.retail.api.FilterKeyConstants;
 import com.pc.retail.dao.*;
-import com.pc.retail.dao.util.FilterKeyConstants;
 import com.pc.retail.dao.util.FilterModel;
 import com.pc.retail.vo.*;
 import org.codehaus.jackson.map.ObjectMapper;

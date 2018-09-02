@@ -287,7 +287,7 @@ public class ProductInventoryEntryGridFormController implements Initializable, U
         productIdTxt.setText(String.valueOf(productInventory.getProductId()));
         prdBarcodeTxt.setText(productInventory.getBarCode());
         productCodeTxt.setText(productInventory.getProductCode());
-        expiryDP.getEditor().setText(productInventory.getExpiryDate());
+        expiryDP.getEditor().setText(DataUtil.getDateStr(productInventory.getExpiryDate()));
         mrpTxt.setText(String.valueOf(productInventory.getQuantity()));
         prdQtyTxt.setText(String.valueOf(productInventory.getQuantity()));
         qtyUOMCB.setValue(String.valueOf(productInventory.getQtyUOM()));

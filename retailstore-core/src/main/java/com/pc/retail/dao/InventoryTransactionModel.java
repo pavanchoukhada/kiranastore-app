@@ -1,5 +1,7 @@
 package com.pc.retail.dao;
 
+import java.util.Date;
+
 /**
  * Created by pavanc on 5/13/17.
  */
@@ -10,7 +12,7 @@ public class InventoryTransactionModel {
     private double quantity;
     private String transDesc;
     private double transPrice;
-    private String transDate;
+    private Date transDate;
     private String barCode;
 
     public String getBarCode() {
@@ -29,7 +31,7 @@ public class InventoryTransactionModel {
         this.productId = productId;
     }
 
-    public String getTransDate() {
+    public Date getTransDate() {
         return transDate;
     }
 
@@ -73,7 +75,7 @@ public class InventoryTransactionModel {
         this.transPrice = transPrice;
     }
 
-    public void setTransDate(String transDate) {
+    public void setTransDate(Date transDate) {
         this.transDate = transDate;
     }
 }

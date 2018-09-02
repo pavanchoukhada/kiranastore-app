@@ -16,7 +16,7 @@ public class ProductInvoiceMasterDO {
     private String  supplierName;
     private Integer supplierId;
     private String invoiceStatus;
-    private String invoiceDate;
+    private Date invoiceDate;
     private double prdInvAmt;
     private double totalAmount;
     private double lumpsumCost;
@@ -53,11 +53,11 @@ public class ProductInvoiceMasterDO {
         this.invoiceStatus = invoiceStatus;
     }
 
-    public String getInvoiceDate() {
+    public Date getInvoiceDate() {
         return invoiceDate;
     }
 
-    public void setInvoiceDate(String invoiceDate) {
+    public void setInvoiceDate(Date invoiceDate) {
         this.invoiceDate = invoiceDate;
     }
 

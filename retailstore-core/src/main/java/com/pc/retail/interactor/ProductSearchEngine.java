@@ -1,5 +1,6 @@
 package com.pc.retail.interactor;
 
+import com.pc.retail.api.FilterKeyConstants;
 import com.pc.retail.dao.util.FilterModel;
 import com.pc.retail.vo.Product;
 
@@ -22,9 +23,9 @@ public class ProductSearchEngine {
 
     public List<Product> filterProducts(FilterModel filterModel) {
         List<Product> filteredProducts = new ArrayList<>();
-        String searchKey = filterModel.getFilterValue(PRODUCT_DESC);
-        String productCompany = filterModel.getFilterValue(PRODUCT_COMPANY);
-        String productCategory = filterModel.getFilterValue(PRODUCT_CATEGORY);
+        String searchKey = filterModel.getFilterValue(FilterKeyConstants.PRODUCT_DESC);
+        String productCompany = filterModel.getFilterValue(FilterKeyConstants.PRODUCT_COMPANY);
+        String productCategory = filterModel.getFilterValue(FilterKeyConstants.PRODUCT_CATEGORY);
         boolean validResult;
         for(Product product : products) {
             validResult = filterAsPerSearchAny(searchKey, product);

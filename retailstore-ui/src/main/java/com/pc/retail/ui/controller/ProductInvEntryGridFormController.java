@@ -167,7 +167,7 @@ public class ProductInvEntryGridFormController implements Initializable, UpdateP
         lumpsumCostTxt.setText(String.valueOf(productInventory.getOtherCost()));
         costPriceTxt.setText(String.valueOf(productInventory.getPerUnitCost()));
         productTotalCostAmountTxt.setText(String.valueOf(productInventory.getTotalCost()));
-        expiryDP.getEditor().setText(productInventory.getExpiryDate());
+        expiryDP.getEditor().setText(DataUtil.getDateStr(productInventory.getExpiryDate()));
         mrpTxt.setText(String.valueOf(productInventory.getQuantity()));
     }
 

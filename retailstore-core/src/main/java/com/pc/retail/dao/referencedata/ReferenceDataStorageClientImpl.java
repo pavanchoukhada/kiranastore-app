@@ -176,7 +176,7 @@ public class ReferenceDataStorageClientImpl implements ReferenceDataStorageClien
                 gstGroupModel.setGstGroupId(resultSet.getInt("gst_group_id"));
                 gstGroupModel.setGroupCode(resultSet.getString("code"));
                 gstGroupModel.setTaxRate(resultSet.getDouble("tax_rate"));
-                gstGroupModel.setEffectiveDate(resultSet.getString("effective_date"));
+                gstGroupModel.setEffectiveDate(resultSet.getDate("effective_date"));
                 gstGroupModel.setcGSTRate(resultSet.getDouble("cgst_rate"));
                 gstGroupModel.setsGSTRate(resultSet.getDouble("sgst_rate"));
                 gstGroupModelList.add(gstGroupModel);
@@ -200,7 +200,7 @@ public class ReferenceDataStorageClientImpl implements ReferenceDataStorageClien
                 statement.setInt(1, gstGroupId);
                 statement.setString(2, gstGroupModel.getGroupCode());
                 statement.setDouble(3, gstGroupModel.getTaxRate());
-                statement.setString(4, gstGroupModel.getEffectiveDate());
+                statement.setDate(4, new Date(gstGroupModel.getEffectiveDate().getTime()));
                 statement.setDouble(5, gstGroupModel.getcGSTRate());
                 statement.setDouble(6, gstGroupModel.getsGSTRate());
                 statement.execute();
@@ -219,7 +219,7 @@ public class ReferenceDataStorageClientImpl implements ReferenceDataStorageClien
             statement.setDouble(2, gstGroupModel.getTaxRate());
             statement.setDouble(3, gstGroupModel.getcGSTRate());
             statement.setDouble(4, gstGroupModel.getsGSTRate());
-            statement.setString(5, gstGroupModel.getEffectiveDate());
+            statement.setDate(5, new Date(gstGroupModel.getEffectiveDate().getTime()));
             statement.setInt(6, gstGroupModel.getGstGroupId());
             statement.execute();
             connection.commit();

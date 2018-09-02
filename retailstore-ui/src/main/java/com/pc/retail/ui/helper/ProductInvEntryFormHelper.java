@@ -95,7 +95,7 @@ public class ProductInvEntryFormHelper {
         productAndInvDetail.setGSTCode(productInvEntryFormController.getPrdGSTTaxCB().getValue());
 
         productAndInvDetail.setQuantity( getNumber(productInvEntryFormController.getPrdQuantityTxt()));
-        productAndInvDetail.setExpiryDate( productInvEntryFormController.getPrdExpiryDtTxt().getText() );
+        //productAndInvDetail.setExpiryDate( productInvEntryFormController.getPrdExpiryDtTxt());
         productAndInvDetail.setMRP( getNumber( productInvEntryFormController.getPrdMRPTxt() ) );
         productAndInvDetail.setInvoiceRef( productInvEntryFormController.getPrdInvoiceRefTxt().getText() );
         return productAndInvDetail;

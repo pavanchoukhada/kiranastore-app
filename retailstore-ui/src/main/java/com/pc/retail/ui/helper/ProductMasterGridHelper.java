@@ -1,5 +1,6 @@
 package com.pc.retail.ui.helper;
 
+import com.pc.retail.api.FilterKeyConstants;
 import com.pc.retail.client.services.*;
 import com.pc.retail.dao.DataAccessException;
 import com.pc.retail.dao.util.FilterModel;
@@ -59,13 +60,13 @@ public class ProductMasterGridHelper {
             String productDesc = productMasterGridController.getSearchKeyTxt().getText();
             FilterModel filterModel = new FilterModel();
             if(IsValid(productCompany)) {
-                filterModel.addFilter(FilterModel.PRODUCT_COMPANY, productCompany);
+                filterModel.addFilter(FilterKeyConstants.PRODUCT_COMPANY, productCompany);
             }
             if(IsValid(productCategory)) {
-                filterModel.addFilter(FilterModel.PRODUCT_CATEGORY, productCategory);
+                filterModel.addFilter(FilterKeyConstants.PRODUCT_CATEGORY, productCategory);
             }
             if(IsValid(productDesc)) {
-                filterModel.addFilter(FilterModel.PRODUCT_DESC, productDesc);
+                filterModel.addFilter(FilterKeyConstants.PRODUCT_DESC, productDesc);
             }
             return productInventoryService.getAllProductsWithInvDetails(filterModel);
         } catch (KiranaStoreException e) {
@@ -84,7 +85,7 @@ public class ProductMasterGridHelper {
         ProductInventoryService productInventoryService =  retailAppClient.getProductInventoryService();
         try {
             FilterModel filterModel = new FilterModel();
-            filterModel.addFilter(FilterModel.BAR_CODE, barcode);
+            filterModel.addFilter(FilterKeyConstants.BARCODE, barcode);
             return productInventoryService.getAllProductsWithInvDetails(filterModel).get(0).getProduct();
 
         }  catch (KiranaStoreException e) {

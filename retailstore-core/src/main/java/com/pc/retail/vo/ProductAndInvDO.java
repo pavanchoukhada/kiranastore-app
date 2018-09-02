@@ -3,6 +3,8 @@ package com.pc.retail.vo;
 
 import com.pc.retail.interactor.MeasurementType;
 
+import java.util.Date;
+
 /**
  * Mainly used for Product Manager display
  */
@@ -10,7 +12,7 @@ public class ProductAndInvDO {
 
     private double MRP;
     private double currentAvailableQty;
-    private String expiryDate;
+    private Date expiryDate;
     private Product product;
 
     public ProductAndInvDO(Product product){
@@ -81,11 +83,11 @@ public class ProductAndInvDO {
         this.currentAvailableQty = currentAvailableQty;
     }
 
-    public String getExpiryDate() {
+    public Date getExpiryDate() {
         return expiryDate;
     }
 
-    public void setExpiryDate(String expiryDate) {
+    public void setExpiryDate(Date expiryDate) {
         this.expiryDate = expiryDate;
     }
 

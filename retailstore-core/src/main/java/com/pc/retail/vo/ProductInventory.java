@@ -1,5 +1,7 @@
 package com.pc.retail.vo;
 
+import java.util.Date;
+
 /**
  * 
  * @author pavanc
@@ -12,7 +14,7 @@ public class ProductInventory {
     private String barCode;
     private int productId;
     private String productCode;
-    private String expiryDate;
+    private Date expiryDate;
 
 	private String invoiceRef;
 	private int invoiceId;
@@ -142,11 +144,11 @@ public class ProductInventory {
         this.productId = productId;
 	}
 
-	public String getExpiryDate() {
+	public Date getExpiryDate() {
 		return expiryDate;
 	}
 
-	public void setExpiryDate(String expiryDate) {
+	public void setExpiryDate(Date expiryDate) {
 		this.expiryDate = expiryDate;
 	}
 	public int getStatus() {
