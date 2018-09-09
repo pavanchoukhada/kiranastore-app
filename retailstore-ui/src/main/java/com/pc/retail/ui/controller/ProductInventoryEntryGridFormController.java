@@ -26,6 +26,7 @@ import javafx.scene.input.KeyEvent;
 import javafx.stage.Stage;
 import javafx.util.Callback;
 
+import javax.xml.crypto.Data;
 import java.net.URL;
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -293,6 +294,12 @@ public class ProductInventoryEntryGridFormController implements Initializable, U
         qtyUOMCB.setValue(String.valueOf(productInventory.getQtyUOM()));
         salePriceTxt.setText(String.valueOf(productInventory.getSalePrice()));
         salePriceUOMTxt.setText(String.valueOf(productInventory.getSalePriceUOM()));
+        GSTRateTxt.setText(String.valueOf(productInventory.getcGSTRate() + productInventory.getsGSTRate()));
+        GSTValueTxt.setText(String.valueOf(productInventory.getcGSTAmount() + productInventory.getsGSTAmount()));
+        CGSTRateTxt.setText(String.valueOf(productInventory.getcGSTRate()));
+        SGSTRateTxt.setText(String.valueOf(productInventory.getsGSTRate()));
+        CGSTValueTxt.setText(String.valueOf(productInventory.getcGSTAmount()));
+        SGSTValueTxt.setText(String.valueOf(productInventory.getsGSTAmount()));
         perUnitCostTxt.setText(String.valueOf(productInventory.getPerUnitCost()));
         perUnitCostIncGSTTxt.setText(String.valueOf(productInventory.getPerUnitCostIncludingGST()));
         perUnitCostIncOfAllTxt.setText(String.valueOf(productInventory.getPerUnitCostIncludingAll()));
@@ -313,8 +320,8 @@ public class ProductInventoryEntryGridFormController implements Initializable, U
         productInvEntryGridColumns.add(createNumericTableColumn("Sale Price", 120, "salePrice", "gridQtyId"));
         productInvEntryGridColumns.add(createStringTableColumn("Sale Price UOM", 120, "salePriceUOM", "gridQtyId"));
         productInvEntryGridColumns.add(createNumericTableColumn("Per Unit Cost", 100, "perUnitCost", "gridPerUnitCostId"));
-        productInvEntryGridColumns.add(createNumericTableColumn("CGST", 100, "totalCost", "cGSTAmount"));
-        productInvEntryGridColumns.add(createNumericTableColumn("SGST", 100, "totalCost", "sGSTAmount"));
+        productInvEntryGridColumns.add(createNumericTableColumn("CGST", 100, "cGSTAmount", "cGSTAmount"));
+        productInvEntryGridColumns.add(createNumericTableColumn("SGST", 100, "sGSTAmount", "sGSTAmount"));
         productInvEntryGridColumns.add(createNumericTableColumn("Per Unit Cost(Incl GST)", 100, "perUnitCostIncludingGST", "perUnitCostIncludingGST"));
         productInvEntryGridColumns.add(createNumericTableColumn("Other Cost", 100, "otherCost", "otherCost"));
         productInvEntryGridColumns.add(createNumericTableColumn("Total Cost", 100, "finalAmount", "finalAmount"));
@@ -443,8 +450,8 @@ public class ProductInventoryEntryGridFormController implements Initializable, U
         productInventory.setSalePriceUOM(salePriceUOMTxt.getText());
         productInventory.setExpiryDate(DataUtil.getDate(expiryDP.getValue()));
 
-        productInventory.setcGSTRate(productDO.getcGSTRate());
-        productInventory.setsGSTRate(productDO.getsGSTRate());
+        productInventory.setcGSTRate(DataUtil.getDouble(CGSTRateTxt.getText()));
+        productInventory.setsGSTRate(DataUtil.getDouble(SGSTRateTxt.getText()));
 
         productInventory.setcGSTAmount(DataUtil.getDoubleValue(CGSTValueTxt.getText(), "CGST Value"));
         productInventory.setsGSTAmount(DataUtil.getDoubleValue(SGSTValueTxt.getText(), "SGST Value"));

@@ -139,8 +139,8 @@ public class ProductInvDAOImpl implements ProductInvDAO {
                     updateProductCurrentInv(storageClientForTrans, productInventory);
                 }
             }
-
             storageClientForTrans.commit();
+            updateProduct(productInvoiceMaster.getProductInventoryList());
         }catch(SQLException | DataAccessException sqlEx){
             storageClientForTrans.rollBack();
 
@@ -148,6 +148,14 @@ public class ProductInvDAOImpl implements ProductInvDAO {
         }finally {
             storageClientForTrans.releaseConnection();
         }
+    }
+
+    private void updateProduct(List<ProductInventory> productInventoryList) throws DataAccessException {
+        for(ProductInventory productInventory : productInventoryList) {
+            Product product = ProductCache.getInstance().getProductFromBarCode(productInventory.getBarCode());
+            product.setCurrentSellingPrice(productInventory.getSalePrice());
+        }
+
     }
 
     @Override
@@ -198,6 +206,9 @@ public class ProductInvDAOImpl implements ProductInvDAO {
                 productCurrentInvDetail.setModificationStatus(ModificationStatus.NEW);
             }
             productCurrentInvDetail.setMRP(productInventory.getMRP());
+	        if(productInventory.getSalePrice() > 0) {
+                productCurrentInvDetail.setCSP(productInventory.getSalePrice());
+            }
             productCurrentInvDetail.setCostPrice(productInventory.getPerUnitCost());
             productCurrentInvDetail.setBarCode(productInventory.getBarCode());
             double qtyInProductQtyUoM = getQuantityInProductQtyUoM(productInventory);

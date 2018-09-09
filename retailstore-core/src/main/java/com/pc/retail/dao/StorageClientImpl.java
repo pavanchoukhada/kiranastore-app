@@ -17,7 +17,7 @@ public class StorageClientImpl implements StorageClient {
 
     private Connection connectionForMultiTrans;
     private RetailDataSource dataSource;
-    SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd-mm-yyyy");
+    SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd-MM-yyyy");
     private boolean multiTrans = false;
     StorageClientImpl(Connection connectionForMultiTrans){
         this.connectionForMultiTrans = connectionForMultiTrans;
@@ -271,7 +271,7 @@ public class StorageClientImpl implements StorageClient {
             preparedStatement.setDouble(index++, productInvoiceMaster.getPrdInvAmt());
             preparedStatement.setDouble(index++, productInvoiceMaster.getTotalInvAmt());
             preparedStatement.setDouble(index++, productInvoiceMaster.getPaidAmount());
-            preparedStatement.setString(index++, productInvoiceMaster.getLastModifyDt());
+            preparedStatement.setDate(index++, new Date(System.currentTimeMillis()));
             preparedStatement.setInt(index++, productInvoiceMaster.getInvoiceId());
             preparedStatement.execute();
         }
@@ -379,7 +379,7 @@ public class StorageClientImpl implements StorageClient {
             preparedStatement.setDouble(index++, productInvoiceMaster.getPrdInvAmt());
             preparedStatement.setDouble(index++, productInvoiceMaster.getTotalInvAmt());
             preparedStatement.setDouble(index++, productInvoiceMaster.getPaidAmount());
-            preparedStatement.setDate(index++, new Date(System.currentTimeMillis()));
+            preparedStatement.setDate(index, new Date(System.currentTimeMillis()));
             preparedStatement.execute();
         }
         catch (SQLException sqlEx){
@@ -668,6 +668,7 @@ public class StorageClientImpl implements StorageClient {
             preparedStatement.execute();
         }
         catch (SQLException sqlEx){
+            sqlEx.printStackTrace();
             throw new DataAccessException(sqlEx.getMessage());
         }
         return prdInvId;

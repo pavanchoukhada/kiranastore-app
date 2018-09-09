@@ -10,7 +10,6 @@ import com.pc.retail.interactor.KiranaAppResult;
 import com.pc.retail.interactor.KiranaStoreException;
 import com.pc.retail.interactor.ResultType;
 import com.pc.retail.ui.controller.InventoryEntryOnlyGridFormController;
-import com.pc.retail.ui.controller.ProductInvEntryGridFormController;
 import com.pc.retail.ui.controller.ProductInventoryEntryGridFormController;
 import com.pc.retail.util.DataUtil;
 import com.pc.retail.vo.ProductInventory;
@@ -18,17 +17,11 @@ import com.pc.retail.vo.ProductInvoiceMaster;
 import com.pc.retail.vo.ProductSupplier;
 import com.pc.retail.vo.ProductUOM;
 import javafx.event.ActionEvent;
-import org.apache.tools.ant.util.DateUtils;
 
-import java.time.LocalDate;
-import java.time.ZoneId;
-import java.time.ZoneOffset;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
 import java.util.List;
-
-import static java.time.temporal.ChronoField.MILLI_OF_SECOND;
 
 /**
  * Created by pavanc on 8/3/17.
@@ -88,9 +81,9 @@ public class ProductInventoryEntryGridFormHelper {
         productInvoiceMaster.setInvoiceId(productInvEntryGridFormController.getInvoiceId());
         productInvoiceMaster.setInvoiceRefId(productInvEntryGridFormController.getInvoiceNoTxt().getText());
         productInvoiceMaster.setInvoiceStatus(getInvoiceStatus(productInvEntryGridFormController));
-        productInvoiceMaster.setInvoiceDate(new Date(productInvEntryGridFormController.getInvoiceDateDP().getValue().getLong(MILLI_OF_SECOND)));
+        productInvoiceMaster.setInvoiceDate(DataUtil.convertLocalDateToDate(productInvEntryGridFormController.getInvoiceDateDP().getValue()));
         productInvoiceMaster.setTotalInvAmt(DataUtil.getDouble(productInvEntryGridFormController.getTotalInvoiceAmountTxt().getText()));
-        if(productInvEntryGridFormController.getSupplierCB().getSelectionModel() != null) {
+        if(productInvEntryGridFormController.getSupplierCB().getSelectionModel().getSelectedItem() != null) {
             productInvoiceMaster.setSupplierId(productInvEntryGridFormController.getSupplierCB().getSelectionModel().getSelectedItem().getId());
         }
         return productInvoiceMaster;

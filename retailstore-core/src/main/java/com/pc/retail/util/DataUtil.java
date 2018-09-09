@@ -11,7 +11,7 @@ import java.util.Date;
  */
 public class DataUtil {
 
-    private static final SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd--MM-yyyy");
+    private static final SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd-MM-yyyy");
 
     public static boolean isEmpty(String value){
         return value==null || "".equals(value);
@@ -89,12 +89,21 @@ public class DataUtil {
     }
 
     public static LocalDate getDateToLocalDate(Date invoiceDate) {
-        return LocalDate.parse(simpleDateFormat.format(invoiceDate));
+        return LocalDate.parse(simpleDateFormat.format(invoiceDate),DateTimeFormatter.ofPattern("dd-MM-y"));
     }
 
     public static String getDateStr(LocalDate fromLocalDate) {
         return fromLocalDate.format(DateTimeFormatter.ofPattern("dd-MM-y"));
     }
+
+    public static Date convertLocalDateToDate(LocalDate fromLocalDate) {
+        try {
+            return simpleDateFormat.parse(fromLocalDate.format(DateTimeFormatter.ofPattern("dd-MM-y")));
+        } catch (ParseException e) {
+            return new Date();
+        }
+    }
+
 
     public static String getDateStr(Date expiryDate) {
         return simpleDateFormat.format(expiryDate);

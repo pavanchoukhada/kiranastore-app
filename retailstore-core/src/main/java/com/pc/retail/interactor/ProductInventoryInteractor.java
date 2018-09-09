@@ -67,10 +67,12 @@ public class ProductInventoryInteractor {
             Product product = ProductCache.getInstance().getProduct(productFilter);
             if(product != null) {
                 productDO = new ProductDO(product);
-                GSTGroupModel gstGroupModel = GSTCache.getInstance().get(productDO.getGstTaxGroup());
-                productDO.setcGSTRate(gstGroupModel.getcGSTRate());
-                productDO.setsGSTRate(gstGroupModel.getsGSTRate());
-                productDO.setGstRate(gstGroupModel.getTaxRate());
+                if(productDO.getGstTaxGroup() != null) {
+                    GSTGroupModel gstGroupModel = GSTCache.getInstance().get(productDO.getGstTaxGroup());
+                    productDO.setcGSTRate(gstGroupModel.getcGSTRate());
+                    productDO.setsGSTRate(gstGroupModel.getsGSTRate());
+                    productDO.setGstRate(gstGroupModel.getTaxRate());
+                }
                 if(product.getBaseProductBarCode() != null){
                     Product baseProduct = ProductCache.getInstance().getProductFromBarCode(product.getBaseProductBarCode());
                     productDO.setBaseProductCode(baseProduct.getPrdCode());
@@ -144,9 +146,20 @@ public class ProductInventoryInteractor {
 
     public ProductInvoiceMaster getProductInvoiceMasterWithDetails(int invoiceRefId) throws KiranaStoreException {
         try {
-            return productInvDAO.getProductInvoiceMasterWithDetail(invoiceRefId);
+            ProductInvoiceMaster productInvoiceMaster =  productInvDAO.getProductInvoiceMasterWithDetail(invoiceRefId);
+            enrichWithProductDetails(productInvoiceMaster.getProductInventoryList());
+            return productInvoiceMaster;
         }catch (DataAccessException ex){
             throw new KiranaStoreException(ex.getMessage());
+        }
+    }
+
+    private void enrichWithProductDetails(List<ProductInventory> productInventoryList) throws DataAccessException {
+	    for(ProductInventory productInventory : productInventoryList){
+	        Product product = ProductCache.getInstance().getProductFromBarCode(productInventory.getBarCode());
+	        productInventory.setProductCode(product.getPrdCode());
+	        productInventory.setSalePrice(product.getCurrentSellingPrice());
+	        productInventory.setSalePriceUOM(product.getPriceUomCd());
         }
     }
 
