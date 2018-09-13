@@ -517,15 +517,16 @@ public class StorageClientImpl implements StorageClient {
 
     private List<ProductInventory> getProductInventories(int invoiceId) throws DataAccessException{
         String selectQuery = "SELECT * FROM product_inv_record where invoice_id = " + invoiceId;
-        return getProductInventoryListForQuery(selectQuery);
+        return getProductInventoryListForQuery(selectQuery, false);
     }
 
     public List<ProductInventory> getProductInventoriesForProduct(int productId) throws DataAccessException{
-        String selectQuery = "SELECT * FROM product_inv_record where product_id = " + productId;
-        return getProductInventoryListForQuery(selectQuery);
+        String selectQuery = "SELECT ir.*,im.invoice_date, im.supplier_id,im.invoice_ref FROM product_inv_record ir, product_invoice_master im " +
+                " where ir.invoice_id=im.invoice_id and product_id = " + productId;
+        return getProductInventoryListForQuery(selectQuery, true);
     }
 
-    private List<ProductInventory> getProductInventoryListForQuery(String selectQuery) throws DataAccessException {
+    private List<ProductInventory> getProductInventoryListForQuery(String selectQuery, boolean loadInvoiceDetail) throws DataAccessException {
         try(Connection connection = dataSource.getConnection();
             Statement statement = connection.createStatement();
             ResultSet resultSet = statement.executeQuery(selectQuery)) {
@@ -537,6 +538,7 @@ public class StorageClientImpl implements StorageClient {
                 productInventory.setProductId(resultSet.getInt("product_id"));
                 productInventory.setBarCode(resultSet.getString("barcode"));
                 productInventory.setInvoiceId(resultSet.getInt("invoice_id"));
+                productInventory.setInvoiceRef(resultSet.getString("invoice_ref"));
                 productInventory.setExpiryDate(resultSet.getDate("expiry_date"));
                 productInventory.setQuantity(resultSet.getDouble("quantity"));
                 productInventory.setMRP(resultSet.getDouble("mrp"));
@@ -554,6 +556,10 @@ public class StorageClientImpl implements StorageClient {
                 productInventory.setsGSTRate(resultSet.getDouble("sgst_rate"));
                 productInventory.setcGSTAmount(resultSet.getDouble("cgst_amount"));
                 productInventory.setsGSTAmount(resultSet.getDouble("sgst_amount"));
+                if(loadInvoiceDetail) {
+                    productInventory.setInvoiceDate(resultSet.getDate("invoice_date"));
+                    productInventory.setSupplierId(resultSet.getInt("supplier_id"));
+                }
                 productInventories.add(productInventory);
             }
             return productInventories;

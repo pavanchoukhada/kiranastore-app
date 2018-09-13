@@ -31,6 +31,6 @@ public interface ProductInventoryService {
 
     int generateBarCode() throws KiranaStoreException;
 
-    List<ProductInventory> getInventoryDetailForProduct(int productId) throws KiranaStoreException;
+    List<ProductInventory> getInventoryTransactionsForProduct(int productId) throws KiranaStoreException;
 
 }

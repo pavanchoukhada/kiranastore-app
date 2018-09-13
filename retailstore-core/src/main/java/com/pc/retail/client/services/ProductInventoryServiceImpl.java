@@ -68,7 +68,7 @@ public class ProductInventoryServiceImpl implements ProductInventoryService {
     }
 
     @Override
-    public List<ProductInventory> getInventoryDetailForProduct(int productId) throws KiranaStoreException {
+    public List<ProductInventory> getInventoryTransactionsForProduct(int productId) throws KiranaStoreException {
         KiranaStoreController controller = new KiranaStoreController();
         return controller.getProductInventories(productId);
     }

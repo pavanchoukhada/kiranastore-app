@@ -21,7 +21,7 @@ import java.util.ResourceBundle;
 /**
  * Created by pavanc on 8/2/17.
  */
-public class ProductInventoryGridFormController implements Initializable, UpdateProductDetail{
+public class ProductInvTransactionGridFormController implements Initializable, UpdateProductDetail{
 
     @FXML
     TextField barcodeTxt;
@@ -62,14 +62,16 @@ public class ProductInventoryGridFormController implements Initializable, Update
     private void initializeInvGridTable() {
 
         ObservableList productInvEntryGridColumns = productInventoryMasterGrid.getColumns();
-        productInvEntryGridColumns.add(createStringTableColumn("Product Id", 120, "productId", "gridProductId"));
+        TableColumn stringTableColumn = createStringTableColumn("Invoice Ref", 120, "invoiceRef", "gridInvoiceRef");
+        
+        productInvEntryGridColumns.add(stringTableColumn);
+        productInvEntryGridColumns.add(createStringTableColumn("Invoice Date", 120, "invoiceDate", "gridInvoiceDate"));
+        productInvEntryGridColumns.add(createStringTableColumn("Supplier", 120, "supplierCode", "gridSupplier"));
         productInvEntryGridColumns.add(createStringTableColumn("Barcode", 120, "barCode", "gridBarCodeId"));
         productInvEntryGridColumns.add(createStringTableColumn("Product Code", 120, "productCode", "gridProductCode"));
         productInvEntryGridColumns.add(createNumericTableColumn("Quantity", 120, "quantity", "gridQtyId"));
         productInvEntryGridColumns.add(createStringTableColumn("Qty UOM", 50, "qtyUOM", "gridQtyUOMId"));
         productInvEntryGridColumns.add(createNumericTableColumn("MRP", 100, "MRP", "gridMRPId"));
-        productInvEntryGridColumns.add(createNumericTableColumn("Sale Price", 120, "salePrice", "gridQtyId"));
-        productInvEntryGridColumns.add(createStringTableColumn("Sale Price UOM", 120, "salePriceUOM", "gridQtyId"));
         productInvEntryGridColumns.add(createNumericTableColumn("Per Unit Cost", 100, "perUnitCost", "gridPerUnitCostId"));
         productInvEntryGridColumns.add(createNumericTableColumn("CGST", 100, "totalCost", "cGSTAmount"));
         productInvEntryGridColumns.add(createNumericTableColumn("SGST", 100, "totalCost", "sGSTAmount"));
@@ -104,6 +106,7 @@ public class ProductInventoryGridFormController implements Initializable, Update
     @Override
     public void updateForm(ProductDO product) {
         this.productId = product.getProductId();
+        productInventoryList.clear();
         productInventoryList.addAll(productInventoryGridFormHelper.getInventories(productId));
 
     }

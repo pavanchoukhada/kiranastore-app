@@ -88,7 +88,7 @@ public class ProductMasterGridController  implements Initializable {
     private void launchProductInventoryGrid(int productId) throws IOException {
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getClassLoader().getResource("ProductInventoryGrid.fxml"));
         Parent root1 = fxmlLoader.load();
-        ProductInventoryGridFormController productFormController = (ProductInventoryGridFormController) fxmlLoader.getController();
+        ProductInvTransactionGridFormController productFormController = (ProductInvTransactionGridFormController) fxmlLoader.getController();
         productFormController.initData(productId);
         Stage stage = new Stage();
         stage.setTitle("Product Inventory History");

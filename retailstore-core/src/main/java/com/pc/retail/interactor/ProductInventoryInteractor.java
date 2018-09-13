@@ -210,8 +210,16 @@ public class ProductInventoryInteractor {
 
     public List<ProductInventory> getProductInventories(int productId) throws KiranaStoreException{
         try {
-            return productInvDAO.getProductInventories(productId);
-            //refreshProductAndInvCache();
+            List<ProductInventory> productInventories = productInvDAO.getProductInventories(productId);
+            for(ProductInventory productInventory : productInventories){
+                productInventory.setSupplierCode(SupplierCache.getInstance()
+                        .getProductSupplier(
+                                productInventory.getSupplierId()).getCode());
+                productInventory.setProductCode(ProductCache.getInstance()
+                        .getProductFromBarCode(
+                                productInventory.getBarCode()).getPrdCode());
+            }
+            return productInventories;
         }catch (DataAccessException daExc){
             throw new KiranaStoreException(daExc.getMessage()) ;
         }

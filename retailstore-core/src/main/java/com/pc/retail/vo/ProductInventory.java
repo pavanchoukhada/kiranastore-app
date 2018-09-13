@@ -17,6 +17,7 @@ public class ProductInventory {
     private Date expiryDate;
 
 	private String invoiceRef;
+	private Date invoiceDate;
 	private int invoiceId;
 
 	private int status;	// accepted, rejected, sample order etc
@@ -47,6 +48,9 @@ public class ProductInventory {
     private double sGSTRate;
     private double cGSTAmount;  //total amount for product
     private double sGSTAmount;
+
+    private int supplierId;
+    private String supplierCode;
 
     public ProductInventory(){
     }
@@ -281,5 +285,29 @@ public class ProductInventory {
 
     public void setInvoiceId(int invoiceId) {
         this.invoiceId = invoiceId;
+    }
+
+    public Date getInvoiceDate() {
+        return invoiceDate;
+    }
+
+    public void setInvoiceDate(Date invoiceDate) {
+        this.invoiceDate = invoiceDate;
+    }
+
+    public int getSupplierId() {
+        return supplierId;
+    }
+
+    public void setSupplierId(int supplierId) {
+        this.supplierId = supplierId;
+    }
+
+    public String getSupplierCode() {
+        return supplierCode;
+    }
+
+    public void setSupplierCode(String supplierCode) {
+        this.supplierCode = supplierCode;
     }
 }
