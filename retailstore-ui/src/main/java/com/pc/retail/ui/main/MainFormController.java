@@ -114,7 +114,7 @@ public class MainFormController implements Initializable {
         Parent root = FXMLLoader.load(getClass().getClassLoader().getResource("BillingGridForm.fxml"));
         Stage stage = new Stage();
         Scene scene = new Scene(root, 500, 450);
-        stage.setTitle("Supplier Form");
+        stage.setTitle("Billing Form");
         stage.setScene(scene);
         stage.show();
     }

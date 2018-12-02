@@ -4,6 +4,7 @@ import com.pc.retail.api.FilterKeyConstants;
 import com.pc.retail.ui.event.handler.GetProductDetailHandler;
 import com.pc.retail.ui.event.handler.UpdateProductDetail;
 import com.pc.retail.ui.helper.ProductInventoryGridFormHelper;
+import com.pc.retail.ui.helper.ProductInventoryRow;
 import com.pc.retail.vo.ProductDO;
 import com.pc.retail.vo.ProductInventory;
 import javafx.collections.FXCollections;
@@ -29,11 +30,11 @@ public class ProductInvTransactionGridFormController implements Initializable, U
     TextField productIdTxt;
 
     @FXML
-    TableView<ProductInventory> productInventoryMasterGrid;
+    TableView<ProductInventoryRow> productInventoryMasterGrid;
 
     int productId = -1;
 
-    ObservableList<ProductInventory> productInventoryList = FXCollections.observableArrayList();
+    ObservableList<ProductInventoryRow> productInventoryList = FXCollections.observableArrayList();
 
     private ProductInventoryGridFormHelper productInventoryGridFormHelper;
 
@@ -62,9 +63,7 @@ public class ProductInvTransactionGridFormController implements Initializable, U
     private void initializeInvGridTable() {
 
         ObservableList productInvEntryGridColumns = productInventoryMasterGrid.getColumns();
-        TableColumn stringTableColumn = createStringTableColumn("Invoice Ref", 120, "invoiceRef", "gridInvoiceRef");
-        
-        productInvEntryGridColumns.add(stringTableColumn);
+        productInvEntryGridColumns.add(createStringTableColumn("Invoice Ref", 120, "InvoiceRefWithHyperLink", "gridInvoiceRef"));
         productInvEntryGridColumns.add(createStringTableColumn("Invoice Date", 120, "invoiceDate", "gridInvoiceDate"));
         productInvEntryGridColumns.add(createStringTableColumn("Supplier", 120, "supplierCode", "gridSupplier"));
         productInvEntryGridColumns.add(createStringTableColumn("Barcode", 120, "barCode", "gridBarCodeId"));

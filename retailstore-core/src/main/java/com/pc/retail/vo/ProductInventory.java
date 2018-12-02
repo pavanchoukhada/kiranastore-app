@@ -1,5 +1,7 @@
 package com.pc.retail.vo;
 
+import javafx.scene.control.Hyperlink;
+
 import java.util.Date;
 
 /**

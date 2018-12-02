@@ -13,10 +13,19 @@ import java.util.List;
  */
 public class ProductInventoryGridFormHelper {
 
-   public List<ProductInventory> getInventories(int productId){
+   public List<ProductInventoryRow> getInventories(int productId){
         try {
             ProductInventoryService productInventoryService = new ProductInventoryServiceImpl();
-            return productInventoryService.getInventoryTransactionsForProduct(productId);
+            List<ProductInventory> productInventoryList =
+                    productInventoryService.getInventoryTransactionsForProduct(productId);
+            ProductInvMasterEventHandler productInvMasterEventHandler = new ProductInvMasterEventHandler();
+            List<ProductInventoryRow> productInventoryRowList = new ArrayList<>();
+            for(ProductInventory productInventory : productInventoryList){
+                ProductInventoryRow productInventoryRow = new ProductInventoryRow(productInventory);
+                productInventoryRow.setOnMouseClickedAction(productInvMasterEventHandler);
+                productInventoryRowList.add(productInventoryRow);
+            }
+            return productInventoryRowList;
         } catch (KiranaStoreException e) {
             e.printStackTrace();
         }

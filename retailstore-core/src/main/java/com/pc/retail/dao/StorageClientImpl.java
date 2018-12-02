@@ -538,7 +538,6 @@ public class StorageClientImpl implements StorageClient {
                 productInventory.setProductId(resultSet.getInt("product_id"));
                 productInventory.setBarCode(resultSet.getString("barcode"));
                 productInventory.setInvoiceId(resultSet.getInt("invoice_id"));
-                productInventory.setInvoiceRef(resultSet.getString("invoice_ref"));
                 productInventory.setExpiryDate(resultSet.getDate("expiry_date"));
                 productInventory.setQuantity(resultSet.getDouble("quantity"));
                 productInventory.setMRP(resultSet.getDouble("mrp"));
@@ -559,6 +558,7 @@ public class StorageClientImpl implements StorageClient {
                 if(loadInvoiceDetail) {
                     productInventory.setInvoiceDate(resultSet.getDate("invoice_date"));
                     productInventory.setSupplierId(resultSet.getInt("supplier_id"));
+                    productInventory.setInvoiceRef(resultSet.getString("invoice_ref"));
                 }
                 productInventories.add(productInventory);
             }
