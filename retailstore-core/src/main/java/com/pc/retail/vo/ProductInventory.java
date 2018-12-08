@@ -48,9 +48,10 @@ public class ProductInventory {
 
     private double cGSTRate;
     private double sGSTRate;
-    private double cGSTAmount;  //total amount for product
+    private double cGSTAmount;
     private double sGSTAmount;
 
+    private double totalGSTAmountForInv;
     private int supplierId;
     private String supplierCode;
 
@@ -233,35 +234,39 @@ public class ProductInventory {
         this.perUnitCostIncludingAll = perUnitCostIncludingAll;
     }
 
-    public double getcGSTRate() {
+    public double getCGSTRate() {
         return cGSTRate;
     }
 
-    public void setcGSTRate(double cGSTRate) {
+    public void setCGSTRate(double cGSTRate) {
         this.cGSTRate = cGSTRate;
     }
 
-    public double getsGSTRate() {
+    public double getSGSTRate() {
         return sGSTRate;
     }
 
-    public void setsGSTRate(double sGSTRate) {
+    public void setSGSTRate(double sGSTRate) {
         this.sGSTRate = sGSTRate;
     }
 
-    public double getcGSTAmount() {
+    public double getCGSTAmount() {
         return cGSTAmount;
     }
 
-    public void setcGSTAmount(double cGSTAmount) {
+    public double getPerUnitGSTAmount(){
+        return cGSTAmount + sGSTAmount;
+    }
+
+    public void setCGSTAmount(double cGSTAmount) {
         this.cGSTAmount = cGSTAmount;
     }
 
-    public double getsGSTAmount() {
+    public double getSGSTAmount() {
         return sGSTAmount;
     }
 
-    public void setsGSTAmount(double sGSTAmount) {
+    public void setSGSTAmount(double sGSTAmount) {
         this.sGSTAmount = sGSTAmount;
     }
 
@@ -312,4 +317,13 @@ public class ProductInventory {
     public void setSupplierCode(String supplierCode) {
         this.supplierCode = supplierCode;
     }
+
+    public double getTotalGSTAmountForInv() {
+        return getPerUnitGSTAmount() * getQuantity();
+    }
+
+    public void setTotalGSTAmountForInv(double totalGSTAmountForInv) {
+        this.totalGSTAmountForInv = totalGSTAmountForInv;
+    }
+
 }

@@ -26,14 +26,12 @@ import javafx.scene.input.KeyEvent;
 import javafx.stage.Stage;
 import javafx.util.Callback;
 
-import javax.xml.crypto.Data;
 import java.net.URL;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.ResourceBundle;
-import java.util.logging.Filter;
 
 /**
  * Created by pavanc on 8/2/17.
@@ -100,6 +98,8 @@ public class ProductInventoryEntryGridFormController implements Initializable, U
 
     @FXML
     TextField totalInvoiceAmountTxt;
+    @FXML
+    TextField totalGSTAmountTxt;
 
     @FXML
     TableView<ProductInventory> productInvEntryGrid;
@@ -136,6 +136,7 @@ public class ProductInventoryEntryGridFormController implements Initializable, U
         totalProductAmountIncGSTTxt.focusedProperty().addListener(totalCostIncGSTListener());
         otherCostPriceTxt.focusedProperty().addListener(otherCostListener());
         totalInvoiceAmountTxt.setDisable(true);
+        totalGSTAmountTxt.setDisable(true);
         GSTRateTxt.setDisable(true);
         CGSTRateTxt.setDisable(true);
         SGSTRateTxt.setDisable(true);
@@ -291,15 +292,17 @@ public class ProductInventoryEntryGridFormController implements Initializable, U
         expiryDP.getEditor().setText(DataUtil.getDateStr(productInventory.getExpiryDate()));
         mrpTxt.setText(String.valueOf(productInventory.getQuantity()));
         prdQtyTxt.setText(String.valueOf(productInventory.getQuantity()));
-        qtyUOMCB.setValue(String.valueOf(productInventory.getQtyUOM()));
+        if(productInventory.getQtyUOM() != null) {
+            qtyUOMCB.setValue(String.valueOf(productInventory.getQtyUOM()));
+        }
         salePriceTxt.setText(String.valueOf(productInventory.getSalePrice()));
         salePriceUOMTxt.setText(String.valueOf(productInventory.getSalePriceUOM()));
-        GSTRateTxt.setText(String.valueOf(productInventory.getcGSTRate() + productInventory.getsGSTRate()));
-        GSTValueTxt.setText(String.valueOf(productInventory.getcGSTAmount() + productInventory.getsGSTAmount()));
-        CGSTRateTxt.setText(String.valueOf(productInventory.getcGSTRate()));
-        SGSTRateTxt.setText(String.valueOf(productInventory.getsGSTRate()));
-        CGSTValueTxt.setText(String.valueOf(productInventory.getcGSTAmount()));
-        SGSTValueTxt.setText(String.valueOf(productInventory.getsGSTAmount()));
+        GSTRateTxt.setText(String.valueOf(productInventory.getCGSTRate() + productInventory.getSGSTRate()));
+        GSTValueTxt.setText(String.valueOf(productInventory.getCGSTAmount() + productInventory.getSGSTAmount()));
+        CGSTRateTxt.setText(String.valueOf(productInventory.getCGSTRate()));
+        SGSTRateTxt.setText(String.valueOf(productInventory.getSGSTRate()));
+        CGSTValueTxt.setText(String.valueOf(productInventory.getCGSTAmount()));
+        SGSTValueTxt.setText(String.valueOf(productInventory.getSGSTAmount()));
         perUnitCostTxt.setText(String.valueOf(productInventory.getPerUnitCost()));
         perUnitCostIncGSTTxt.setText(String.valueOf(productInventory.getPerUnitCostIncludingGST()));
         perUnitCostIncOfAllTxt.setText(String.valueOf(productInventory.getPerUnitCostIncludingAll()));
@@ -320,8 +323,8 @@ public class ProductInventoryEntryGridFormController implements Initializable, U
         productInvEntryGridColumns.add(createNumericTableColumn("Sale Price", 120, "salePrice", "gridQtyId"));
         productInvEntryGridColumns.add(createStringTableColumn("Sale Price UOM", 120, "salePriceUOM", "gridQtyId"));
         productInvEntryGridColumns.add(createNumericTableColumn("Per Unit Cost", 100, "perUnitCost", "gridPerUnitCostId"));
-        productInvEntryGridColumns.add(createNumericTableColumn("CGST", 100, "cGSTAmount", "cGSTAmount"));
-        productInvEntryGridColumns.add(createNumericTableColumn("SGST", 100, "sGSTAmount", "sGSTAmount"));
+        productInvEntryGridColumns.add(createNumericTableColumn("GST Per Unit", 120, "perUnitGSTAmount", "perUnitGSTAmount"));
+        productInvEntryGridColumns.add(createNumericTableColumn("GST Amount", 100, "totalGSTAmountForInv", "totalGSTAmountForInv"));
         productInvEntryGridColumns.add(createNumericTableColumn("Per Unit Cost(Incl GST)", 100, "perUnitCostIncludingGST", "perUnitCostIncludingGST"));
         productInvEntryGridColumns.add(createNumericTableColumn("Other Cost", 100, "otherCost", "otherCost"));
         productInvEntryGridColumns.add(createNumericTableColumn("Total Cost", 100, "finalAmount", "finalAmount"));
@@ -375,7 +378,7 @@ public class ProductInventoryEntryGridFormController implements Initializable, U
         ProductInventory productInventory = null;
         if(DataUtil.isEmpty(message)) {
             try {
-                productInventory = getProductInvDO();
+                productInventory = ceateProductInvFromInput();
             } catch (Exception e) {
                 message = e.getMessage();
             }
@@ -403,10 +406,13 @@ public class ProductInventoryEntryGridFormController implements Initializable, U
 
     private void calcTotalAmount() {
         double totalAmount = 0.0d;
+        double totalGSTAmount = 0.0d;
         for(ProductInventory productInventory : productInventoryList){
             totalAmount = totalAmount + productInventory.getFinalAmount();
+            totalGSTAmount = totalGSTAmount + productInventory.getTotalGSTAmountForInv();
         }
         totalInvoiceAmountTxt.setText(DataUtil.convertToText(totalAmount));
+        totalGSTAmountTxt.setText(DataUtil.convertToText(totalGSTAmount));
     }
 
     private ButtonType generateResponseToUser(Alert.AlertType warning, String message) {
@@ -438,23 +444,25 @@ public class ProductInventoryEntryGridFormController implements Initializable, U
         return -1;
     }
 
-    private ProductInventory getProductInvDO() throws Exception{
+    private ProductInventory ceateProductInvFromInput() throws Exception{
         ProductInventory productInventory = new ProductInventory();
         productInventory.setProductId(DataUtil.getIntegerValue(productIdTxt.getText(), "Product Id"));
         productInventory.setBarCode(prdBarcodeTxt.getText());
         productInventory.setProductCode(productCodeTxt.getText());
         productInventory.setQuantity(DataUtil.getDoubleValue(prdQtyTxt.getText(), "Quantity"));
-        productInventory.setQtyUOM((String)qtyUOMCB.getValue());
+        if(!DataUtil.isEmpty((String) qtyUOMCB.getValue())) {
+            productInventory.setQtyUOM((String) qtyUOMCB.getValue());
+        }
         productInventory.setMRP(DataUtil.getDoubleValue(mrpTxt.getText(), "MRP"));
         productInventory.setSalePrice(DataUtil.getDoubleValue(salePriceTxt.getText(), "Sale Price"));
         productInventory.setSalePriceUOM(salePriceUOMTxt.getText());
         productInventory.setExpiryDate(DataUtil.getDate(expiryDP.getValue()));
 
-        productInventory.setcGSTRate(DataUtil.getDouble(CGSTRateTxt.getText()));
-        productInventory.setsGSTRate(DataUtil.getDouble(SGSTRateTxt.getText()));
+        productInventory.setCGSTRate(DataUtil.getDouble(CGSTRateTxt.getText()));
+        productInventory.setSGSTRate(DataUtil.getDouble(SGSTRateTxt.getText()));
 
-        productInventory.setcGSTAmount(DataUtil.getDoubleValue(CGSTValueTxt.getText(), "CGST Value"));
-        productInventory.setsGSTAmount(DataUtil.getDoubleValue(SGSTValueTxt.getText(), "SGST Value"));
+        productInventory.setCGSTAmount(DataUtil.getDoubleValue(CGSTValueTxt.getText(), "CGST Value"));
+        productInventory.setSGSTAmount(DataUtil.getDoubleValue(SGSTValueTxt.getText(), "SGST Value"));
 
         productInventory.setPerUnitCost(DataUtil.getDoubleValue(perUnitCostTxt.getText(), "Per Unit Cost Price"));
         productInventory.setPerUnitCostIncludingGST(DataUtil.getDoubleValue(perUnitCostIncGSTTxt.getText(), "Per Unit Cost Inc GST"));
@@ -596,8 +604,11 @@ public class ProductInventoryEntryGridFormController implements Initializable, U
             this.prdBarcodeTxt.setText(product.getBarcode());
             if(product.getMeasurementType()== MeasurementType.COUNT) {
                 this.qtyUOMCB.setDisable(true);
+                this.qtyUOMCB.getEditor().clear();
+                this.qtyUOMCB.setValue("");
             }else{
                 this.qtyUOMCB.setDisable(false);
+                this.qtyUOMCB.setValue(product.getQtyUomCd());
             }
             this.productIdTxt.setText(String.valueOf(product.getProductId()));
             this.productDO = product;

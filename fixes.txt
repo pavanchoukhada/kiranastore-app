@@ -1,0 +1,2 @@
+1. Add percentage sign after GST Rate on new inv addition form.
+2.

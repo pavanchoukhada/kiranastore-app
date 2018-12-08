@@ -142,8 +142,11 @@
             </TableView>
         </Pane>
          <HBox layoutX="80" layoutY="550" spacing="10">
-             <Label prefHeight="22.0" prefWidth="120.0" text="Total Invoice Amount" textAlignment="RIGHT"/>
+             <Label prefHeight="22.0" prefWidth="120.0" text="Bill Amount(Incl GST)" textAlignment="RIGHT"/>
              <TextField fx:id="totalInvoiceAmountTxt" prefHeight="23.0" prefWidth="153.0"/>
+             <Label prefHeight="22.0" prefWidth="120.0" text="GST Amount" textAlignment="RIGHT"/>
+             <TextField fx:id="totalGSTAmountTxt" prefHeight="23.0" prefWidth="153.0"/>
+
          </HBox>
          <HBox layoutX="500.0" layoutY="600.0" prefHeight="23.0" prefWidth="375.0" spacing="40.0">
              <children>

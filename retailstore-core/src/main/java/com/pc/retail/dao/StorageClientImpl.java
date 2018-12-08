@@ -3,14 +3,12 @@ package com.pc.retail.dao;
 import java.sql.*;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
 import com.pc.retail.api.FilterKeyConstants;
 import com.pc.retail.dao.util.FilterModel;
 import com.pc.retail.interactor.MeasurementType;
-import com.pc.retail.util.DataUtil;
 import com.pc.retail.vo.*;
 
 public class StorageClientImpl implements StorageClient {
@@ -551,10 +549,10 @@ public class StorageClientImpl implements StorageClient {
                 productInventory.setTotalCostIncludingGST(resultSet.getDouble("total_cost_gst"));
                 productInventory.setPerUnitCostIncludingAll(resultSet.getDouble("per_unit_cost_all"));
                 productInventory.setFinalAmount(resultSet.getDouble("final_amount"));
-                productInventory.setcGSTRate(resultSet.getDouble("cgst_rate"));
-                productInventory.setsGSTRate(resultSet.getDouble("sgst_rate"));
-                productInventory.setcGSTAmount(resultSet.getDouble("cgst_amount"));
-                productInventory.setsGSTAmount(resultSet.getDouble("sgst_amount"));
+                productInventory.setCGSTRate(resultSet.getDouble("cgst_rate"));
+                productInventory.setSGSTRate(resultSet.getDouble("sgst_rate"));
+                productInventory.setCGSTAmount(resultSet.getDouble("cgst_amount"));
+                productInventory.setSGSTAmount(resultSet.getDouble("sgst_amount"));
                 if(loadInvoiceDetail) {
                     productInventory.setInvoiceDate(resultSet.getDate("invoice_date"));
                     productInventory.setSupplierId(resultSet.getInt("supplier_id"));
@@ -667,10 +665,10 @@ public class StorageClientImpl implements StorageClient {
             preparedStatement.setDouble(index++, productInventoryDetail.getTotalCostIncludingGST());
             preparedStatement.setDouble(index++, productInventoryDetail.getPerUnitCostIncludingAll());
             preparedStatement.setDouble(index++, productInventoryDetail.getFinalAmount());
-            preparedStatement.setDouble(index++, productInventoryDetail.getcGSTRate());
-            preparedStatement.setDouble(index++, productInventoryDetail.getsGSTRate());
-            preparedStatement.setDouble(index++, productInventoryDetail.getcGSTAmount());
-            preparedStatement.setDouble(index++, productInventoryDetail.getsGSTAmount());
+            preparedStatement.setDouble(index++, productInventoryDetail.getCGSTRate());
+            preparedStatement.setDouble(index++, productInventoryDetail.getSGSTRate());
+            preparedStatement.setDouble(index++, productInventoryDetail.getCGSTAmount());
+            preparedStatement.setDouble(index++, productInventoryDetail.getSGSTAmount());
             preparedStatement.execute();
         }
         catch (SQLException sqlEx){
@@ -708,10 +706,10 @@ public class StorageClientImpl implements StorageClient {
             preparedStatement.setDouble(index++, productInventoryDetail.getTotalCostIncludingGST());
             preparedStatement.setDouble(index++, productInventoryDetail.getPerUnitCostIncludingAll());
             preparedStatement.setDouble(index++, productInventoryDetail.getFinalAmount());
-            preparedStatement.setDouble(index++, productInventoryDetail.getcGSTRate());
-            preparedStatement.setDouble(index++, productInventoryDetail.getsGSTRate());
-            preparedStatement.setDouble(index++, productInventoryDetail.getcGSTAmount());
-            preparedStatement.setDouble(index++, productInventoryDetail.getsGSTAmount());
+            preparedStatement.setDouble(index++, productInventoryDetail.getCGSTRate());
+            preparedStatement.setDouble(index++, productInventoryDetail.getSGSTRate());
+            preparedStatement.setDouble(index++, productInventoryDetail.getCGSTAmount());
+            preparedStatement.setDouble(index++, productInventoryDetail.getSGSTAmount());
             preparedStatement.setInt(index++, productInventoryDetail.getPrdInvId());
             preparedStatement.execute();
         }

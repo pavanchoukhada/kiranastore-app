@@ -201,35 +201,35 @@ public class ProductInventoryRow {
     }
 
     public double getcGSTRate() {
-        return productInventory.getcGSTRate();
+        return productInventory.getCGSTRate();
     }
 
     public void setcGSTRate(double cGSTRate) {
-        productInventory.setcGSTRate(cGSTRate);
+        productInventory.setCGSTRate(cGSTRate);
     }
 
     public double getsGSTRate() {
-        return productInventory.getsGSTRate();
+        return productInventory.getSGSTRate();
     }
 
     public void setsGSTRate(double sGSTRate) {
-        productInventory.setsGSTRate(sGSTRate);
+        productInventory.setSGSTRate(sGSTRate);
     }
 
     public double getcGSTAmount() {
-        return productInventory.getcGSTAmount();
+        return productInventory.getCGSTAmount();
     }
 
     public void setcGSTAmount(double cGSTAmount) {
-        productInventory.setcGSTAmount(cGSTAmount);
+        productInventory.setCGSTAmount(cGSTAmount);
     }
 
     public double getsGSTAmount() {
-        return productInventory.getsGSTAmount();
+        return productInventory.getSGSTAmount();
     }
 
     public void setsGSTAmount(double sGSTAmount) {
-        productInventory.setsGSTAmount(sGSTAmount);
+        productInventory.setSGSTAmount(sGSTAmount);
     }
 
     public double getSalePrice() {

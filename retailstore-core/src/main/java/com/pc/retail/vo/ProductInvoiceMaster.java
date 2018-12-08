@@ -23,6 +23,10 @@ public class ProductInvoiceMaster {
 	private boolean fullyPaid;
 	private String lastModifyDt;
 
+	private double cGSTAmount;
+	private double sGSTAmount;
+
+
     public String getInvoiceRefId() {
         return invoiceRefId;
     }
@@ -121,5 +125,21 @@ public class ProductInvoiceMaster {
 
     public void setPrdInvAmt(double prdInvAmt) {
         this.prdInvAmt = prdInvAmt;
+    }
+
+    public double getcGSTAmount() {
+        return cGSTAmount;
+    }
+
+    public void setcGSTAmount(double cGSTAmount) {
+        this.cGSTAmount = cGSTAmount;
+    }
+
+    public double getsGSTAmount() {
+        return sGSTAmount;
+    }
+
+    public void setsGSTAmount(double sGSTAmount) {
+        this.sGSTAmount = sGSTAmount;
     }
 }
