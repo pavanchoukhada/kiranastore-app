@@ -116,6 +116,7 @@ public class InvoiceGridFormController  implements Initializable {
         productInvEntryGridColumns.add(createNumericTableColumn("Invoice Status", 100, "invoiceStatus", "invoiceStatus"));
         productInvEntryGridColumns.add(createStringTableColumn("Supplier Name", 100, "supplierName", "supplierName"));
         productInvEntryGridColumns.add(createNumericTableColumn("Other Cost", 120, "lumpsumCost", "lumpsumCost"));
+        productInvEntryGridColumns.add(createNumericTableColumn("GST Amount", 100, "GSTAmount", "GSTAmount"));
         productInvEntryGridColumns.add(createNumericTableColumn("Invoice Amount", 100, "prdInvAmt", "prdInvAmt"));
         productInvEntryGridColumns.add(createNumericTableColumn("Total Amount", 100, "totalAmount", "gridTotalCostId"));
     }

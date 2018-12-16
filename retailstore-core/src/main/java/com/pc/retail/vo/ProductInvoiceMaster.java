@@ -142,4 +142,8 @@ public class ProductInvoiceMaster {
     public void setsGSTAmount(double sGSTAmount) {
         this.sGSTAmount = sGSTAmount;
     }
+
+    public double getGSTAmount(){
+        return this.sGSTAmount + this.cGSTAmount;
+    }
 }

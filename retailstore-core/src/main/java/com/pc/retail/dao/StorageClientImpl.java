@@ -257,7 +257,7 @@ public class StorageClientImpl implements StorageClient {
     private void updateProductInvoiceMaster(ProductInvoiceMaster productInvoiceMaster) throws DataAccessException{
 
         String insertSql = " update product_invoice_master set invoice_ref = ?, supplier_id = ?, invoice_date= ?, invoice_status = ?, " +
-                "lumpsum_cost = ?, invoice_amount = ?, total_amount = ?, paid_amount = ?, last_modify_dt = ? " +
+                "lumpsum_cost = ?, s_gst_amount= ?, c_gst_amount= ?, invoice_amount = ?, total_amount = ?, paid_amount = ?, last_modify_dt = ? " +
                 " where invoice_id = ? ";
         try (PreparedStatement preparedStatement = connectionForMultiTrans.prepareStatement(insertSql)){
             int index = 1;
@@ -266,6 +266,8 @@ public class StorageClientImpl implements StorageClient {
             preparedStatement.setDate(index++, new Date(productInvoiceMaster.getInvoiceDate().getTime()));
             preparedStatement.setInt(index++, productInvoiceMaster.getInvoiceStatus().getInd());
             preparedStatement.setDouble(index++, productInvoiceMaster.getLumpsumCost());
+            preparedStatement.setDouble(index++, productInvoiceMaster.getsGSTAmount());
+            preparedStatement.setDouble(index++, productInvoiceMaster.getcGSTAmount());
             preparedStatement.setDouble(index++, productInvoiceMaster.getPrdInvAmt());
             preparedStatement.setDouble(index++, productInvoiceMaster.getTotalInvAmt());
             preparedStatement.setDouble(index++, productInvoiceMaster.getPaidAmount());
@@ -364,8 +366,8 @@ public class StorageClientImpl implements StorageClient {
     private int insertProductInvoiceMaster(ProductInvoiceMaster productInvoiceMaster) throws DataAccessException{
         int invoiceId = getNextVal("product_invoice_id_seq");
         String insertSql = "insert into product_invoice_master(invoice_id, invoice_ref, supplier_id, invoice_date, invoice_status, " +
-                "lumpsum_cost, invoice_amount, total_amount, paid_amount, last_modify_dt) " +
-                "	values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+                "lumpsum_cost, s_gst_amount, c_gst_amount, total_invoice_amount, total_amount, paid_amount, last_modify_dt) " +
+                "	values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
         try (PreparedStatement preparedStatement = connectionForMultiTrans.prepareStatement(insertSql)){
             int index = 1;
             preparedStatement.setInt(index++, invoiceId);
@@ -374,6 +376,8 @@ public class StorageClientImpl implements StorageClient {
             preparedStatement.setDate(index++, new Date(productInvoiceMaster.getInvoiceDate().getTime()));
             preparedStatement.setInt(index++, productInvoiceMaster.getInvoiceStatus().getInd());
             preparedStatement.setDouble(index++, productInvoiceMaster.getLumpsumCost());
+            preparedStatement.setDouble(index++, productInvoiceMaster.getsGSTAmount());
+            preparedStatement.setDouble(index++, productInvoiceMaster.getcGSTAmount());
             preparedStatement.setDouble(index++, productInvoiceMaster.getPrdInvAmt());
             preparedStatement.setDouble(index++, productInvoiceMaster.getTotalInvAmt());
             preparedStatement.setDouble(index++, productInvoiceMaster.getPaidAmount());
@@ -485,6 +489,8 @@ public class StorageClientImpl implements StorageClient {
                 productInvoiceMaster.setInvoiceStatus(InvoiceStatus.valueOf(resultSet.getInt("invoice_status")));
                 productInvoiceMaster.setInvoiceDate(resultSet.getDate("invoice_date"));
                 productInvoiceMaster.setLumpsumCost(resultSet.getDouble("lumpsum_cost"));
+                productInvoiceMaster.setsGSTAmount(resultSet.getDouble("s_gst_amount"));
+                productInvoiceMaster.setcGSTAmount(resultSet.getDouble("c_gst_amount"));
                 productInvoiceMaster.setPrdInvAmt(resultSet.getDouble("invoice_amount"));
                 productInvoiceMaster.setTotalInvAmt(resultSet.getDouble("total_amount"));
                 productInvoiceMaster.setPaidAmount(resultSet.getDouble("paid_amount"));
