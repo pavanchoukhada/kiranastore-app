@@ -554,11 +554,14 @@ public class StorageClientImpl implements StorageClient {
                 productInventory.setTotalCost(resultSet.getDouble("total_cost"));
                 productInventory.setTotalCostIncludingGST(resultSet.getDouble("total_cost_gst"));
                 productInventory.setPerUnitCostIncludingAll(resultSet.getDouble("per_unit_cost_all"));
-                productInventory.setFinalAmount(resultSet.getDouble("final_amount"));
+                productInventory.setFinalAmountInclAll(resultSet.getDouble("final_amount"));
                 productInventory.setCGSTRate(resultSet.getDouble("cgst_rate"));
                 productInventory.setSGSTRate(resultSet.getDouble("sgst_rate"));
-                productInventory.setCGSTAmount(resultSet.getDouble("cgst_amount"));
-                productInventory.setSGSTAmount(resultSet.getDouble("sgst_amount"));
+                productInventory.setPerUnitCGSTAmount(resultSet.getDouble("cgst_amount"));
+                productInventory.setPerUnitSGSTAmount(resultSet.getDouble("sgst_amount"));
+                productInventory.setTotalCGSTAmount(resultSet.getDouble("cgst_total_amount"));
+                productInventory.setTotalSGSTAmount(resultSet.getDouble("sgst_total_amount"));
+
                 if(loadInvoiceDetail) {
                     productInventory.setInvoiceDate(resultSet.getDate("invoice_date"));
                     productInventory.setSupplierId(resultSet.getInt("supplier_id"));
@@ -649,8 +652,8 @@ public class StorageClientImpl implements StorageClient {
         int prdInvId = getNextVal("prd_inv_id_seq");
         String insertSql = "insert into product_inv_record(prd_inv_id, product_id, barcode, invoice_id, expiry_date, quantity, mrp, status, " +
                 " per_unit_cost, inv_date, remaining_qty, qty_uom_cd, per_unit_cost_gst , other_cost , total_cost ," +
-                " total_cost_gst, per_unit_cost_all, final_amount, cgst_rate, sgst_rate, cgst_amount, sgst_amount) " +
-                "	values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+                " total_cost_gst, per_unit_cost_all, final_amount, sgst_rate, cgst_rate, sgst_amount, cgst_amount, sgst_total_amount, cgst_total_amount) " +
+                "	values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ? , ?)";
         try (PreparedStatement preparedStatement = connectionForMultiTrans.prepareStatement(insertSql)){
             int index = 1;
             preparedStatement.setInt(index++, prdInvId);
@@ -670,11 +673,14 @@ public class StorageClientImpl implements StorageClient {
             preparedStatement.setDouble(index++, productInventoryDetail.getTotalCost());
             preparedStatement.setDouble(index++, productInventoryDetail.getTotalCostIncludingGST());
             preparedStatement.setDouble(index++, productInventoryDetail.getPerUnitCostIncludingAll());
-            preparedStatement.setDouble(index++, productInventoryDetail.getFinalAmount());
-            preparedStatement.setDouble(index++, productInventoryDetail.getCGSTRate());
+            preparedStatement.setDouble(index++, productInventoryDetail.getFinalAmountInclAll());
             preparedStatement.setDouble(index++, productInventoryDetail.getSGSTRate());
-            preparedStatement.setDouble(index++, productInventoryDetail.getCGSTAmount());
-            preparedStatement.setDouble(index++, productInventoryDetail.getSGSTAmount());
+            preparedStatement.setDouble(index++, productInventoryDetail.getCGSTRate());
+            preparedStatement.setDouble(index++, productInventoryDetail.getPerUnitSGSTAmount());
+            preparedStatement.setDouble(index++, productInventoryDetail.getPerUnitCGSTAmount());
+            preparedStatement.setDouble(index++, productInventoryDetail.getTotalSGSTAmount());
+            preparedStatement.setDouble(index++, productInventoryDetail.getTotalCGSTAmount());
+
             preparedStatement.execute();
         }
         catch (SQLException sqlEx){
@@ -690,8 +696,8 @@ public class StorageClientImpl implements StorageClient {
                 " quantity = ?, mrp = ?, status = ?, per_unit_cost = ?, " +
                 " remaining_qty = ?, inv_date = ?,  qty_uom_cd= ?, " +
                 " per_unit_cost_gst =? , other_cost = ?, total_cost = ? ," +
-                " total_cost_gst = ?, per_unit_cost_all = ?, final_amount = ?, cgst_rate = ?, " +
-                " sgst_rate = ?, cgst_amount = ?, sgst_amount = ? " +
+                " total_cost_gst = ?, per_unit_cost_all = ?, final_amount = ?, sgst_rate = ?, " +
+                " cgst_rate = ?, sgst_amount = ?, cgst_amount = ?, sgst_total_amount = ?, cgst_total_amount = ?  " +
                 " where prd_inv_id = ?";
         try (PreparedStatement preparedStatement = connectionForMultiTrans.prepareStatement(updateSql)){
             int index = 1;
@@ -711,11 +717,14 @@ public class StorageClientImpl implements StorageClient {
             preparedStatement.setDouble(index++, productInventoryDetail.getTotalCost());
             preparedStatement.setDouble(index++, productInventoryDetail.getTotalCostIncludingGST());
             preparedStatement.setDouble(index++, productInventoryDetail.getPerUnitCostIncludingAll());
-            preparedStatement.setDouble(index++, productInventoryDetail.getFinalAmount());
-            preparedStatement.setDouble(index++, productInventoryDetail.getCGSTRate());
+            preparedStatement.setDouble(index++, productInventoryDetail.getFinalAmountInclAll());
             preparedStatement.setDouble(index++, productInventoryDetail.getSGSTRate());
-            preparedStatement.setDouble(index++, productInventoryDetail.getCGSTAmount());
-            preparedStatement.setDouble(index++, productInventoryDetail.getSGSTAmount());
+            preparedStatement.setDouble(index++, productInventoryDetail.getCGSTRate());
+            preparedStatement.setDouble(index++, productInventoryDetail.getPerUnitSGSTAmount());
+            preparedStatement.setDouble(index++, productInventoryDetail.getPerUnitCGSTAmount());
+            preparedStatement.setDouble(index++, productInventoryDetail.getTotalSGSTAmount());
+            preparedStatement.setDouble(index++, productInventoryDetail.getTotalCGSTAmount());
+
             preparedStatement.setInt(index++, productInventoryDetail.getPrdInvId());
             preparedStatement.execute();
         }

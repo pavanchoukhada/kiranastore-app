@@ -1,7 +1,5 @@
 package com.pc.retail.vo;
 
-import javafx.scene.control.Hyperlink;
-
 import java.util.Date;
 
 /**
@@ -48,8 +46,10 @@ public class ProductInventory {
 
     private double cGSTRate;
     private double sGSTRate;
-    private double cGSTAmount;
-    private double sGSTAmount;
+    private double perUnitCGSTAmount;
+    private double perUnitSGSTAmount;
+    private double totalCGSTAmount;
+    private double totalSGSTAmount;
 
     private double totalGSTAmountForInv;
     private int supplierId;
@@ -218,11 +218,11 @@ public class ProductInventory {
         this.totalCostIncludingGST = totalCostIncludingGST;
     }
 
-    public double getFinalAmount() {
+    public double getFinalAmountInclAll() {
         return finalAmount;
     }
 
-    public void setFinalAmount(double finalAmount) {
+    public void setFinalAmountInclAll(double finalAmount) {
         this.finalAmount = finalAmount;
     }
 
@@ -250,24 +250,24 @@ public class ProductInventory {
         this.sGSTRate = sGSTRate;
     }
 
-    public double getCGSTAmount() {
-        return cGSTAmount;
+    public double getPerUnitCGSTAmount() {
+        return perUnitCGSTAmount;
     }
 
     public double getPerUnitGSTAmount(){
-        return cGSTAmount + sGSTAmount;
+        return perUnitCGSTAmount + perUnitSGSTAmount;
     }
 
-    public void setCGSTAmount(double cGSTAmount) {
-        this.cGSTAmount = cGSTAmount;
+    public void setPerUnitCGSTAmount(double cGSTAmount) {
+        this.perUnitCGSTAmount = cGSTAmount;
     }
 
-    public double getSGSTAmount() {
-        return sGSTAmount;
+    public double getPerUnitSGSTAmount() {
+        return perUnitSGSTAmount;
     }
 
-    public void setSGSTAmount(double sGSTAmount) {
-        this.sGSTAmount = sGSTAmount;
+    public void setPerUnitSGSTAmount(double sGSTAmount) {
+        this.perUnitSGSTAmount = sGSTAmount;
     }
 
     public double getSalePrice() {
@@ -316,6 +316,38 @@ public class ProductInventory {
 
     public void setSupplierCode(String supplierCode) {
         this.supplierCode = supplierCode;
+    }
+
+    public double getcGSTRate() {
+        return cGSTRate;
+    }
+
+    public void setcGSTRate(double cGSTRate) {
+        this.cGSTRate = cGSTRate;
+    }
+
+    public double getsGSTRate() {
+        return sGSTRate;
+    }
+
+    public void setsGSTRate(double sGSTRate) {
+        this.sGSTRate = sGSTRate;
+    }
+
+    public double getTotalCGSTAmount() {
+        return totalCGSTAmount;
+    }
+
+    public void setTotalCGSTAmount(double totalCGSTAmount) {
+        this.totalCGSTAmount = totalCGSTAmount;
+    }
+
+    public double getTotalSGSTAmount() {
+        return totalSGSTAmount;
+    }
+
+    public void setTotalSGSTAmount(double totalSGSTAmount) {
+        this.totalSGSTAmount = totalSGSTAmount;
     }
 
     public double getTotalGSTAmountForInv() {

@@ -19,6 +19,8 @@ public class ProductInvoiceMasterDO {
     private Date invoiceDate;
     private double prdInvAmt;
     private double totalAmount;
+    private double cGSTAmount;
+    private double sGSTAmount;
     private double lumpsumCost;
     //private double totalInvAmt;
     private Date invDate;
@@ -35,6 +37,8 @@ public class ProductInvoiceMasterDO {
         this.totalAmount = productInvoiceMaster.getTotalInvAmt();
         this.prdInvAmt = productInvoiceMaster.getPrdInvAmt();
         this.lumpsumCost = productInvoiceMaster.getLumpsumCost();
+        this.sGSTAmount = productInvoiceMaster.getsGSTAmount();
+        this.cGSTAmount = productInvoiceMaster.getcGSTAmount();
     }
 
     public String getSupplierName() {
@@ -131,5 +135,25 @@ public class ProductInvoiceMasterDO {
 
     public void setLumpsumCost(double lumpsumCost) {
         this.lumpsumCost = lumpsumCost;
+    }
+
+    public double getcGSTAmount() {
+        return cGSTAmount;
+    }
+
+    public void setcGSTAmount(double cGSTAmount) {
+        this.cGSTAmount = cGSTAmount;
+    }
+
+    public double getsGSTAmount() {
+        return sGSTAmount;
+    }
+
+    public void setsGSTAmount(double sGSTAmount) {
+        this.sGSTAmount = sGSTAmount;
+    }
+
+    public double getGSTAmount(){
+        return getcGSTAmount()+ getsGSTAmount();
     }
 }

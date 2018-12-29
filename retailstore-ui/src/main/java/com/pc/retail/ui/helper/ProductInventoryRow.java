@@ -185,11 +185,11 @@ public class ProductInventoryRow {
     }
 
     public double getFinalAmount() {
-        return productInventory.getFinalAmount();
+        return productInventory.getFinalAmountInclAll();
     }
 
     public void setFinalAmount(double finalAmount) {
-        productInventory.setFinalAmount(finalAmount);
+        productInventory.setFinalAmountInclAll(finalAmount);
     }
 
     public double getPerUnitCostIncludingAll() {
@@ -217,19 +217,19 @@ public class ProductInventoryRow {
     }
 
     public double getcGSTAmount() {
-        return productInventory.getCGSTAmount();
+        return productInventory.getPerUnitCGSTAmount();
     }
 
     public void setcGSTAmount(double cGSTAmount) {
-        productInventory.setCGSTAmount(cGSTAmount);
+        productInventory.setPerUnitCGSTAmount(cGSTAmount);
     }
 
     public double getsGSTAmount() {
-        return productInventory.getSGSTAmount();
+        return productInventory.getPerUnitSGSTAmount();
     }
 
     public void setsGSTAmount(double sGSTAmount) {
-        productInventory.setSGSTAmount(sGSTAmount);
+        productInventory.setPerUnitSGSTAmount(sGSTAmount);
     }
 
     public double getSalePrice() {

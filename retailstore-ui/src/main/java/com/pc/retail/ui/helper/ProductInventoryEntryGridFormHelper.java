@@ -83,9 +83,12 @@ public class ProductInventoryEntryGridFormHelper {
         productInvoiceMaster.setInvoiceStatus(getInvoiceStatus(productInvEntryGridFormController));
         productInvoiceMaster.setInvoiceDate(DataUtil.convertLocalDateToDate(productInvEntryGridFormController.getInvoiceDateDP().getValue()));
         productInvoiceMaster.setTotalInvAmt(DataUtil.getDouble(productInvEntryGridFormController.getTotalInvoiceAmountTxt().getText()));
+        productInvoiceMaster.setsGSTAmount(DataUtil.getDouble(productInvEntryGridFormController.getTotalsGSTAmountTxt().getText()));
+        productInvoiceMaster.setcGSTAmount(DataUtil.getDouble(productInvEntryGridFormController.getTotalcGSTAmountTxt().getText()));
         if(productInvEntryGridFormController.getSupplierCB().getSelectionModel().getSelectedItem() != null) {
             productInvoiceMaster.setSupplierId(productInvEntryGridFormController.getSupplierCB().getSelectionModel().getSelectedItem().getId());
         }
+
         return productInvoiceMaster;
     }
 

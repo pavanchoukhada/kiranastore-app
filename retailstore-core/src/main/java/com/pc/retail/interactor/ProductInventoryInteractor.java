@@ -175,6 +175,7 @@ public class ProductInventoryInteractor {
     }
 
     private List<ProductAndInvDO> enrichAndTransformProductInvDO(List<Product> products) throws DataAccessException{
+	    //TODO get following info from cache
         Map<Integer, ProductCurrentInvDetail> productCurrentInvDetailMap  = convertoToMap(productInvDAO.getAllCurrentInventoryDetail());
         List<ProductAndInvDO> productAndInvDOList = new ArrayList<>();
 	    for(Product product : products){
