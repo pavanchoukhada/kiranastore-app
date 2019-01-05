@@ -82,7 +82,8 @@ public class ProductInventoryEntryGridFormHelper {
         productInvoiceMaster.setInvoiceRefId(productInvEntryGridFormController.getInvoiceNoTxt().getText());
         productInvoiceMaster.setInvoiceStatus(getInvoiceStatus(productInvEntryGridFormController));
         productInvoiceMaster.setInvoiceDate(DataUtil.convertLocalDateToDate(productInvEntryGridFormController.getInvoiceDateDP().getValue()));
-        productInvoiceMaster.setTotalInvAmt(DataUtil.getDouble(productInvEntryGridFormController.getTotalInvoiceAmountTxt().getText()));
+        productInvoiceMaster.setTotalInvAmt(DataUtil.getDouble(productInvEntryGridFormController.getTotalInvoiceAmountInclAllTxt().getText()));
+
         productInvoiceMaster.setsGSTAmount(DataUtil.getDouble(productInvEntryGridFormController.getTotalsGSTAmountTxt().getText()));
         productInvoiceMaster.setcGSTAmount(DataUtil.getDouble(productInvEntryGridFormController.getTotalcGSTAmountTxt().getText()));
         if(productInvEntryGridFormController.getSupplierCB().getSelectionModel().getSelectedItem() != null) {
@@ -109,7 +110,7 @@ public class ProductInventoryEntryGridFormHelper {
         try {
             ProductInvoiceMaster productInvoiceMaster = productInventoryService.getProductInvoiceDetail(invoiceId);
             productInventoryEntryGridFormController.getInvoiceNoTxt().setText(productInvoiceMaster.getInvoiceRefId());
-            productInventoryEntryGridFormController.getTotalInvoiceAmountTxt().setText(DataUtil.convertToText(productInvoiceMaster.getTotalInvAmt()));
+            productInventoryEntryGridFormController.getTotalInvoiceAmountInclAllTxt().setText(DataUtil.convertToText(productInvoiceMaster.getTotalInvAmt()));
             Date invoiceDate = productInvoiceMaster.getInvoiceDate();
             productInventoryEntryGridFormController.getInvoiceDateDP().setValue(DataUtil.getDateToLocalDate(invoiceDate));
             List<ProductSupplier> productSuppliers = productInventoryEntryGridFormController.getSupplierCB().getItems();

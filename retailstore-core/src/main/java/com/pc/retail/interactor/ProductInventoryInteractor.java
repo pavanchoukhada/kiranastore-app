@@ -67,7 +67,7 @@ public class ProductInventoryInteractor {
             Product product = ProductCache.getInstance().getProduct(productFilter);
             if(product != null) {
                 productDO = new ProductDO(product);
-                if(productDO.getGstTaxGroup() != null) {
+                if(productDO.getGstTaxGroup() != null && !"".equals(productDO.getGstTaxGroup())) {
                     GSTGroupModel gstGroupModel = GSTCache.getInstance().get(productDO.getGstTaxGroup());
                     productDO.setcGSTRate(gstGroupModel.getcGSTRate());
                     productDO.setsGSTRate(gstGroupModel.getsGSTRate());

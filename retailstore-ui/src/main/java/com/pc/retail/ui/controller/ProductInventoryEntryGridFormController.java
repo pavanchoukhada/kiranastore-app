@@ -97,7 +97,11 @@ public class ProductInventoryEntryGridFormController implements Initializable, U
     TextField totalProductCostIncOfAllTxt;
 
     @FXML
+    TextField totalInvoiceAmountInclAllTxt;
+
+    @FXML
     TextField totalInvoiceAmountTxt;
+
     @FXML
     TextField totalsGSTAmountTxt;
     @FXML
@@ -140,7 +144,7 @@ public class ProductInventoryEntryGridFormController implements Initializable, U
         perUnitCostIncGSTTxt.focusedProperty().addListener(perUnitCostIncGSTListener());
         totalProductAmountIncGSTTxt.focusedProperty().addListener(totalCostIncGSTListener());
         otherCostPriceTxt.focusedProperty().addListener(otherCostListener());
-        totalInvoiceAmountTxt.setDisable(true);
+        totalInvoiceAmountInclAllTxt.setDisable(true);
         totalGSTAmountTxt.setDisable(true);
         totalcGSTAmountTxt.setDisable(true);
         totalsGSTAmountTxt.setDisable(true);
@@ -334,8 +338,9 @@ public class ProductInventoryEntryGridFormController implements Initializable, U
         productInvEntryGridColumns.add(createNumericTableColumn("Per Unit Cost(Incl GST)", 100, "perUnitCostIncludingGST", "perUnitCostIncludingGST"));
         productInvEntryGridColumns.add(createNumericTableColumn("Other Cost", 100, "otherCost", "otherCost"));
         productInvEntryGridColumns.add(createNumericTableColumn("Per Unit Cost(Incl All)", 100, "perUnitCostIncludingAll", "perUnitCostIncludingAll"));
+        productInvEntryGridColumns.add(createNumericTableColumn("Total Amount", 100, "totalCost", "totalCost"));
         productInvEntryGridColumns.add(createNumericTableColumn("GST Amount", 100, "totalGSTAmountForInv", "totalGSTAmountForInv"));
-        productInvEntryGridColumns.add(createNumericTableColumn("Total Cost", 100, "finalAmountInclAll", "finalAmountInclAll"));
+        productInvEntryGridColumns.add(createNumericTableColumn("Total Amount(Incl GST)", 100, "finalAmountInclAll", "finalAmountInclAll"));
         productInvEntryGrid.setItems(productInventoryList);
     }
 
@@ -417,14 +422,15 @@ public class ProductInventoryEntryGridFormController implements Initializable, U
         double totalGSTAmount = 0.0d;
         double totalcGSTAmount = 0.0d;
         double totalsGSTAmount = 0.0d;
-
+        double totalAmountIncAll = 0.0d;
         for(ProductInventory productInventory : productInventoryList){
-            totalAmount = totalAmount + productInventory.getFinalAmountInclAll();
+            totalAmountIncAll = totalAmountIncAll + productInventory.getFinalAmountInclAll();
             totalGSTAmount = totalGSTAmount + productInventory.getTotalGSTAmountForInv();
             totalsGSTAmount = totalsGSTAmount + productInventory.getTotalSGSTAmount();
             totalcGSTAmount = totalcGSTAmount + productInventory.getTotalCGSTAmount();
+            totalAmount = totalAmount + productInventory.getTotalCost();
         }
-        totalInvoiceAmountTxt.setText(DataUtil.convertToText(totalAmount));
+        totalInvoiceAmountInclAllTxt.setText(DataUtil.convertToText(totalAmountIncAll));
         totalGSTAmountTxt.setText(DataUtil.convertToText(totalGSTAmount));
         totalsGSTAmountTxt.setText(DataUtil.convertToText(totalsGSTAmount));
         totalcGSTAmountTxt.setText(DataUtil.convertToText(totalcGSTAmount));
@@ -657,6 +663,10 @@ public class ProductInventoryEntryGridFormController implements Initializable, U
 
     public List<ProductInventory> getDeletedProductInventoryList() {
         return deletedProductInventoryList;
+    }
+
+    public TextField getTotalInvoiceAmountInclAllTxt() {
+        return totalInvoiceAmountInclAllTxt;
     }
 
     public TextField getTotalInvoiceAmountTxt() {

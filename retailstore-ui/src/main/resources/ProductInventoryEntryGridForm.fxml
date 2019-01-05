@@ -143,13 +143,15 @@
         </Pane>
          <HBox layoutX="80" layoutY="550" spacing="10">
              <Label prefHeight="22.0" prefWidth="120.0" text="Bill Amount(Incl GST)" textAlignment="RIGHT"/>
-             <TextField fx:id="totalInvoiceAmountTxt" prefHeight="23.0" prefWidth="153.0"/>
+             <TextField fx:id="totalInvoiceAmountTxt" prefHeight="23.0" prefWidth="123.0"/>
              <Label prefHeight="22.0" prefWidth="80.0" text="SGST Amount" textAlignment="RIGHT"/>
-             <TextField fx:id="totalsGSTAmountTxt" prefHeight="23.0" prefWidth="153.0"/>
+             <TextField fx:id="totalsGSTAmountTxt" prefHeight="23.0" prefWidth="123.0"/>
              <Label prefHeight="22.0" prefWidth="80.0" text="CGST Amount" textAlignment="RIGHT"/>
-             <TextField fx:id="totalcGSTAmountTxt" prefHeight="23.0" prefWidth="153.0"/>
+             <TextField fx:id="totalcGSTAmountTxt" prefHeight="23.0" prefWidth="123.0"/>
              <Label prefHeight="22.0" prefWidth="80.0" text="GST Amount" textAlignment="RIGHT"/>
-             <TextField fx:id="totalGSTAmountTxt" prefHeight="23.0" prefWidth="153.0"/>
+             <TextField fx:id="totalGSTAmountTxt" prefHeight="23.0" prefWidth="123.0"/>
+             <Label prefHeight="22.0" prefWidth="120.0" text="Bill Amount(Incl GST)" textAlignment="RIGHT"/>
+             <TextField fx:id="totalInvoiceAmountInclAllTxt" prefHeight="23.0" prefWidth="123.0"/>
 
          </HBox>
          <HBox layoutX="500.0" layoutY="600.0" prefHeight="23.0" prefWidth="375.0" spacing="40.0">
