@@ -148,7 +148,7 @@ public class StorageClientImpl implements StorageClient {
     @Override
     public List<ProductCurrentInvDetail> getCurrentInventoryForProduct(int productId) throws DataAccessException {
         String selectQuery = "select product_id, barcode, current_quantity, csp, mrp, per_unit_cost, qty_uom_cd ,price_uom_cd, current_w_qty, expiry_date, " +
-                " last_trans_date from product_curr_inv_detail ";
+                " last_trans_date, last_inv_trans_type, last_trans_ref from product_curr_inv_detail ";
         if(productId > 0){
             selectQuery = selectQuery + " where product_id = " + productId;
         }
@@ -170,6 +170,7 @@ public class StorageClientImpl implements StorageClient {
                 productCurrentInvDetail.setLastModifyDt(resultSet.getString("last_trans_date"));
                 productCurrentInvDetail.setExpiryDate(resultSet.getDate("expiry_date"));
                 productCurrentInvDetail.setModificationStatus(ModificationStatus.NO_CHANGE);
+                productCurrentInvDetail.setLastInvTransType(resultSet.getInt("last_inv_trans_type"));
                 productCurrentInvDetailList.add(productCurrentInvDetail);
             }
         } catch (SQLException e) {
@@ -195,7 +196,7 @@ public class StorageClientImpl implements StorageClient {
 
     private void insertProductCurrentInventoryDetail(ProductCurrentInvDetail productCurrentInvDetail) throws SQLException{
         String insertSql = "insert into product_curr_inv_detail(product_id, barcode, current_quantity, csp, mrp, per_unit_cost, qty_uom_cd ,price_uom_cd, " +
-                " expiry_date, last_trans_date) values ( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+                " expiry_date, last_inv_trans_date, last_inv_trans_type, last_trans_ref) values ( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
         try(PreparedStatement preparedStatement = connectionForMultiTrans.prepareStatement( insertSql )) {
             int index = 1;
             preparedStatement.setInt(index++, productCurrentInvDetail.getProductId());
@@ -208,13 +209,15 @@ public class StorageClientImpl implements StorageClient {
             preparedStatement.setString(index++, productCurrentInvDetail.getPriceUomCd());
             preparedStatement.setDate(index++, new Date(productCurrentInvDetail.getExpiryDate().getTime()));
             preparedStatement.setDate(index++, new Date(System.currentTimeMillis()));
+            preparedStatement.setInt(index++, productCurrentInvDetail.getLastInvTransType());
+            preparedStatement.setString(index, productCurrentInvDetail.getLastInvTransRef());
             preparedStatement.execute();
         }
     }
 
     private void updateProductCurrentInventoryDetail(ProductCurrentInvDetail productCurrentInvDetail) throws SQLException{
         String insertSql = "update product_curr_inv_detail set barcode = ?, current_quantity= ?, csp = ?, mrp = ?, per_unit_cost = ?, qty_uom_cd =?, price_uom_cd = ?, " +
-                " last_trans_date = ? where product_id = ? ";
+                " last_trans_date = ?, last_inv_trans_type=?, last_trans_ref = ? where product_id = ? ";
         try(PreparedStatement preparedStatement = connectionForMultiTrans.prepareStatement( insertSql )) {
             int index = 1;
             preparedStatement.setString(index++, productCurrentInvDetail.getBarCode());
@@ -225,7 +228,9 @@ public class StorageClientImpl implements StorageClient {
             preparedStatement.setString(index++, productCurrentInvDetail.getQtyUomCd());
             preparedStatement.setString(index++, productCurrentInvDetail.getPriceUomCd());
             preparedStatement.setDate(index++, new Date(System.currentTimeMillis()));
-            preparedStatement.setInt(index++, productCurrentInvDetail.getProductId());
+            preparedStatement.setInt(index++, productCurrentInvDetail.getLastInvTransType());
+            preparedStatement.setString(index++, productCurrentInvDetail.getLastInvTransRef());
+            preparedStatement.setInt(index, productCurrentInvDetail.getProductId());
             preparedStatement.execute();
         }
     }
@@ -268,11 +273,11 @@ public class StorageClientImpl implements StorageClient {
             preparedStatement.setDouble(index++, productInvoiceMaster.getLumpsumCost());
             preparedStatement.setDouble(index++, productInvoiceMaster.getsGSTAmount());
             preparedStatement.setDouble(index++, productInvoiceMaster.getcGSTAmount());
-            preparedStatement.setDouble(index++, productInvoiceMaster.getPrdInvAmt());
-            preparedStatement.setDouble(index++, productInvoiceMaster.getTotalInvAmt());
+            preparedStatement.setDouble(index++, productInvoiceMaster.getTotalAmountExclGST());
+            preparedStatement.setDouble(index++, productInvoiceMaster.getTotalAmountInclAll());
             preparedStatement.setDouble(index++, productInvoiceMaster.getPaidAmount());
             preparedStatement.setDate(index++, new Date(System.currentTimeMillis()));
-            preparedStatement.setInt(index++, productInvoiceMaster.getInvoiceId());
+            preparedStatement.setInt(index, productInvoiceMaster.getInvoiceId());
             preparedStatement.execute();
         }
         catch (SQLException sqlEx){
@@ -318,7 +323,7 @@ public class StorageClientImpl implements StorageClient {
                     preparedStatement.setDouble(index++, productInvoiceDetail.getPerUnitCost());
                     preparedStatement.setDouble(index++, productInvoiceDetail.getPrdInvAmt());
                     preparedStatement.setDouble(index++, productInvoiceDetail.getQty());
-                    preparedStatement.setInt(index++, productInvoiceDetail.getPrdInventoryEntryId());
+                    preparedStatement.setInt(index, productInvoiceDetail.getPrdInventoryEntryId());
                     preparedStatement.addBatch();
                 }
             }
@@ -367,7 +372,7 @@ public class StorageClientImpl implements StorageClient {
         int invoiceId = getNextVal("product_invoice_id_seq");
         String insertSql = "insert into product_invoice_master(invoice_id, invoice_ref, supplier_id, invoice_date, invoice_status, " +
                 "lumpsum_cost, s_gst_amount, c_gst_amount, total_amount, paid_amount, last_modify_dt) " +
-                "	values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+                "	values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
         try (PreparedStatement preparedStatement = connectionForMultiTrans.prepareStatement(insertSql)){
             int index = 1;
             preparedStatement.setInt(index++, invoiceId);
@@ -378,8 +383,8 @@ public class StorageClientImpl implements StorageClient {
             preparedStatement.setDouble(index++, productInvoiceMaster.getLumpsumCost());
             preparedStatement.setDouble(index++, productInvoiceMaster.getsGSTAmount());
             preparedStatement.setDouble(index++, productInvoiceMaster.getcGSTAmount());
-            //preparedStatement.setDouble(index++, productInvoiceMaster.getPrdInvAmt());
-            preparedStatement.setDouble(index++, productInvoiceMaster.getTotalInvAmt());
+            preparedStatement.setDouble(index++, productInvoiceMaster.getTotalAmountExclGST());
+            preparedStatement.setDouble(index++, productInvoiceMaster.getTotalAmountInclAll());
             preparedStatement.setDouble(index++, productInvoiceMaster.getPaidAmount());
             preparedStatement.setDate(index, new Date(System.currentTimeMillis()));
             preparedStatement.execute();
@@ -407,7 +412,7 @@ public class StorageClientImpl implements StorageClient {
                     preparedStatement.setDouble(index++, productInvoiceDetail.getPerUnitPrice());
                     preparedStatement.setDouble(index++, productInvoiceDetail.getPerUnitCost());
                     preparedStatement.setDouble(index++, productInvoiceDetail.getPrdInvAmt());
-                    preparedStatement.setDouble(index++, productInvoiceDetail.getQty());
+                    preparedStatement.setDouble(index, productInvoiceDetail.getQty());
                     preparedStatement.addBatch();
                 }
             }
@@ -491,8 +496,8 @@ public class StorageClientImpl implements StorageClient {
                 productInvoiceMaster.setLumpsumCost(resultSet.getDouble("lumpsum_cost"));
                 productInvoiceMaster.setsGSTAmount(resultSet.getDouble("s_gst_amount"));
                 productInvoiceMaster.setcGSTAmount(resultSet.getDouble("c_gst_amount"));
-                //productInvoiceMaster.setPrdInvAmt(resultSet.getDouble("invoice_amount"));
-                productInvoiceMaster.setTotalInvAmt(resultSet.getDouble("total_amount"));
+                productInvoiceMaster.setTotalAmountExclGST(resultSet.getDouble("invoice_amount"));
+                productInvoiceMaster.setTotalAmountInclAll(resultSet.getDouble("total_amount"));
                 productInvoiceMaster.setPaidAmount(resultSet.getDouble("paid_amount"));
                 productInvoiceMasterList.add(productInvoiceMaster);
             }
@@ -601,7 +606,6 @@ public class StorageClientImpl implements StorageClient {
                 product.setBaseProductBarCode(resultSet.getString("base_product"));
                 product.setWeight(resultSet.getDouble("weight"));
                 product.setBaseProductFlag(resultSet.getBoolean("is_base_product"));
-                product.setCurrentSellingPrice(resultSet.getDouble("csp"));
                 product.setGstTaxGroup(resultSet.getString("gst_group"));
                 products.add(product);
             }

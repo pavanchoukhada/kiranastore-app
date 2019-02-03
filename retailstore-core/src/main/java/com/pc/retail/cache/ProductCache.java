@@ -10,9 +10,9 @@ import java.util.concurrent.ConcurrentHashMap;
 import com.pc.retail.dao.DataAccessException;
 import com.pc.retail.dao.ProductInvDAO;
 import com.pc.retail.dao.DataSourceManager;
-import com.pc.retail.interactor.KiranaStoreException;
 import com.pc.retail.interactor.ProductFilter;
 import com.pc.retail.vo.Product;
+import com.pc.retail.vo.ProductCurrentInvDetail;
 
 
 public class ProductCache extends AbstractCache{
@@ -21,12 +21,12 @@ public class ProductCache extends AbstractCache{
 	private static volatile boolean initialized = false;
 	private Map<String, Product> productMap;
     private Map<Integer, Product> productIdProductMap;
-	public static String CACHE_NAME = "ProductCache";
+
 	private List<Product> prdList;
 	private ProductCache(){
-		productMap = new ConcurrentHashMap<String, Product>();
+		productMap = new ConcurrentHashMap<>();
         productIdProductMap  = new ConcurrentHashMap<>();
-		prdList = new ArrayList<Product>();
+		prdList = new ArrayList<>();
 	}
 	
 	public static ProductCache getInstance() throws DataAccessException{
@@ -50,12 +50,16 @@ public class ProductCache extends AbstractCache{
 	
 	public void poulateCache() throws DataAccessException{
 		prdList = getDataSource().getAllProducts();
+		List<ProductCurrentInvDetail> productCurrentInvDetailList = getDataSource().getAllCurrentInventoryDetail();
 		for(Iterator<Product> iter = prdList.iterator(); iter.hasNext();){
 			Product prd = iter.next();
 			productMap.put(prd.getBarcode(), prd);
             productIdProductMap.put(prd.getProductId(), prd);
 		}
-		
+		for(ProductCurrentInvDetail productCurrentInvDetail : productCurrentInvDetailList) {
+            Product product = productMap.get(productCurrentInvDetail.getBarCode());
+            product.setProductCurrentInvDetail(productCurrentInvDetail);
+        }
 	}
 
     private ProductInvDAO getDataSource() throws DataAccessException{

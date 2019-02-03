@@ -153,7 +153,12 @@ public class ProductInvDAOImpl implements ProductInvDAO {
     private void updateProduct(List<ProductInventory> productInventoryList) throws DataAccessException {
         for(ProductInventory productInventory : productInventoryList) {
             Product product = ProductCache.getInstance().getProductFromBarCode(productInventory.getBarCode());
-            product.setCurrentSellingPrice(productInventory.getSalePrice());
+            if(productInventory.getSalePrice() > 0) {
+                product.setCurrentSellingPrice(productInventory.getSalePrice());
+            }
+            if(productInventory.getMRP() > 0) {
+                product.setMRP(productInventory.getMRP());
+            }
         }
 
     }

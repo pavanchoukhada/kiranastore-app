@@ -12,8 +12,8 @@ public class ProductInvoiceMaster {
     private int invoiceId;
 	private String invoiceRefId;
 	private double lumpsumCost;
-	private double prdInvAmt;
-	private double totalInvAmt;
+	private double totalAmountExclGST;
+	private double totalAmountInclAll;
 	private int supplierId;
 	private Date invoiceDate;
 	private InvoiceStatus invoiceStatus;
@@ -47,12 +47,12 @@ public class ProductInvoiceMaster {
         this.invoiceId = invoiceId;
     }
 
-    public double getTotalInvAmt() {
-        return totalInvAmt;
+    public double getTotalAmountInclAll() {
+        return totalAmountInclAll;
     }
 
-    public void setTotalInvAmt(double totalInvAmt) {
-        this.totalInvAmt = totalInvAmt;
+    public void setTotalAmountInclAll(double totalAmountInclAll) {
+        this.totalAmountInclAll = totalAmountInclAll;
     }
 
     public int getSupplierId() {
@@ -119,12 +119,12 @@ public class ProductInvoiceMaster {
         this.lumpsumCost = lumpsumCost;
     }
 
-    public double getPrdInvAmt() {
-        return prdInvAmt;
+    public double getTotalAmountExclGST() {
+        return totalAmountExclGST;
     }
 
-    public void setPrdInvAmt(double prdInvAmt) {
-        this.prdInvAmt = prdInvAmt;
+    public void setTotalAmountExclGST(double totalAmountExclGST) {
+        this.totalAmountExclGST = totalAmountExclGST;
     }
 
     public double getcGSTAmount() {

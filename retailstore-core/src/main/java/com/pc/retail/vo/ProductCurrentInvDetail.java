@@ -16,6 +16,8 @@ public class ProductCurrentInvDetail {
 
     private ModificationStatus modificationStatus;
     private Date expiryDate;
+    private int lastInvTransType;
+    private String lastInvTransRef;
 
     public String getLastModifyDt() {
         return lastModifyDt;
@@ -103,5 +105,21 @@ public class ProductCurrentInvDetail {
 
     public Date getExpiryDate() {
         return expiryDate;
+    }
+
+    public void setLastInvTransType(int lastInvTransType) {
+        this.lastInvTransType = lastInvTransType;
+    }
+
+    public void setLastInvTransRef(String lastInvTransRef) {
+        this.lastInvTransRef = lastInvTransRef;
+    }
+
+    public int getLastInvTransType() {
+        return lastInvTransType;
+    }
+
+    public String getLastInvTransRef() {
+        return lastInvTransRef;
     }
 }

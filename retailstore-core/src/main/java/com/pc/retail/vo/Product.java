@@ -12,7 +12,6 @@ public class Product {
 	private String category;	//spices, tooth-paste, pulses etc
 
     private MeasurementType measurementType;	//weight or count
-    private double currentSellingPrice;
 	private String priceUomCd;	//per unit for price
 	private String qtyUomCd;     //base qty uom
 
@@ -22,19 +21,18 @@ public class Product {
     private String baseProductCode;
     private double weight;
 
-
     private boolean baseProductFlag;
 
     private String gstTaxGroup;
-    private double MRP;
 
+    ProductCurrentInvDetail productCurrentInvDetail;
 
-    public double getCurrentSellingPrice() {
-        return currentSellingPrice;
+    public Product(){
+        productCurrentInvDetail = new ProductCurrentInvDetail();
     }
 
-    public void setCurrentSellingPrice(double currentSelllingPrice) {
-        this.currentSellingPrice = currentSelllingPrice;
+    public double getCurrentSellingPrice() {
+        return productCurrentInvDetail.getCSP();
     }
 
     public String getGstTaxGroup() {
@@ -150,6 +148,22 @@ public class Product {
     }
 
     public double getMRP() {
-        return MRP;
+        return productCurrentInvDetail.getMRP();
+    }
+
+    public void setProductCurrentInvDetail(ProductCurrentInvDetail productCurrentInvDetail) {
+        this.productCurrentInvDetail = productCurrentInvDetail;
+    }
+
+    public ProductCurrentInvDetail getProductCurrentInvDetail() {
+        return productCurrentInvDetail;
+    }
+
+    public void setCurrentSellingPrice(double currentSellingPrice) {
+        this.productCurrentInvDetail.setCSP(currentSellingPrice);
+    }
+
+    public void setMRP(double mrp) {
+        this.productCurrentInvDetail.setMRP(mrp);
     }
 }

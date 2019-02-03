@@ -1,7 +1,5 @@
 package com.pc.retail.vo;
 
-import com.pc.retail.dao.InvoiceStatus;
-
 import java.util.Date;
 import java.util.List;
 
@@ -34,8 +32,8 @@ public class ProductInvoiceMasterDO {
         this.supplierId = productInvoiceMaster.getSupplierId();
         this.invoiceStatus = productInvoiceMaster.getInvoiceStatus().getName();
         this.invoiceDate = productInvoiceMaster.getInvoiceDate();
-        this.totalAmount = productInvoiceMaster.getTotalInvAmt();
-        this.prdInvAmt = productInvoiceMaster.getPrdInvAmt();
+        this.totalAmount = productInvoiceMaster.getTotalAmountInclAll();
+        this.prdInvAmt = productInvoiceMaster.getTotalAmountExclGST();
         this.lumpsumCost = productInvoiceMaster.getLumpsumCost();
         this.sGSTAmount = productInvoiceMaster.getsGSTAmount();
         this.cGSTAmount = productInvoiceMaster.getcGSTAmount();

@@ -191,7 +191,7 @@ public class ProductInventoryInteractor {
         return productAndInvDOList;
     }
 
-    private Map<Integer, ProductCurrentInvDetail>convertoToMap(List<ProductCurrentInvDetail> allCurrentInventoryDetail) {
+    private Map<Integer, ProductCurrentInvDetail> convertoToMap(List<ProductCurrentInvDetail> allCurrentInventoryDetail) {
         Map<Integer, ProductCurrentInvDetail> productCurrentInvDetailMap = new HashMap<>();
         for(ProductCurrentInvDetail productCurrentInvDetail : allCurrentInventoryDetail){
             productCurrentInvDetailMap.put(productCurrentInvDetail.getProductId(), productCurrentInvDetail);
