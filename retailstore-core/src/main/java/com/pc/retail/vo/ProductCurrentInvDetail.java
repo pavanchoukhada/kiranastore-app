@@ -17,7 +17,7 @@ public class ProductCurrentInvDetail {
     private ModificationStatus modificationStatus;
     private Date expiryDate;
     private int lastInvTransType;
-    private String lastInvTransRef;
+    private int lastInvTransRef;
 
     public String getLastModifyDt() {
         return lastModifyDt;
@@ -111,7 +111,7 @@ public class ProductCurrentInvDetail {
         this.lastInvTransType = lastInvTransType;
     }
 
-    public void setLastInvTransRef(String lastInvTransRef) {
+    public void setLastInvTransRef(int lastInvTransRef) {
         this.lastInvTransRef = lastInvTransRef;
     }
 
@@ -119,7 +119,7 @@ public class ProductCurrentInvDetail {
         return lastInvTransType;
     }
 
-    public String getLastInvTransRef() {
+    public int getLastInvTransRef() {
         return lastInvTransRef;
     }
 }

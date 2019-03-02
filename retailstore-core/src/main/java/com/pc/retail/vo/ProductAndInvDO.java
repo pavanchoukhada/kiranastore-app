@@ -10,9 +10,6 @@ import java.util.Date;
  */
 public class ProductAndInvDO {
 
-    private double MRP;
-    private double currentAvailableQty;
-    private Date expiryDate;
     private Product product;
 
     public ProductAndInvDO(Product product){
@@ -68,32 +65,21 @@ public class ProductAndInvDO {
     }
 
     public double getMRP() {
-        return MRP;
-    }
-
-    public void setMRP(double MRP) {
-        this.MRP = MRP;
+        return product.getMRP();
     }
 
     public double getCurrentAvailableQty() {
-        return currentAvailableQty;
-    }
-
-    public void setCurrentAvailableQty(double currentAvailableQty) {
-        this.currentAvailableQty = currentAvailableQty;
+        return product.getProductCurrentInvDetail().getQuantity();
     }
 
     public Date getExpiryDate() {
-        return expiryDate;
-    }
-
-    public void setExpiryDate(Date expiryDate) {
-        this.expiryDate = expiryDate;
+        return product.getProductCurrentInvDetail().getExpiryDate();
     }
 
     public String getCompanyCode(){
         return product.getCompanyCode();
     }
+
     public Product getProduct() {
         return product;
     }

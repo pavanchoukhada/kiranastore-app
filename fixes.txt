@@ -1,2 +1,4 @@
 1. Add percentage sign after GST Rate on new inv addition form.
-2.
+2.Improve usability of Product Form : Inventory details and price details
+3 : Product selling price is not updated from Product Manager : Done
+4. GST Report Manager

@@ -153,9 +153,10 @@ public class StorageClientImpl implements StorageClient {
             selectQuery = selectQuery + " where product_id = " + productId;
         }
         List<ProductCurrentInvDetail> productCurrentInvDetailList = new ArrayList<>();
-        try(Connection connection = dataSource.getConnection();
-                Statement statement = connection.createStatement();
-                ResultSet resultSet = statement.executeQuery(selectQuery)) {
+        Connection connection = getConnection();
+        try(
+            Statement statement = connection.createStatement();
+            ResultSet resultSet = statement.executeQuery(selectQuery)) {
 
             while(resultSet.next()){
                 ProductCurrentInvDetail productCurrentInvDetail = new ProductCurrentInvDetail();
@@ -177,7 +178,32 @@ public class StorageClientImpl implements StorageClient {
             logError(e);
             throw new DataAccessException(e.getMessage());
         }
+        finally {
+            closeConnection(connection);
+        }
         return productCurrentInvDetailList;
+    }
+
+    private void closeConnection(Connection connection) throws DataAccessException {
+        if(!multiTrans){
+            try {
+                connection.close();
+            } catch (SQLException e) {
+                throw new DataAccessException(e.getMessage());
+            }
+        }
+    }
+
+    private Connection getConnection() throws DataAccessException {
+        if(multiTrans){
+            return connectionForMultiTrans;
+        }else {
+            try {
+                return dataSource.getConnection();
+            } catch (SQLException e) {
+                throw new DataAccessException(e.getMessage());
+            }
+        }
     }
 
     @Override
@@ -196,7 +222,7 @@ public class StorageClientImpl implements StorageClient {
 
     private void insertProductCurrentInventoryDetail(ProductCurrentInvDetail productCurrentInvDetail) throws SQLException{
         String insertSql = "insert into product_curr_inv_detail(product_id, barcode, current_quantity, csp, mrp, per_unit_cost, qty_uom_cd ,price_uom_cd, " +
-                " expiry_date, last_inv_trans_date, last_inv_trans_type, last_trans_ref) values ( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+                " expiry_date, last_trans_date, last_inv_trans_type, last_trans_ref) values ( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
         try(PreparedStatement preparedStatement = connectionForMultiTrans.prepareStatement( insertSql )) {
             int index = 1;
             preparedStatement.setInt(index++, productCurrentInvDetail.getProductId());
@@ -207,10 +233,14 @@ public class StorageClientImpl implements StorageClient {
             preparedStatement.setDouble(index++, productCurrentInvDetail.getCostPrice());
             preparedStatement.setString(index++, productCurrentInvDetail.getQtyUomCd());
             preparedStatement.setString(index++, productCurrentInvDetail.getPriceUomCd());
-            preparedStatement.setDate(index++, new Date(productCurrentInvDetail.getExpiryDate().getTime()));
+            Date date = null;
+            if(productCurrentInvDetail.getExpiryDate() != null) {
+                date = new Date(productCurrentInvDetail.getExpiryDate().getTime());
+            }
+            preparedStatement.setDate(index++, date);
             preparedStatement.setDate(index++, new Date(System.currentTimeMillis()));
             preparedStatement.setInt(index++, productCurrentInvDetail.getLastInvTransType());
-            preparedStatement.setString(index, productCurrentInvDetail.getLastInvTransRef());
+            preparedStatement.setInt(index, productCurrentInvDetail.getLastInvTransRef());
             preparedStatement.execute();
         }
     }
@@ -229,7 +259,7 @@ public class StorageClientImpl implements StorageClient {
             preparedStatement.setString(index++, productCurrentInvDetail.getPriceUomCd());
             preparedStatement.setDate(index++, new Date(System.currentTimeMillis()));
             preparedStatement.setInt(index++, productCurrentInvDetail.getLastInvTransType());
-            preparedStatement.setString(index++, productCurrentInvDetail.getLastInvTransRef());
+            preparedStatement.setInt(index++, productCurrentInvDetail.getLastInvTransRef());
             preparedStatement.setInt(index, productCurrentInvDetail.getProductId());
             preparedStatement.execute();
         }
@@ -371,7 +401,7 @@ public class StorageClientImpl implements StorageClient {
     private int insertProductInvoiceMaster(ProductInvoiceMaster productInvoiceMaster) throws DataAccessException{
         int invoiceId = getNextVal("product_invoice_id_seq");
         String insertSql = "insert into product_invoice_master(invoice_id, invoice_ref, supplier_id, invoice_date, invoice_status, " +
-                "lumpsum_cost, s_gst_amount, c_gst_amount, total_amount, paid_amount, last_modify_dt) " +
+                "lumpsum_cost, s_gst_amount, c_gst_amount, invoice_amount, total_amount, paid_amount, last_modify_dt) " +
                 "	values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
         try (PreparedStatement preparedStatement = connectionForMultiTrans.prepareStatement(insertSql)){
             int index = 1;
@@ -476,7 +506,7 @@ public class StorageClientImpl implements StorageClient {
     }
 
     private List<ProductInvoiceMaster> getProductInvoiceMasters(String selectQuery, List<Date> dateList) throws DataAccessException {
-        try(Connection connection = dataSource.getConnection();
+        try(Connection connection = getConnection();
             PreparedStatement statement = connection.prepareStatement(selectQuery);
             ) {
             int index=1;
@@ -536,7 +566,7 @@ public class StorageClientImpl implements StorageClient {
     }
 
     private List<ProductInventory> getProductInventoryListForQuery(String selectQuery, boolean loadInvoiceDetail) throws DataAccessException {
-        try(Connection connection = dataSource.getConnection();
+        try(Connection connection = getConnection();
             Statement statement = connection.createStatement();
             ResultSet resultSet = statement.executeQuery(selectQuery)) {
             List<ProductInventory> productInventories = new ArrayList<>();

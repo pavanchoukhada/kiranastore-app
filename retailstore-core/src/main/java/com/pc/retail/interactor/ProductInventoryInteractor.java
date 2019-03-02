@@ -175,18 +175,9 @@ public class ProductInventoryInteractor {
     }
 
     private List<ProductAndInvDO> enrichAndTransformProductInvDO(List<Product> products) throws DataAccessException{
-	    //TODO get following info from cache
-        Map<Integer, ProductCurrentInvDetail> productCurrentInvDetailMap  = convertoToMap(productInvDAO.getAllCurrentInventoryDetail());
         List<ProductAndInvDO> productAndInvDOList = new ArrayList<>();
 	    for(Product product : products){
-            ProductCurrentInvDetail productCurrentInvDetail = productCurrentInvDetailMap.get(product.getProductId());
-            ProductAndInvDO productAndInvDO = new ProductAndInvDO(product);
-            if(productCurrentInvDetail != null) {
-                productAndInvDO.setMRP(productCurrentInvDetail.getMRP());
-                productAndInvDO.setExpiryDate(productCurrentInvDetail.getExpiryDate());
-                productAndInvDO.setCurrentAvailableQty(productCurrentInvDetail.getQuantity());
-            }
-            productAndInvDOList.add(productAndInvDO);
+            productAndInvDOList.add(new ProductAndInvDO(product));
         }
         return productAndInvDOList;
     }

@@ -79,6 +79,7 @@ public class ProductAndInvDetail {
 
     public void setCurrentSellingPrice(double currentSellingPrice) {
         this.product.setCurrentSellingPrice( currentSellingPrice );
+        this.prdInvEntry.setSalePrice(currentSellingPrice);
     }
 
     public void setMRP(double MRP) {

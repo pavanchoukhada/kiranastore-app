@@ -57,14 +57,13 @@ public class ProductInvEntryFormHelper {
 
     public KiranaAppResult submitForm(ProductFormController productFormController) {
 
-        ProductAndInvDetail productAndInvDetail = transform(productFormController);
-        validateForm(productAndInvDetail);
+        Product product = transform(productFormController);
         RetailAppClientLocator retailAppClientLocator = new RetailAppClientLocator();
         RetailAppClient retailAppClient = retailAppClientLocator.getRetailAppClient();
         ProductInventoryService productInventoryService =  retailAppClient.getProductInventoryService();
         KiranaAppResult kiranaAppResult;
         try {
-            kiranaAppResult = productInventoryService.saveProductAndInvDetails(productAndInvDetail);
+            kiranaAppResult = productInventoryService.saveProduct(product);
         } catch (KiranaStoreException e) {
             kiranaAppResult = new KiranaAppResult(ResultType.APP_ERROR, e.getMessage());
             e.printStackTrace();
@@ -101,27 +100,27 @@ public class ProductInvEntryFormHelper {
         return productAndInvDetail;
     }
 
-    private ProductAndInvDetail transform(ProductFormController productFormController) {
-        ProductAndInvDetail productAndInvDetail = new ProductAndInvDetail();
-        productAndInvDetail.setBarcode( productFormController.getPrdBarCodeTxt().getText() );
-        productAndInvDetail.setProductId( productFormController.getProductId());
+    private Product transform(ProductFormController productFormController) {
+        Product product = new Product();
+        product.setBarcode( productFormController.getPrdBarCodeTxt().getText() );
+        product.setProductId( productFormController.getProductId());
         if(productFormController.getPrdBaseProduct().getValue() != null) {
-            productAndInvDetail.setBaseProduct(productFormController.getPrdBaseProduct().getValue().getId());
+            product.setBaseProductBarCode(productFormController.getPrdBaseProduct().getValue().getId());
         }
-        productAndInvDetail.setIsBaseProduct(Boolean.valueOf((String)productFormController.getPrdBaseProductChoiceGrp().getSelectedToggle().getUserData()));
-        productAndInvDetail.setCategory( productFormController.getPrdCategoryCB().getValue());
-        productAndInvDetail.setPrdCode(productFormController.getPrdShortCodeTxt().getText());
-        productAndInvDetail.setPrdDesc( productFormController.getPrdDescriptionTxt().getText());
-        productAndInvDetail.setSearchKey( productFormController.getPrdSearchKeyTxt().getText());
-        productAndInvDetail.setCompanyCode( productFormController.getPrdCompanyCB().getValue());
-        productAndInvDetail.setMeasurementType(MeasurementType.valueOf(Integer.parseInt( (String) productFormController.getPrdMeasurementGroup().getSelectedToggle().getUserData()) ));
-        productAndInvDetail.setProductWeight(getNumber(productFormController.getPrdWeightTxt()));
-        productAndInvDetail.setCurrentSellingPrice( getNumber( productFormController.getPrdCSPTxt() ) );
-        productAndInvDetail.setPriceUomCd( productFormController.getPrdPriceUOMCB().getValue());
-        productAndInvDetail.setQtyUomCd( productFormController.getPrdWeightUnitCB().getValue());
-        productAndInvDetail.setGSTCode(productFormController.getPrdGSTTaxCB().getValue());
-        productAndInvDetail.setProductId(productFormController.getProductId());
-        return productAndInvDetail;
+        product.setBaseProductFlag(Boolean.valueOf((String)productFormController.getPrdBaseProductChoiceGrp().getSelectedToggle().getUserData()));
+        product.setCategory( productFormController.getPrdCategoryCB().getValue());
+        product.setPrdCode(productFormController.getPrdShortCodeTxt().getText());
+        product.setPrdDesc( productFormController.getPrdDescriptionTxt().getText());
+        product.setSearchKey( productFormController.getPrdSearchKeyTxt().getText());
+        product.setCompanyCode( productFormController.getPrdCompanyCB().getValue());
+        product.setMeasurementType(MeasurementType.valueOf(Integer.parseInt((String) productFormController.getPrdMeasurementGroup().getSelectedToggle().getUserData())));
+        product.setWeight(getNumber(productFormController.getPrdWeightTxt()));
+        product.setCurrentSellingPrice( getNumber( productFormController.getPrdCSPTxt() ) );
+        product.setPriceUomCd( productFormController.getPrdPriceUOMCB().getValue());
+        product.setQtyUomCd( productFormController.getPrdWeightUnitCB().getValue());
+        product.setGstTaxGroup(productFormController.getPrdGSTTaxCB().getValue());
+        product.setProductId(productFormController.getProductId());
+        return product;
     }
 
     private double getDouble(String text) {

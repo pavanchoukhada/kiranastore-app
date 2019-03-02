@@ -24,6 +24,20 @@ public class ProductInvDAOImpl implements ProductInvDAO {
         StorageClient storageClient = storageManager.getStorageClientForTrans();
         try {
             storageClient.saveProduct(product);
+            List<ProductCurrentInvDetail> currentInvModels = storageManager.getStorageClient().getCurrentInventoryForProduct(product.getProductId());
+            ProductCurrentInvDetail productCurrentInvDetail;
+
+            if(currentInvModels != null && !currentInvModels.isEmpty()){
+                productCurrentInvDetail = currentInvModels.get(0);
+                productCurrentInvDetail.setCSP(product.getCurrentSellingPrice());
+            }else{
+                productCurrentInvDetail = product.getProductCurrentInvDetail();
+                productCurrentInvDetail.setBarCode(product.getBarcode());
+                productCurrentInvDetail.setProductId(product.getProductId());
+                productCurrentInvDetail.setModificationStatus(ModificationStatus.NEW);
+            }
+            storageClient.saveCurrentInventoryForProduct(productCurrentInvDetail);
+            storageClient.commit();
         }catch(DataAccessException sqlEx){
             logError(sqlEx);
             storageClient.rollBack();
@@ -54,20 +68,7 @@ public class ProductInvDAOImpl implements ProductInvDAO {
         StorageClient storageClient = storageManager.getStorageClientForTrans();
 	    try {
             int productId = storageClient.saveProduct(productAndInvDetail.getProduct());
-            productAndInvDetail.getProduct().setProductId( productId );
-            if(productAndInvDetail.getProductInventoryDetail().getQuantity() > 0) {
-                if(productAndInvDetail.getProductInventoryDetail().getPrdInvId() <= 0 ){
-                    productAndInvDetail.getProductInventoryDetail().setModificationStatus(ModificationStatus.NEW);
-                }
-                productAndInvDetail.setProductId(productAndInvDetail.getProduct().getProductId());
-                InventoryTransactionModel invTransModel = createInvTransaction(productAndInvDetail.getProductInventoryDetail());
-                int prdInvId = storageClient.saveProductInv(productAndInvDetail.getProductInventoryDetail());
-                productAndInvDetail.getProductInventoryDetail().setPrdInvId(prdInvId);
-                invTransModel.setExternalRef(prdInvId);
-                storageClient.addAuditInventoryTransaction(invTransModel);
-                updateProductCurrentInv(storageClient, productAndInvDetail.getProductInventoryDetail());
-                processAndSaveProductInvoice(productAndInvDetail, storageClient);
-            }
+            saveProdutInvDetail(productAndInvDetail, storageClient, productId);
             storageClient.commit();
         }catch(SQLException | DataAccessException sqlEx){
 	        logError(sqlEx);
@@ -75,6 +76,23 @@ public class ProductInvDAOImpl implements ProductInvDAO {
 	        throw new DataAccessException( sqlEx.getMessage() );
         }finally {
             storageClient.releaseConnection();
+        }
+    }
+
+    private void saveProdutInvDetail(ProductAndInvDetail productAndInvDetail, StorageClient storageClient, int productId) throws DataAccessException, SQLException {
+        productAndInvDetail.getProduct().setProductId( productId );
+        if(productAndInvDetail.getProductInventoryDetail().getQuantity() > 0) {
+            if(productAndInvDetail.getProductInventoryDetail().getPrdInvId() <= 0 ){
+                productAndInvDetail.getProductInventoryDetail().setModificationStatus(ModificationStatus.NEW);
+            }
+            productAndInvDetail.setProductId(productAndInvDetail.getProduct().getProductId());
+            InventoryTransactionModel invTransModel = createInvTransaction(productAndInvDetail.getProductInventoryDetail());
+            int prdInvId = storageClient.saveProductInv(productAndInvDetail.getProductInventoryDetail());
+            productAndInvDetail.getProductInventoryDetail().setPrdInvId(prdInvId);
+            invTransModel.setExternalRef(prdInvId);
+            storageClient.addAuditInventoryTransaction(invTransModel);
+            updateProductCurrentInv(storageClient, productAndInvDetail.getProductInventoryDetail());
+            processAndSaveProductInvoice(productAndInvDetail, storageClient);
         }
     }
 
