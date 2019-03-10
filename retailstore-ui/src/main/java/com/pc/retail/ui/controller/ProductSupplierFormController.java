@@ -3,6 +3,7 @@ package com.pc.retail.ui.controller;
 import com.pc.retail.interactor.KiranaAppResult;
 import com.pc.retail.interactor.ResultType;
 import com.pc.retail.ui.helper.ProductSupplierFormHelper;
+import com.pc.retail.vo.ProductSupplier;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -37,6 +38,7 @@ public class ProductSupplierFormController implements Initializable{
 
     ProductSupplierFormHelper productSupplierFormHelper;
     private int supplierId;
+    private SupplierGridFormController supplierGridFormController;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -75,6 +77,21 @@ public class ProductSupplierFormController implements Initializable{
         Alert alert = new Alert(warning, message);
         alert.showAndWait();
     }
+
+    public void initData(ProductSupplier productSupplier) {
+        this.supplierId = productSupplier.getId();
+        this.supplierShortCodeTxt.setText(productSupplier.getCode());
+        supplierNameTxt.setText(productSupplier.getName());
+        this.suppplierGSTNNoTxt.setText(productSupplier.getGstnId());
+        supplierPhoneNoTxt.setText(productSupplier.getPhoneNo());
+        supplierAddressTxt.setText(productSupplier.getAddress());
+        supplierMobileNoTxt.setText(productSupplier.getMobileNo());
+    }
+
+    public void hookGSTGrid(SupplierGridFormController supplierGridFormController) {
+        this.supplierGridFormController = supplierGridFormController;
+    }
+
 
 
     @FXML

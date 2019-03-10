@@ -4,14 +4,15 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane id="AnchorPane" prefHeight="800.0" prefWidth="653.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/8" fx:controller="com.pc.retail.ui.controller.GSTGridFormController">
+<AnchorPane id="AnchorPane" prefHeight="800.0" prefWidth="653.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/8" fx:controller="com.pc.retail.ui.controller.SupplierGridFormController">
      <children>
          <HBox spacing="5" layoutX="20" layoutY="30">
-             <Button text="Add" onAction="#addNewGSTGroup"></Button>
-             <Button text="Modify" onAction="#modifyGSTGroup"></Button>
+             <Button text="Add" onAction="#addNewSupplier"></Button>
+             <Button text="Modify" onAction="#modifySupplier"></Button>
+             <Button text="Refresh" onAction="#refreshGrid"></Button>
          </HBox>
          <Pane layoutX="20" layoutY="70">
-            <TableView fx:id="gstGroupGrid" prefWidth="1000">
+            <TableView fx:id="productSuppliersGrid" prefWidth="1000">
                 <columns>
                 </columns>
             </TableView>

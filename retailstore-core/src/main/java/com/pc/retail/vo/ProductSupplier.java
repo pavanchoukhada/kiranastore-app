@@ -7,10 +7,10 @@ public class ProductSupplier {
 
     private int id;
     private String code;
-    private String gdtnId;
+    private String gstnId;
     private String name;
     private String address;
-    private int mobileNo;
+    private String mobileNo;
     private String phoneNo;
 
     public int getId() {
@@ -29,12 +29,12 @@ public class ProductSupplier {
         this.code = code;
     }
 
-    public String getGdtnId() {
-        return gdtnId;
+    public String getGstnId() {
+        return gstnId;
     }
 
-    public void setGdtnId(String gdtnId) {
-        this.gdtnId = gdtnId;
+    public void setGstnId(String gdtnId) {
+        this.gstnId = gdtnId;
     }
 
     public String getName() {
@@ -53,11 +53,11 @@ public class ProductSupplier {
         this.address = address;
     }
 
-    public int getMobileNo() {
+    public String getMobileNo() {
         return mobileNo;
     }
 
-    public void setMobileNo(int mobileNo) {
+    public void setMobileNo(String mobileNo) {
         this.mobileNo = mobileNo;
     }
 

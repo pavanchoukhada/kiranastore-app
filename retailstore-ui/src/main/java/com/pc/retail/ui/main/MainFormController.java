@@ -107,7 +107,8 @@ public class MainFormController implements Initializable {
     public void productCategoryForm(ActionEvent actionEvent) {
     }
 
-    public void launchSupplierGrid(ActionEvent actionEvent) {
+    public void launchSupplierGrid(ActionEvent actionEvent) throws IOException {
+        resetPaneWith(getClass().getClassLoader().getResource("SupplierGridForm.fxml"));
     }
 
     public void launchBillingForm(ActionEvent actionEvent) throws IOException {

@@ -11,9 +11,7 @@ import org.junit.Test;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.hasSize;
@@ -99,7 +97,7 @@ public class ReferenceDataFileDAOImplTest {
         ProductSupplier productSupplier = new ProductSupplier();
         productSupplier.setId(id);
         productSupplier.setCode(code);
-        productSupplier.setGdtnId( gstnId );
+        productSupplier.setGstnId( gstnId );
         return productSupplier;
     }
 }

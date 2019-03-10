@@ -4,18 +4,12 @@ import com.pc.retail.api.BaseProductInfo;
 import com.pc.retail.cache.GSTCache;
 import com.pc.retail.cache.SupplierCache;
 import com.pc.retail.dao.referencedata.ReferenceDataStorageClient;
-import com.pc.retail.util.DataUtil;
 import com.pc.retail.vo.GSTGroupModel;
 import com.pc.retail.vo.ProductCategory;
 import com.pc.retail.vo.ProductSupplier;
 import com.pc.retail.vo.ProductUOM;
 
-import java.sql.SQLException;
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import java.util.*;
-
-import static com.pc.retail.client.services.ReferenceDataConstants.*;
 
 /**
  * Created by pavanc on 6/10/17.
@@ -53,7 +47,7 @@ public class ReferenceDataDAOImpl implements ReferenceDataDAO {
 
     public void saveProductSupplier(ProductSupplier productSupplier) throws DataAccessException{
         List<ProductSupplier> productSupplierList = getSuppliers();
-        Optional<ProductSupplier> any = productSupplierList.stream().filter(productSupplier1 -> productSupplier1.getGdtnId() == productSupplier.getGdtnId()).findAny();
+        Optional<ProductSupplier> any = productSupplierList.stream().filter(productSupplier1 -> productSupplier1.getGstnId() == productSupplier.getGstnId()).findAny();
         if(any.isPresent()){
             throw new DataAccessException("Supplier exists with given GSTN");
         }

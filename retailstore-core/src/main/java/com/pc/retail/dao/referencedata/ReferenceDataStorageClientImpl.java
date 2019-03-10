@@ -68,14 +68,14 @@ public class ReferenceDataStorageClientImpl implements ReferenceDataStorageClien
                 " address = ?, gstn_no = ? where id= ? ";
         try (Connection connection = dataSource.getConnection();
              PreparedStatement statement = connection.prepareStatement(updateQuery)){
-            int index=0;
+            int index=1;
             statement.setString(index++, productSupplier.getCode());
             statement.setString(index++, productSupplier.getName());
-            statement.setInt(index++, productSupplier.getMobileNo());
+            statement.setString(index++, productSupplier.getMobileNo());
             statement.setString(index++, productSupplier.getPhoneNo());
             statement.setString(index++, productSupplier.getAddress());
-            statement.setString(index++, productSupplier.getGdtnId());
-            statement.setInt(index++, productSupplier.getId());
+            statement.setString(index++, productSupplier.getGstnId());
+            statement.setInt(index, productSupplier.getId());
             statement.execute();
             connection.commit();
         } catch (SQLException e) {
@@ -91,10 +91,10 @@ public class ReferenceDataStorageClientImpl implements ReferenceDataStorageClien
             statement.setInt(1, productSupplier.getId());
             statement.setString(2, productSupplier.getCode());
             statement.setString(3, productSupplier.getName());
-            statement.setInt(4, productSupplier.getMobileNo());
+            statement.setString(4, productSupplier.getMobileNo());
             statement.setString(5, productSupplier.getPhoneNo());
             statement.setString(6, productSupplier.getAddress());
-            statement.setString(7, productSupplier.getGdtnId());
+            statement.setString(7, productSupplier.getGstnId());
             statement.execute();
             connection.commit();
         } catch (SQLException e) {
@@ -114,10 +114,10 @@ public class ReferenceDataStorageClientImpl implements ReferenceDataStorageClien
                 productSupplier.setId(resultSet.getInt("id"));
                 productSupplier.setCode(resultSet.getString("code"));
                 productSupplier.setName(resultSet.getString("name"));
-                productSupplier.setMobileNo(resultSet.getInt("mobileno"));
+                productSupplier.setMobileNo(resultSet.getString("mobileno"));
                 productSupplier.setPhoneNo(resultSet.getString("phoneno"));
                 productSupplier.setAddress(resultSet.getString("address"));
-                productSupplier.setGdtnId(resultSet.getString("gstn_no"));
+                productSupplier.setGstnId(resultSet.getString("gstn_no"));
                 productSuppliers.add(productSupplier);
             }
             return productSuppliers;
