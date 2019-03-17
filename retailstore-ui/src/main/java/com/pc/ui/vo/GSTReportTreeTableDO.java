@@ -1,29 +1,25 @@
-package com.pc.retail.api;
-
-import java.util.List;
+package com.pc.ui.vo;
 
 /**
  * Created by pavanc on 3/17/19.
  */
-public class SupplierGSTReportDO {
-
-    private String invoiceRef;
+public class GSTReportTreeTableDO {
+    private String gstCode;
     private String supplierCode;
-    private String invoiceDate;
-
+    private String invoiceRef;
+    private String productCode;
+    private int barCode;
     private double totalInvoiceAmt;
     private double totalCGSTAmount;
     private double totalSGSTAmount;
     private double totalGSTAmount;
 
-    List<ProductGSTReportDO> productGSTReportDOList;
-
-    public String getInvoiceRef() {
-        return invoiceRef;
+    public String getGstCode() {
+        return gstCode;
     }
 
-    public void setInvoiceRef(String invoiceRef) {
-        this.invoiceRef = invoiceRef;
+    public void setGstCode(String gstCode) {
+        this.gstCode = gstCode;
     }
 
     public String getSupplierCode() {
@@ -34,12 +30,28 @@ public class SupplierGSTReportDO {
         this.supplierCode = supplierCode;
     }
 
-    public String getInvoiceDate() {
-        return invoiceDate;
+    public String getInvoiceRef() {
+        return invoiceRef;
     }
 
-    public void setInvoiceDate(String invoiceDate) {
-        this.invoiceDate = invoiceDate;
+    public void setInvoiceRef(String invoiceRef) {
+        this.invoiceRef = invoiceRef;
+    }
+
+    public String getProductCode() {
+        return productCode;
+    }
+
+    public void setProductCode(String productCode) {
+        this.productCode = productCode;
+    }
+
+    public int getBarCode() {
+        return barCode;
+    }
+
+    public void setBarCode(int barCode) {
+        this.barCode = barCode;
     }
 
     public double getTotalInvoiceAmt() {
@@ -72,13 +84,5 @@ public class SupplierGSTReportDO {
 
     public void setTotalGSTAmount(double totalGSTAmount) {
         this.totalGSTAmount = totalGSTAmount;
-    }
-
-    public List<ProductGSTReportDO> getProductGSTReportDOList() {
-        return productGSTReportDOList;
-    }
-
-    public void setProductGSTReportDOList(List<ProductGSTReportDO> productGSTReportDOList) {
-        this.productGSTReportDOList = productGSTReportDOList;
     }
 }

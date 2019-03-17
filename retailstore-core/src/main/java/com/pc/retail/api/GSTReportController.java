@@ -40,19 +40,22 @@ public class GSTReportController {
         gstReportDO5.setTotalGSTAmount(1000);
         gstReportDOList.add(gstReportDO5);
 
-        GSTReportDO gstReportSupplier1 = new GSTReportDO();
-        gstReportSupplier1.setSupplierCode("ABC Corporation");
-        gstReportSupplier1.setTotalCGSTAmount(150);
-        gstReportSupplier1.setTotalSGSTAmount(150);
-        gstReportSupplier1.setTotalGSTAmount(300);
-        gstReportDOList.add(gstReportSupplier1);
+        List<SupplierGSTReportDO> supplierGSTReportDOList = new ArrayList<>();
+        SupplierGSTReportDO supplierGSTReportDO = new SupplierGSTReportDO();
+        supplierGSTReportDO.setSupplierCode("ABC Corporation");
+        supplierGSTReportDO.setTotalCGSTAmount(150);
+        supplierGSTReportDO.setTotalSGSTAmount(150);
+        supplierGSTReportDO.setTotalGSTAmount(300);
+        supplierGSTReportDOList.add(supplierGSTReportDO);
 
-        GSTReportDO gstReportSupplier2 = new GSTReportDO();
-        gstReportSupplier2.setSupplierCode("XYZ Ind.");
-        gstReportSupplier2.setTotalCGSTAmount(350);
-        gstReportSupplier2.setTotalSGSTAmount(350);
-        gstReportSupplier2.setTotalGSTAmount(700);
-        gstReportDOList.add(gstReportSupplier2);
+        SupplierGSTReportDO supplierGSTReportDO2 = new SupplierGSTReportDO();
+        supplierGSTReportDO2.setSupplierCode("XYZ Ind.");
+        supplierGSTReportDO2.setTotalCGSTAmount(350);
+        supplierGSTReportDO2.setTotalSGSTAmount(350);
+        supplierGSTReportDO2.setTotalGSTAmount(700);
+        supplierGSTReportDOList.add(supplierGSTReportDO2);
+
+        gstReportDO5.setSupplierGSTReportDOList(supplierGSTReportDOList);
 
 
         GSTReportDO gstReportDO12 = new GSTReportDO();
@@ -62,19 +65,23 @@ public class GSTReportController {
         gstReportDO12.setTotalGSTAmount(3000);
         gstReportDOList.add(gstReportDO12);
 
-        GSTReportDO gstReportSupplier3 = new GSTReportDO();
-        gstReportSupplier1.setSupplierCode("ABC Corporation");
-        gstReportSupplier1.setTotalCGSTAmount(700);
-        gstReportSupplier1.setTotalSGSTAmount(700);
-        gstReportSupplier1.setTotalGSTAmount(1400);
-        gstReportDOList.add(gstReportSupplier3);
+        List<SupplierGSTReportDO> supplierGSTReportDOList2 = new ArrayList<>();
 
-        GSTReportDO gstReportSupplier4 = new GSTReportDO();
-        gstReportSupplier2.setSupplierCode("KBC Trading");
-        gstReportSupplier2.setTotalCGSTAmount(800);
-        gstReportSupplier2.setTotalSGSTAmount(800);
-        gstReportSupplier2.setTotalGSTAmount(1600);
-        gstReportDOList.add(gstReportSupplier4);
+        SupplierGSTReportDO supplierGSTReportDO3 = new SupplierGSTReportDO();
+        supplierGSTReportDO3.setSupplierCode("ABC Corporation");
+        supplierGSTReportDO3.setTotalCGSTAmount(700);
+        supplierGSTReportDO3.setTotalSGSTAmount(700);
+        supplierGSTReportDO3.setTotalGSTAmount(1400);
+        supplierGSTReportDOList2.add(supplierGSTReportDO3);
+
+        SupplierGSTReportDO supplierGSTReportDO4 = new SupplierGSTReportDO();
+        supplierGSTReportDO4.setSupplierCode("KBC Trading");
+        supplierGSTReportDO4.setTotalCGSTAmount(800);
+        supplierGSTReportDO4.setTotalSGSTAmount(800);
+        supplierGSTReportDO4.setTotalGSTAmount(1600);
+        supplierGSTReportDOList2.add(supplierGSTReportDO4);
+
+        gstReportDO12.setSupplierGSTReportDOList(supplierGSTReportDOList2);
 
     }
 

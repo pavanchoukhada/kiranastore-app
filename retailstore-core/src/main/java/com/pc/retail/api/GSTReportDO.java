@@ -1,6 +1,8 @@
 package com.pc.retail.api;
 
 
+import java.util.List;
+
 /**
  * Created by pavanc on 3/10/19.
  */
@@ -10,6 +12,8 @@ public class GSTReportDO {
     private double totalCGSTAmount;
     private double totalSGSTAmount;
     private double totalGSTAmount;
+
+    List<SupplierGSTReportDO> supplierGSTReportDOList;
 
     public String getGstCode() {
         return gstCode;
@@ -49,5 +53,13 @@ public class GSTReportDO {
 
     public void setTotalGSTAmount(double totalGSTAmount) {
         this.totalGSTAmount = totalGSTAmount;
+    }
+
+    public List<SupplierGSTReportDO> getSupplierGSTReportDOList() {
+        return supplierGSTReportDOList;
+    }
+
+    public void setSupplierGSTReportDOList(List<SupplierGSTReportDO> supplierGSTReportDOList) {
+        this.supplierGSTReportDOList = supplierGSTReportDOList;
     }
 }

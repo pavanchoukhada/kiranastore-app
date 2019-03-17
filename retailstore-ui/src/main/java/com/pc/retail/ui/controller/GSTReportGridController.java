@@ -1,18 +1,14 @@
 package com.pc.retail.ui.controller;
 
 import com.pc.retail.api.GSTReportDO;
+import com.pc.retail.api.SupplierGSTReportDO;
 import com.pc.retail.interactor.KiranaStoreException;
-import com.pc.retail.ui.helper.GSTGridFormHelper;
-import com.pc.retail.vo.GSTGroupModel;
-import com.pc.retail.vo.ProductInventory;
-import javafx.collections.FXCollections;
+import com.pc.ui.vo.GSTReportTreeTableDO;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TreeTableColumn;
-import javafx.scene.control.TreeTableView;
+import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 
 import java.net.URL;
@@ -25,7 +21,7 @@ import java.util.ResourceBundle;
 public class GSTReportGridController implements Initializable{
 
     @FXML
-    TreeTableView<GSTReportDO> gstReportDOTreeTableView;
+    TreeTableView<GSTReportTreeTableDO> gstReportDOTreeTableView;
 
     ObservableList<GSTReportDO> gstReportDOObservableList;
 
@@ -37,15 +33,35 @@ public class GSTReportGridController implements Initializable{
     }
 
     private void loadGSTReportDataInToGrid() throws KiranaStoreException {
-        List<GSTReportDO> gstReportData = gstReportDOClientHelper.getGSTReportData();
-        ObservableList<GSTReportDO> gstReportDOObservableList = FXCollections.observableArrayList();
+        List<GSTReportDO> gstReportDataList = gstReportDOClientHelper.getGSTReportData();
+        boolean first = true;
+        for(GSTReportDO gstReportDO : gstReportDataList){
+            TreeItem<GSTReportTreeTableDO> treeItem = new TreeItem<>();
+            GSTReportTreeTableDO gstReportTreeTableDO = new GSTReportTreeTableDO();
+            gstReportTreeTableDO.setGstCode(gstReportDO.getGstCode());
+            gstReportTreeTableDO.setTotalCGSTAmount(gstReportDO.getTotalCGSTAmount());
+            gstReportTreeTableDO.setTotalSGSTAmount(gstReportDO.getTotalSGSTAmount());
+            gstReportTreeTableDO.setTotalGSTAmount(gstReportDO.getTotalGSTAmount());
+            treeItem.setValue(gstReportTreeTableDO);
+            for(SupplierGSTReportDO supplierGSTReportDO : gstReportDO.getSupplierGSTReportDOList()){
+                GSTReportTreeTableDO gstReportTreeTableDOSupplier = new GSTReportTreeTableDO();
+                gstReportTreeTableDOSupplier.setSupplierCode(supplierGSTReportDO.getSupplierCode());
+                gstReportTreeTableDOSupplier.setTotalCGSTAmount(supplierGSTReportDO.getTotalCGSTAmount());
+                gstReportTreeTableDOSupplier.setTotalSGSTAmount(supplierGSTReportDO.getTotalSGSTAmount());
+                gstReportTreeTableDOSupplier.setTotalGSTAmount(supplierGSTReportDO.getTotalGSTAmount());
+                TreeItem<GSTReportTreeTableDO> supplierNode = new TreeItem<>();
+                treeItem.getChildren().add(supplierNode);
+            }
+            if(first) {
+                gstReportDOTreeTableView.setRoot(treeItem);
+                first = false;
+            }
 
-        gstReportDOObservableList = FXCollections.observableArrayList(gstReportData);
-
+        }
     }
 
     private void initializeGSTReportGridTable() {
-        ObservableList<TreeTableColumn<GSTReportDO, ?>> productInvEntryGridColumns = gstReportDOTreeTableView.getColumns();
+        ObservableList<TreeTableColumn<GSTReportTreeTableDO, ?>> productInvEntryGridColumns = gstReportDOTreeTableView.getColumns();
         productInvEntryGridColumns.add(createStringTableColumn("GST Group Code", 120, "groupCode", "groupCode"));
         productInvEntryGridColumns.add(createNumericTableColumn("GST Rate", 120, "taxRate", "taxRate"));
         productInvEntryGridColumns.add(createNumericTableColumn("CGST", 100, "sGSTRate", "sGSTRate"));
