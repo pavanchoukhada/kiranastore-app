@@ -47,12 +47,9 @@ public class GSTGridFormController implements Initializable {
         loadGSTGroupGrid();
     }
 
-
-
-    public void loadGSTGroupGrid(){
+    private void loadGSTGroupGrid(){
         gstGroupModels = FXCollections.observableArrayList(gstGridFormHelper.getGSTGroupModelList());
         gstGroupGrid.setItems(gstGroupModels);
-
     }
 
     private void initializeInvGridTable() {

@@ -1,4 +1,8 @@
 1. Add percentage sign after GST Rate on new inv addition form.
 2.Improve usability of Product Form : Inventory details and price details
 3 : Product selling price is not updated from Product Manager : Done
-4. GST Report Manager
+4. GST Report Manager :-
+5. Purchase Manager : Product wise purchase detail, new entry for every new purchase ,
+this is the same window as opened from product manager,,enhance this form to show purchase detail. price, qty, date etc.
+6. Supplier : show options on right click menu that opens latest invoices from supplier.
+7.

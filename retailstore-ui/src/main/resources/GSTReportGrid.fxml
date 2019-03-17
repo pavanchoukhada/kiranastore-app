@@ -4,24 +4,26 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane id="AnchorPane" prefHeight="800.0" prefWidth="653.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/8" fx:controller="com.pc.retail.ui.controller.ProductMasterGridController">
+<AnchorPane id="AnchorPane" prefHeight="800.0" prefWidth="653.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/8" fx:controller="com.pc.retail.ui.controller.GSTReportGridController">
      <children>
-         <HBox layoutX="200" layoutY="20" spacing="5">
-             <Label prefHeight="22.0" prefWidth="80.0" text="Product Category" />
-             <ComboBox fx:id="categoryCB" prefHeight="23.0" prefWidth="153.0"/>
+         <HBox layoutX="100" layoutY="20" spacing="5">
+             <Label prefHeight="22.0" prefWidth="80.0" text="GST Rate" />
+             <ComboBox fx:id="gstRateCB" prefHeight="23.0" prefWidth="153.0"/>
              <Label prefHeight="22.0" prefWidth="10.0" text=" " />
-             <Label prefHeight="22.0" prefWidth="40.0" text="Company" />
-             <ComboBox fx:id="companyCB" prefHeight="23.0" prefWidth="153.0"/>
+             <Label prefHeight="22.0" prefWidth="40.0" text="Supplier" />
+             <ComboBox fx:id="supplierCB" prefHeight="23.0" prefWidth="153.0"/>
              <Label prefHeight="22.0" prefWidth="10.0" text=" " />
-             <Label prefHeight="22.0" prefWidth="60.0" text="Product Desc" />
-             <TextField fx:id="searchKeyTxt" prefHeight="23.0" prefWidth="153.0"/>
+             <Label prefHeight="22.0" prefWidth="60.0" text="From Date" />
+             <DatePicker fx:id="fromInvoiceDateDP" prefHeight="23.0" prefWidth="153.0"/>
+             <Label prefHeight="22.0" prefWidth="40.0" text="To Date" />
+             <DatePicker fx:id="toInvoiceDateDP" prefHeight="23.0" prefWidth="153.0"/>
              <Button mnemonicParsing="false" text="Apply" onAction="#applyFilter"/>
          </HBox>
         <Pane layoutX="20" layoutY="60">
-            <TableView fx:id="productMasterGrid" prefWidth="1200">
+            <TreeTableView fx:id="gstReportGrid" prefWidth="1200">
                 <columns>
                 </columns>
-            </TableView>
+            </TreeTableView>
         </Pane>
    </children>
 </AnchorPane>
