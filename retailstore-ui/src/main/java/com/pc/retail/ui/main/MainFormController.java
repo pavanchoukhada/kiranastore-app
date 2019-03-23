@@ -119,4 +119,13 @@ public class MainFormController implements Initializable {
         stage.setScene(scene);
         stage.show();
     }
+
+    public void launchGSTReportForm(ActionEvent actionEvent) throws IOException {
+        Parent root = FXMLLoader.load(getClass().getClassLoader().getResource("GSTReportGrid.fxml"));
+        Stage stage = new Stage();
+        Scene scene = new Scene(root, 500, 450);
+        stage.setTitle("GST Report");
+        stage.setScene(scene);
+        stage.show();
+    }
 }

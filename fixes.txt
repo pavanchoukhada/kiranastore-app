@@ -5,4 +5,10 @@
 5. Purchase Manager : Product wise purchase detail, new entry for every new purchase ,
 this is the same window as opened from product manager,,enhance this form to show purchase detail. price, qty, date etc.
 6. Supplier : show options on right click menu that opens latest invoices from supplier.
-7.
+7. Packaging of software and DB Schema creation....file based DB.
+8. Quick product look up utility...can be used while adding inventory and billing.
+9. Add support for GST code for product.
+10. export report in excel and in format that be uploaded to GST.
+11 export data from old system to new system
+12 Barcode generation support., printing etc
+13. Billing

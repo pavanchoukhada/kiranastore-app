@@ -27,6 +27,12 @@
                       <MenuItem fx:id="addInventoryMI" mnemonicParsing="false" text="Add Inventory" accelerator="Shortcut+I"  onAction="#launchInvGrid" />
                   </items>
                 </Menu>
+                  <Menu mnemonicParsing="false" text="GST Report">
+                      <items>
+                          <MenuItem fx:id="gstReportMI" mnemonicParsing="false" text="GST Report" accelerator="Shortcut+g" onAction="#launchGSTReportForm"/>
+                      </items>
+                  </Menu>
+
                   <Menu mnemonicParsing="false" text="Data Setup">
                       <items>
                           <MenuItem fx:id="gstFormMI" mnemonicParsing="false" text="Add GST Group" accelerator="Shortcut+P" onAction="#launchGSTForm"/>

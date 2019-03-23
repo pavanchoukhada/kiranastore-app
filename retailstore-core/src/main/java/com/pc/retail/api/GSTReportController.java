@@ -18,7 +18,7 @@ import java.util.List;
 public class GSTReportController {
 
     public List<GSTReportDO> getProductWithDetail(FilterModel filterModel) throws KiranaStoreException {
-           return new ArrayList<>();
+           return createDummyList();
     }
 
     private ProductInventoryInteractor getProductInventoryInteractor() throws KiranaStoreException {
@@ -31,7 +31,7 @@ public class GSTReportController {
         return new ProductInventoryInteractor(dataSourceManager.getProductInvDAO());
     }
 
-    private void createDummyList(){
+    private List<GSTReportDO>  createDummyList(){
         List<GSTReportDO> gstReportDOList = new ArrayList<>();
         GSTReportDO gstReportDO5 = new GSTReportDO();
         gstReportDO5.setGstCode("GST 5%");
@@ -82,6 +82,8 @@ public class GSTReportController {
         supplierGSTReportDOList2.add(supplierGSTReportDO4);
 
         gstReportDO12.setSupplierGSTReportDOList(supplierGSTReportDOList2);
+
+        return gstReportDOList;
 
     }
 
