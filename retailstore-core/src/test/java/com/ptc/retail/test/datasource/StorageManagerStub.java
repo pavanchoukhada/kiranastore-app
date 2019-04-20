@@ -1,6 +1,7 @@
 package com.ptc.retail.test.datasource;
 
 import com.pc.retail.dao.DataAccessException;
+import com.pc.retail.dao.ReportClientImpl;
 import com.pc.retail.dao.StorageClient;
 import com.pc.retail.dao.StorageManager;
 import com.pc.retail.dao.referencedata.ReferenceDataStorageClient;
@@ -16,6 +17,11 @@ public class StorageManagerStub implements StorageManager {
 
     @Override
     public StorageClient getStorageClient() {
+        return null;
+    }
+
+    @Override
+    public ReportClientImpl getReportClient() {
         return null;
     }
 

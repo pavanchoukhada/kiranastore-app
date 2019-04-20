@@ -44,6 +44,7 @@ public class ProductInventory {
     private double finalAmount;
     private double perUnitCostIncludingAll;   //perUnitCost * qty
 
+    private String gstGroupCode;
     private double cGSTRate;
     private double sGSTRate;
     private double perUnitCGSTAmount;
@@ -54,6 +55,7 @@ public class ProductInventory {
     private double totalGSTAmountForInv;
     private int supplierId;
     private String supplierCode;
+    private String GSTCode;
 
     public ProductInventory(){
     }
@@ -351,11 +353,19 @@ public class ProductInventory {
     }
 
     public double getTotalGSTAmountForInv() {
-        return getPerUnitGSTAmount() * getQuantity();
+        return getTotalCGSTAmount() + getTotalSGSTAmount();
     }
 
     public void setTotalGSTAmountForInv(double totalGSTAmountForInv) {
         this.totalGSTAmountForInv = totalGSTAmountForInv;
+    }
+
+    public String getGstGroupCode() {
+        return gstGroupCode;
+    }
+
+    public void setGstGroupCode(String gstGroupCode) {
+        this.gstGroupCode = gstGroupCode;
     }
 
 }

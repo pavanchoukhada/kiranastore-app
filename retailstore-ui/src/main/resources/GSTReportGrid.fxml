@@ -24,9 +24,9 @@
              <ComboBox fx:id="supplierCB" prefHeight="23.0" prefWidth="153.0" />
              <Label prefHeight="22.0" prefWidth="10.0" text=" " />
              <Label prefHeight="22.0" prefWidth="60.0" text="From Date" />
-             <DatePicker fx:id="fromInvoiceDateDP" prefHeight="23.0" prefWidth="100.0" />
+             <DatePicker fx:id="fromGstReportDateDP" prefHeight="23.0" prefWidth="100.0" />
              <Label prefHeight="22.0" prefWidth="60.0" text="To Date" />
-             <DatePicker fx:id="toInvoiceDateDP" prefHeight="23.0" prefWidth="100.0" />
+             <DatePicker fx:id="toGstReportDateDP" prefHeight="23.0" prefWidth="100.0" />
              <Button mnemonicParsing="false" onAction="#applyFilter" text="Apply" />
          </HBox>
          <Pane layoutX="20" layoutY="60">

@@ -108,4 +108,13 @@ public class DataUtil {
     public static String getDateStr(Date expiryDate) {
         return simpleDateFormat.format(expiryDate);
     }
+
+    public static Date getSqlDateValue(String toInvoiceDate) {
+        try {
+            return new java.sql.Date(simpleDateFormat.parse(toInvoiceDate).getTime());
+        } catch (ParseException e) {
+            return new Date(System.currentTimeMillis());
+        }
+    }
+
 }

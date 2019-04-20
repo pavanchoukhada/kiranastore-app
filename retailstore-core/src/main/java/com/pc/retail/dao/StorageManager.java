@@ -11,6 +11,8 @@ public interface StorageManager {
 
     StorageClient getStorageClient();
 
+    ReportClientImpl getReportClient();
+
     ReferenceDataStorageClient getReferenceDataStorageClient() throws DataAccessException;
 
 

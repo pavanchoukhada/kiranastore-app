@@ -9,11 +9,12 @@ import java.util.List;
 public class GSTReportDO {
     private String gstCode;
     private double totalInvoiceAmt;
+    private double totalTaxableAmt;
     private double totalCGSTAmount;
     private double totalSGSTAmount;
     private double totalGSTAmount;
 
-    List<SupplierGSTReportDO> supplierGSTReportDOList;
+    List<ProductGSTReportDO> productGSTReportDOList;
 
     public String getGstCode() {
         return gstCode;
@@ -29,6 +30,14 @@ public class GSTReportDO {
 
     public void setTotalInvoiceAmt(double totalInvoiceAmt) {
         this.totalInvoiceAmt = totalInvoiceAmt;
+    }
+
+    public double getTotalTaxableAmt() {
+        return totalTaxableAmt;
+    }
+
+    public void setTotalTaxableAmt(double totalTaxableAmt) {
+        this.totalTaxableAmt = totalTaxableAmt;
     }
 
     public double getTotalCGSTAmount() {
@@ -55,11 +64,11 @@ public class GSTReportDO {
         this.totalGSTAmount = totalGSTAmount;
     }
 
-    public List<SupplierGSTReportDO> getSupplierGSTReportDOList() {
-        return supplierGSTReportDOList;
+    public List<ProductGSTReportDO> getProductGSTReportDOList() {
+        return productGSTReportDOList;
     }
 
-    public void setSupplierGSTReportDOList(List<SupplierGSTReportDO> supplierGSTReportDOList) {
-        this.supplierGSTReportDOList = supplierGSTReportDOList;
+    public void setProductGSTReportDOList(List<ProductGSTReportDO> productGSTReportDOList) {
+        this.productGSTReportDOList = productGSTReportDOList;
     }
 }

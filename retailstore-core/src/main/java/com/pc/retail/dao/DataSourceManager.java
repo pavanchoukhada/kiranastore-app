@@ -63,6 +63,11 @@ public class DataSourceManager {
         return new BillingDAO(getStorageManager());
     }
 
+    public GSTReportDAO getGSTReportDAO() {
+        return new GSTReportDAO(getStorageManager());
+    }
+
+
 
     private StorageManager getStorageManager() {
         return storageManager;

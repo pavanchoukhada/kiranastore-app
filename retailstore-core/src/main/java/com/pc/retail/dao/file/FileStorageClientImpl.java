@@ -248,27 +248,6 @@ public class FileStorageClientImpl implements StorageClient {
         }
     }
 
-    @Override
-    public ProductInvoiceMaster getInvoiceMasterWithDetail(int invoiceId) throws DataAccessException {
-        List<ProductInvoiceMaster> productInvoiceMasterList = loadInvoiceDetails();
-        Optional<ProductInvoiceMaster> invoiceMasterOptional =
-                productInvoiceMasterList.stream().filter(invoiceMaster -> (invoiceId == invoiceMaster.getInvoiceId())).findAny();
-        if(invoiceMasterOptional.isPresent()){
-            return invoiceMasterOptional.get();
-        }
-        return null;
-    }
-
-    @Override
-    public ProductInvoiceMaster getInvoiceMasterWithDetail(String invoiceRefId) throws DataAccessException {
-        List<ProductInvoiceMaster> productInvoiceMasterList = loadInvoiceDetails();
-        Optional<ProductInvoiceMaster> invoiceMasterOptional =
-                productInvoiceMasterList.stream().filter(invoiceMaster -> invoiceRefId.equals(invoiceMaster.getInvoiceId())).findAny();
-        if(invoiceMasterOptional.isPresent()){
-            return invoiceMasterOptional.get();
-        }
-        return null;
-    }
 
 
     private List<ProductInvoiceMaster> loadInvoiceDetails() throws DataAccessException{
@@ -323,6 +302,11 @@ public class FileStorageClientImpl implements StorageClient {
         return productInvoiceMasterList;
     }
 
+    @Override
+    public ProductInvoiceMaster getInvoiceMasterWithDetail(List<SQLParameter> sqlParameterList) throws DataAccessException {
+        return null;
+    }
+
 
     private List<ProductInvoiceMaster> getAllProductInvoiceMasterRecord() throws DataAccessException {
         try {
@@ -372,10 +356,6 @@ public class FileStorageClientImpl implements StorageClient {
 
     }
 
-    @Override
-    public List<ProductInvoiceDetail> getProductInvoiceDetails(int invoiceId) throws DataAccessException {
-        return null;
-    }
 
     @Override
     public int generateBarCode() throws DataAccessException {
@@ -383,9 +363,10 @@ public class FileStorageClientImpl implements StorageClient {
     }
 
     @Override
-    public List<ProductInventory> getProductInventoriesForProduct(int productId) throws DataAccessException {
+    public List<ProductInventory> getProductInventoriesForProduct(List<SQLParameter> sqlParameterList) throws DataAccessException {
         return null;
     }
+
 
     @Override
     public void releaseConnection() {

@@ -1,7 +1,6 @@
 package com.pc.retail.dao;
 
 import java.sql.*;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
@@ -9,16 +8,17 @@ import java.util.List;
 import com.pc.retail.api.FilterKeyConstants;
 import com.pc.retail.dao.util.FilterModel;
 import com.pc.retail.interactor.MeasurementType;
+import com.pc.retail.util.DataUtil;
 import com.pc.retail.vo.*;
 
 public class StorageClientImpl implements StorageClient {
 
-    private Connection connectionForMultiTrans;
+    private Connection connection;
     private RetailDataSource dataSource;
     SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd-MM-yyyy");
     private boolean multiTrans = false;
-    StorageClientImpl(Connection connectionForMultiTrans){
-        this.connectionForMultiTrans = connectionForMultiTrans;
+    StorageClientImpl(Connection connection){
+        this.connection = connection;
         multiTrans = true;
     }
 
@@ -27,7 +27,7 @@ public class StorageClientImpl implements StorageClient {
     }
 
     public int getNextVal(String key) throws DataAccessException{
-        try(Statement stmt = connectionForMultiTrans.createStatement();
+        try(Statement stmt = connection.createStatement();
             ResultSet resultSet = stmt.executeQuery("SELECT nextval('" + key +"')")){
             if(resultSet.next()){
                 int id = resultSet.getInt(1);
@@ -56,7 +56,7 @@ public class StorageClientImpl implements StorageClient {
         String insertSql = "update product_master set barcode = ?, prd_code = ?, prd_desc = ?, prd_search_key = ? , prd_category = ?, " +
                 " price_uom_cd = ?, qty_uom_cd = ?, measure_ind = ?, company_code = ?, base_product = ?, weight = ? , is_base_product = ?, " +
                 " csp = ?, gst_group = ? where product_id = ? ";
-        try(PreparedStatement preparedStatement = connectionForMultiTrans.prepareStatement( insertSql )) {
+        try(PreparedStatement preparedStatement = connection.prepareStatement( insertSql )) {
             int index = 1;
             preparedStatement.setString(index++, product.getBarcode());
             preparedStatement.setString(index++, product.getPrdCode());
@@ -85,7 +85,7 @@ public class StorageClientImpl implements StorageClient {
         String insertSql = "insert into product_master(product_id, barcode, prd_code, prd_desc, prd_search_key, prd_category, " +
                             " price_uom_cd, qty_uom_cd, measure_ind, company_code, base_product, weight, is_base_product, csp, gst_group) " +
                             "	values(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
-        try(PreparedStatement preparedStatement = connectionForMultiTrans.prepareStatement( insertSql )) {
+        try(PreparedStatement preparedStatement = connection.prepareStatement( insertSql )) {
             int index = 1;
             preparedStatement.setInt(index++, productId);
             preparedStatement.setString(index++, product.getBarcode());
@@ -114,7 +114,7 @@ public class StorageClientImpl implements StorageClient {
     public void addAuditInventoryTransaction(InventoryTransactionModel inventoryTransactionModel) throws SQLException {
         String insertSql = "insert into product_inv_transaction(prd_inv_trans_id, prd_id, barcode, external_ref, trans_type, trans_date, trans_desc, trans_price) " +
                 "	values (nextval('prd_inv_trans_id_seq'), ?, ?, ?, ?, ?, ?, ?)";
-        try(PreparedStatement preparedStatement = connectionForMultiTrans.prepareStatement( insertSql )) {
+        try(PreparedStatement preparedStatement = connection.prepareStatement( insertSql )) {
             int index = 1;
             preparedStatement.setInt(index++, inventoryTransactionModel.getProductId());
             preparedStatement.setString(index++, inventoryTransactionModel.getBarCode());
@@ -130,7 +130,7 @@ public class StorageClientImpl implements StorageClient {
     @Override
     public void commit() throws DataAccessException{
         try {
-            connectionForMultiTrans.commit();
+            connection.commit();
         } catch (SQLException sqlEx) {
             throw new DataAccessException(sqlEx.getMessage());
         }
@@ -139,7 +139,7 @@ public class StorageClientImpl implements StorageClient {
     @Override
     public void rollBack() throws DataAccessException{
         try {
-            connectionForMultiTrans.rollback();
+            connection.rollback();
         } catch (SQLException sqlEx) {
             throw new DataAccessException(sqlEx.getMessage());
         }
@@ -196,7 +196,7 @@ public class StorageClientImpl implements StorageClient {
 
     private Connection getConnection() throws DataAccessException {
         if(multiTrans){
-            return connectionForMultiTrans;
+            return connection;
         }else {
             try {
                 return dataSource.getConnection();
@@ -223,7 +223,7 @@ public class StorageClientImpl implements StorageClient {
     private void insertProductCurrentInventoryDetail(ProductCurrentInvDetail productCurrentInvDetail) throws SQLException{
         String insertSql = "insert into product_curr_inv_detail(product_id, barcode, current_quantity, csp, mrp, per_unit_cost, qty_uom_cd ,price_uom_cd, " +
                 " expiry_date, last_trans_date, last_inv_trans_type, last_trans_ref) values ( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
-        try(PreparedStatement preparedStatement = connectionForMultiTrans.prepareStatement( insertSql )) {
+        try(PreparedStatement preparedStatement = connection.prepareStatement( insertSql )) {
             int index = 1;
             preparedStatement.setInt(index++, productCurrentInvDetail.getProductId());
             preparedStatement.setString(index++, productCurrentInvDetail.getBarCode());
@@ -248,7 +248,7 @@ public class StorageClientImpl implements StorageClient {
     private void updateProductCurrentInventoryDetail(ProductCurrentInvDetail productCurrentInvDetail) throws SQLException{
         String insertSql = "update product_curr_inv_detail set barcode = ?, current_quantity= ?, csp = ?, mrp = ?, per_unit_cost = ?, qty_uom_cd =?, price_uom_cd = ?, " +
                 " last_trans_date = ?, last_inv_trans_type=?, last_trans_ref = ? where product_id = ? ";
-        try(PreparedStatement preparedStatement = connectionForMultiTrans.prepareStatement( insertSql )) {
+        try(PreparedStatement preparedStatement = connection.prepareStatement( insertSql )) {
             int index = 1;
             preparedStatement.setString(index++, productCurrentInvDetail.getBarCode());
             preparedStatement.setDouble(index++, productCurrentInvDetail.getQuantity());
@@ -266,26 +266,12 @@ public class StorageClientImpl implements StorageClient {
     }
 
     @Override
-    public ProductInvoiceMaster getInvoiceMasterWithDetail(String invoiceRef) throws DataAccessException {
-        String selectQuery = "select * from product_invoice_master where invoice_ref=" + getQuotedString(invoiceRef);
-        List<ProductInvoiceMaster> productInvoiceMasterList = getProductInvoiceMasters(selectQuery, new ArrayList<>());
-        if(productInvoiceMasterList.size() > 0){
-            return productInvoiceMasterList.get(0);
-        }else{
-            return null;
-        }
-
-    }
-
-    @Override
     public void saveInvoiceMaster(ProductInvoiceMaster productInvoiceMaster) throws DataAccessException {
         if(productInvoiceMaster.getInvoiceId() <= 0){
             int invoiceId = insertProductInvoiceMaster(productInvoiceMaster);
             productInvoiceMaster.setInvoiceId(invoiceId);
-            //insertProductInvoiceDetail(invoiceId, productInvoiceMaster.getProductInventoryList());
         }else{
             updateProductInvoiceMaster(productInvoiceMaster);
-            //updateProductInvoiceDetail(productInvoiceMaster.getInvoiceId(), productInvoiceMaster.getProductInventoryList());
         }
     }
 
@@ -294,7 +280,7 @@ public class StorageClientImpl implements StorageClient {
         String insertSql = " update product_invoice_master set invoice_ref = ?, supplier_id = ?, invoice_date= ?, invoice_status = ?, " +
                 "lumpsum_cost = ?, s_gst_amount= ?, c_gst_amount= ?, invoice_amount = ?, total_amount = ?, paid_amount = ?, last_modify_dt = ? " +
                 " where invoice_id = ? ";
-        try (PreparedStatement preparedStatement = connectionForMultiTrans.prepareStatement(insertSql)){
+        try (PreparedStatement preparedStatement = connection.prepareStatement(insertSql)){
             int index = 1;
             preparedStatement.setString(index++, productInvoiceMaster.getInvoiceRefId());
             preparedStatement.setInt(index++, productInvoiceMaster.getSupplierId());
@@ -316,81 +302,6 @@ public class StorageClientImpl implements StorageClient {
         }
     }
 
-    private void updateProductInvoiceDetail(int invoiceId, List<ProductInvoiceDetail> productInvoiceDetailList) throws DataAccessException{
-        updateProductInvoiceDetail(productInvoiceDetailList);
-        insertProductInvoiceDetail(invoiceId, productInvoiceDetailList);
-        deleteProductInvoiceDetail(productInvoiceDetailList);
-    }
-
-    private void deleteProductInvoiceDetail(List<ProductInvoiceDetail> productInvoiceDetailList) throws DataAccessException{
-        String deleteSql = "delete from product_invoice_detail where  prd_inv_id = ? ";
-        try (PreparedStatement preparedStatement = connectionForMultiTrans.prepareStatement(deleteSql)){
-            for(ProductInvoiceDetail productInvoiceDetail : productInvoiceDetailList) {
-                if(productInvoiceDetail.getModificationStatus() == ModificationStatus.DELETED) {
-                    preparedStatement.setInt(1, productInvoiceDetail.getPrdInventoryEntryId());
-                    preparedStatement.addBatch();
-                }
-            }
-            preparedStatement.executeBatch();
-        }
-        catch (SQLException sqlEx){
-            logError(sqlEx);
-            throw new DataAccessException(sqlEx.getMessage());
-        }
-    }
-
-    private void updateProductInvoiceDetail(List<ProductInvoiceDetail> prdInvDtlUpdateList) throws DataAccessException {
-        String insertSql = "update product_invoice_detail set product_id = ?,barcode = ?, lump_sum_cost = ?, per_unit_price = ?, per_unit_cost = ?," +
-                " prd_inv_amt = ?, qty = ? where  prd_inv_id = ?";
-        try (PreparedStatement preparedStatement = connectionForMultiTrans.prepareStatement(insertSql)){
-            for(ProductInvoiceDetail productInvoiceDetail : prdInvDtlUpdateList) {
-                if(productInvoiceDetail.getModificationStatus() == ModificationStatus.MODIFIED) {
-                    int index = 1;
-                    preparedStatement.setInt(index++, productInvoiceDetail.getProductId());
-                    preparedStatement.setString(index++, productInvoiceDetail.getBarCode());
-                    preparedStatement.setDouble(index++, productInvoiceDetail.getLumpsumCost());
-                    preparedStatement.setDouble(index++, productInvoiceDetail.getPerUnitPrice());
-                    preparedStatement.setDouble(index++, productInvoiceDetail.getPerUnitCost());
-                    preparedStatement.setDouble(index++, productInvoiceDetail.getPrdInvAmt());
-                    preparedStatement.setDouble(index++, productInvoiceDetail.getQty());
-                    preparedStatement.setInt(index, productInvoiceDetail.getPrdInventoryEntryId());
-                    preparedStatement.addBatch();
-                }
-            }
-            preparedStatement.executeBatch();
-        }
-        catch (SQLException sqlEx){
-            logError(sqlEx);
-            throw new DataAccessException(sqlEx.getMessage());
-        }
-    }
-
-    @Override
-    public List<ProductInvoiceDetail> getProductInvoiceDetails(int invoiceId) throws DataAccessException {
-        String selectQuery = "select product_id, prd_inv_id, barcode, lump_sum_cost, per_unit_price, per_unit_cost," +
-                " prd_inv_amt, qty from product_invoice_detail where invoice_id = ?";
-        try(Statement statement = connectionForMultiTrans.createStatement();
-            ResultSet resultSet = statement.executeQuery(selectQuery)) {
-
-            List<ProductInvoiceDetail> productInvoiceDetailList = new ArrayList<>();
-            while(resultSet.next()){
-                ProductInvoiceDetail productInvoiceDetail = new ProductInvoiceDetail();
-                productInvoiceDetail.setInvoiceId(invoiceId);
-                productInvoiceDetail.setProductId(resultSet.getInt("product_id"));
-                productInvoiceDetail.setPrdInventoryEntryId(resultSet.getInt("prd_inv_id"));
-                productInvoiceDetail.setBarCode(resultSet.getString("barcode"));
-                productInvoiceDetail.setLumpsumCost(resultSet.getDouble("lump_sum_cost"));
-                productInvoiceDetail.setPerUnitPrice(resultSet.getDouble("per_unit_price"));
-                productInvoiceDetail.setPerUnitCost(resultSet.getDouble("per_unit_cost"));
-                productInvoiceDetail.setPrdInvAmt(resultSet.getDouble("prd_inv_amt"));
-                productInvoiceDetail.setQty(resultSet.getDouble("qty"));
-                productInvoiceDetailList.add(productInvoiceDetail);
-            }
-            return productInvoiceDetailList;
-        } catch (SQLException e) {
-            throw new DataAccessException(e.getMessage());
-        }
-    }
 
     @Override
     public int generateBarCode() throws DataAccessException {
@@ -403,7 +314,7 @@ public class StorageClientImpl implements StorageClient {
         String insertSql = "insert into product_invoice_master(invoice_id, invoice_ref, supplier_id, invoice_date, invoice_status, " +
                 "lumpsum_cost, s_gst_amount, c_gst_amount, invoice_amount, total_amount, paid_amount, last_modify_dt) " +
                 "	values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
-        try (PreparedStatement preparedStatement = connectionForMultiTrans.prepareStatement(insertSql)){
+        try (PreparedStatement preparedStatement = connection.prepareStatement(insertSql)){
             int index = 1;
             preparedStatement.setInt(index++, invoiceId);
             preparedStatement.setString(index++, productInvoiceMaster.getInvoiceRefId());
@@ -426,94 +337,57 @@ public class StorageClientImpl implements StorageClient {
         return invoiceId;
     }
 
-    private void insertProductInvoiceDetail(int invoiceId, List<ProductInvoiceDetail> productInvoiceDetailList) throws DataAccessException {
-        String insertSql = "insert into product_invoice_detail(invoice_id, product_id, prd_inv_id, barcode, lump_sum_cost, per_unit_price, per_unit_cost," +
-                " prd_inv_amt, qty) " +
-                "	values (?, ?, ?, ?, ?, ?, ?, ?, ?)";
-        try (PreparedStatement preparedStatement = connectionForMultiTrans.prepareStatement(insertSql)){
-            for(ProductInvoiceDetail productInvoiceDetail : productInvoiceDetailList) {
-                if(productInvoiceDetail.getModificationStatus() == null || productInvoiceDetail.getModificationStatus() == ModificationStatus.NEW) {
-                    int index = 1;
-                    preparedStatement.setInt(index++, invoiceId);
-                    preparedStatement.setInt(index++, productInvoiceDetail.getProductId());
-                    preparedStatement.setInt(index++, productInvoiceDetail.getPrdInventoryEntryId());
-                    preparedStatement.setString(index++, productInvoiceDetail.getBarCode());
-                    preparedStatement.setDouble(index++, productInvoiceDetail.getLumpsumCost());
-                    preparedStatement.setDouble(index++, productInvoiceDetail.getPerUnitPrice());
-                    preparedStatement.setDouble(index++, productInvoiceDetail.getPerUnitCost());
-                    preparedStatement.setDouble(index++, productInvoiceDetail.getPrdInvAmt());
-                    preparedStatement.setDouble(index, productInvoiceDetail.getQty());
-                    preparedStatement.addBatch();
-                }
-            }
-            preparedStatement.executeBatch();
-        }
-        catch (SQLException sqlEx){
-            logError(sqlEx);
-            throw new DataAccessException(sqlEx.getMessage());
-        }
-    }
 
     @Override
     public List<ProductInvoiceMaster> getProductInvoiceMasterList(FilterModel filterModel) throws DataAccessException {
-        StringBuilder selectClause= new StringBuilder("SELECT * FROM product_invoice_master ");
-        List<Date> dateList = new ArrayList<>();
-        StringBuilder whereClause = new StringBuilder();
-        String fromInvoiceDate = (String) filterModel.getFilterValue(FilterKeyConstants.FROM_INVOICE_DATE);
+        List<SQLParameter> sqlParameterList = new ArrayList<>();
+        String fromInvoiceDate = filterModel.getFilterValue(FilterKeyConstants.FROM_INVOICE_DATE);
         if (fromInvoiceDate != null && !"".equals(fromInvoiceDate)) {
-            whereClause.append("invoice_date >= ?");
-            dateList.add(getDateValue(fromInvoiceDate));
+            SQLParameter sqlParameter = new SQLParameter();
+            sqlParameter.setParamDataType(DataType.DATE);
+            sqlParameter.setParamValue(DataUtil.getSqlDateValue(fromInvoiceDate));
+            sqlParameter.setSqlOperator(SQLOperator.GREATER_THEN_EQUAL_TO);
+            sqlParameter.setParamName("invoice_date");
+            sqlParameterList.add(sqlParameter);
         }
 
         String toInvoiceDate = filterModel.getFilterValue(FilterKeyConstants.TO_INVOICE_DATE);
         if (toInvoiceDate != null && !"".equals(toInvoiceDate)) {
-            if(whereClause.length() > 0){
-                whereClause.append(" and ");
-            }
-            whereClause.append("invoice_date <= ?");
-            dateList.add(getDateValue(toInvoiceDate));
+            SQLParameter sqlParameter = new SQLParameter();
+            sqlParameter.setParamDataType(DataType.DATE);
+            sqlParameter.setParamValue(DataUtil.getSqlDateValue(toInvoiceDate));
+            sqlParameter.setSqlOperator(SQLOperator.LESS_THEN_EQUAL_TO);
+            sqlParameter.setParamName("invoice_date");
+            sqlParameterList.add(sqlParameter);
         }
 
         String invoiceStatus = filterModel.getFilterValue(FilterKeyConstants.INVOICE_STATUS);
         if (invoiceStatus != null && !"".equals(invoiceStatus)) {
             int ind = InvoiceStatus.getInvoiceStatus(invoiceStatus).getInd();
-            if(whereClause.length() > 0){
-                whereClause.append(" and ");
-            }
-            whereClause.append("invoice_status = ").append(ind);
+            SQLParameter sqlParameter = new SQLParameter();
+            sqlParameter.setParamDataType(DataType.INTEGER);
+            sqlParameter.setParamValue(ind);
+            sqlParameter.setParamName("invoice_status");
         }
 
         String supplierIdVal =  filterModel.getFilterValue(FilterKeyConstants.SUPPLIER_ID);
         if (supplierIdVal != null && !"".equals(supplierIdVal)) {
             int supplierId = Integer.parseInt(supplierIdVal);
-            if(whereClause.length() > 0){
-                whereClause.append(" and ");
-            }
-            whereClause.append("supplier_id = ").append(supplierId);
+            SQLParameter sqlParameter = new SQLParameter();
+            sqlParameter.setParamName("supplier_id");
+            sqlParameter.setParamDataType(DataType.INTEGER);
+            sqlParameter.setParamValue(supplierId);
         }
-        if(whereClause.length() > 0){
-            selectClause.append(" WHERE ").append(whereClause);
-        }
-        return getProductInvoiceMasters(selectClause.toString(), dateList);
+        return getProductInvoiceMasters("SELECT * FROM product_invoice_master ", sqlParameterList);
     }
 
-    private Date getDateValue(String toInvoiceDate) {
-        try {
-            return new Date(simpleDateFormat.parse(toInvoiceDate).getTime());
-        } catch (ParseException e) {
-            return new Date(System.currentTimeMillis());
-        }
-    }
 
-    private List<ProductInvoiceMaster> getProductInvoiceMasters(String selectQuery, List<Date> dateList) throws DataAccessException {
+    private List<ProductInvoiceMaster> getProductInvoiceMasters(String selectQuery, List<SQLParameter> sqlParameterList) throws DataAccessException {
         try(Connection connection = getConnection();
-            PreparedStatement statement = connection.prepareStatement(selectQuery);
+            PreparedStatement statement
+                    = connection.prepareStatement(selectQuery + appendWhereClause(sqlParameterList));
             ) {
-            int index=1;
-            for(Date date : dateList){
-                statement.setDate(index, date);
-                index++;
-            }
+            QueryUtil.setParameter(sqlParameterList, statement);
             ResultSet resultSet = statement.executeQuery();
             List<ProductInvoiceMaster> productInvoiceMasterList = new ArrayList<>();
             while(resultSet.next()){
@@ -537,38 +411,46 @@ public class StorageClientImpl implements StorageClient {
         }
     }
 
-    private String getQuotedString(String value) {
-        return "'" + value + "'";
+    private String appendWhereClause(List<SQLParameter> sqlParameterList) {
+        if(!sqlParameterList.isEmpty()) {
+            return " WHERE " + QueryUtil.createWhereClause(sqlParameterList);
+        }
+        return "";
     }
 
+
     @Override
-    public ProductInvoiceMaster getInvoiceMasterWithDetail(int invoiceId) throws DataAccessException {
-        String selectQuery = "SELECT * FROM product_invoice_master where invoice_id = " + invoiceId;
-        List<ProductInvoiceMaster> productInvoiceMasterList = getProductInvoiceMasters(selectQuery, new ArrayList<>());
+    public ProductInvoiceMaster getInvoiceMasterWithDetail(List<SQLParameter> sqlParameterList) throws DataAccessException {
+        String selectQuery = "SELECT * FROM product_invoice_master";
+        List<ProductInvoiceMaster> productInvoiceMasterList = getProductInvoiceMasters(selectQuery, sqlParameterList);
         if(productInvoiceMasterList.size() > 0){
             ProductInvoiceMaster productInvoiceMaster = productInvoiceMasterList.get(0);
-            productInvoiceMaster.setProductInventoryList(getProductInventories(invoiceId));
+            productInvoiceMaster.setProductInventoryList(getProductInventories(sqlParameterList));
             return productInvoiceMaster;
         }else {
-            throw new DataAccessException("No Invoice Record found for " + invoiceId);
+            throw new DataAccessException("No Invoice Record found for given query parameter");
         }
     }
 
-    private List<ProductInventory> getProductInventories(int invoiceId) throws DataAccessException{
-        String selectQuery = "SELECT * FROM product_inv_record where invoice_id = " + invoiceId;
-        return getProductInventoryListForQuery(selectQuery, false);
+    private List<ProductInventory> getProductInventories(List<SQLParameter> sqlParameterList) throws DataAccessException{
+        String selectQuery = "SELECT * FROM product_inv_record ";
+        return getProductInventoryListForQuery(selectQuery, false, sqlParameterList);
     }
 
-    public List<ProductInventory> getProductInventoriesForProduct(int productId) throws DataAccessException{
+    public List<ProductInventory> getProductInventoriesForProduct(List<SQLParameter> sqlParameterList) throws DataAccessException{
+
         String selectQuery = "SELECT ir.*,im.invoice_date, im.supplier_id,im.invoice_ref FROM product_inv_record ir, product_invoice_master im " +
-                " where ir.invoice_id=im.invoice_id and product_id = " + productId;
-        return getProductInventoryListForQuery(selectQuery, true);
+                " where ir.invoice_id=im.invoice_id ";
+        return getProductInventoryListForQuery(selectQuery, true, sqlParameterList);
     }
 
-    private List<ProductInventory> getProductInventoryListForQuery(String selectQuery, boolean loadInvoiceDetail) throws DataAccessException {
+    private List<ProductInventory> getProductInventoryListForQuery(String selectQuery,
+                        boolean loadInvoiceDetail, List<SQLParameter> sqlParameterList) throws DataAccessException {
+        ResultSet resultSet = null;
         try(Connection connection = getConnection();
-            Statement statement = connection.createStatement();
-            ResultSet resultSet = statement.executeQuery(selectQuery)) {
+            PreparedStatement statement = connection.prepareStatement(selectQuery + appendWhereClause(sqlParameterList))) {
+            QueryUtil.setParameter(sqlParameterList, statement);
+            resultSet = statement.executeQuery(selectQuery);
             List<ProductInventory> productInventories = new ArrayList<>();
             while(resultSet.next()){
                 ProductInventory productInventory = new ProductInventory();
@@ -596,7 +478,7 @@ public class StorageClientImpl implements StorageClient {
                 productInventory.setPerUnitSGSTAmount(resultSet.getDouble("sgst_amount"));
                 productInventory.setTotalCGSTAmount(resultSet.getDouble("cgst_total_amount"));
                 productInventory.setTotalSGSTAmount(resultSet.getDouble("sgst_total_amount"));
-
+                productInventory.setGstGroupCode(resultSet.getString("gst_group_code"));
                 if(loadInvoiceDetail) {
                     productInventory.setInvoiceDate(resultSet.getDate("invoice_date"));
                     productInventory.setSupplierId(resultSet.getInt("supplier_id"));
@@ -605,6 +487,18 @@ public class StorageClientImpl implements StorageClient {
                 productInventories.add(productInventory);
             }
             return productInventories;
+        } catch (SQLException e) {
+            throw new DataAccessException(e.getMessage());
+        }finally {
+            close(resultSet);
+        }
+    }
+
+    private void close(ResultSet resultSet) throws DataAccessException {
+        try {
+            if (resultSet != null) {
+                resultSet.close();
+            }
         } catch (SQLException e) {
             throw new DataAccessException(e.getMessage());
         }
@@ -617,7 +511,7 @@ public class StorageClientImpl implements StorageClient {
         if(productId > 0){
             selectQuery = selectQuery + " product_id = " + productId;
         }
-        try(Statement statement = connectionForMultiTrans.createStatement();
+        try(Statement statement = connection.createStatement();
             ResultSet resultSet = statement.executeQuery(selectQuery)) {
 
             List<Product> products = new ArrayList<>();
@@ -650,7 +544,7 @@ public class StorageClientImpl implements StorageClient {
     @Override
     public void releaseConnection() {
         try {
-            connectionForMultiTrans.close();
+            connection.close();
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -672,7 +566,7 @@ public class StorageClientImpl implements StorageClient {
 
     private void deleteProductInv(ProductInventory productInventoryDetail) throws DataAccessException{
         String updateSql = "delete from product_inv_record  where prd_inv_id = ?";
-        try (PreparedStatement preparedStatement = connectionForMultiTrans.prepareStatement(updateSql)){
+        try (PreparedStatement preparedStatement = connection.prepareStatement(updateSql)){
             preparedStatement.setInt(1, productInventoryDetail.getPrdInvId());
             preparedStatement.execute();
         }
@@ -682,38 +576,39 @@ public class StorageClientImpl implements StorageClient {
     }
 
 
-    private int insertProductInv(ProductInventory productInventoryDetail) throws DataAccessException {
+    private int insertProductInv(ProductInventory productInventory) throws DataAccessException {
         int prdInvId = getNextVal("prd_inv_id_seq");
         String insertSql = "insert into product_inv_record(prd_inv_id, product_id, barcode, invoice_id, expiry_date, quantity, mrp, status, " +
                 " per_unit_cost, inv_date, remaining_qty, qty_uom_cd, per_unit_cost_gst , other_cost , total_cost ," +
-                " total_cost_gst, per_unit_cost_all, final_amount, sgst_rate, cgst_rate, sgst_amount, cgst_amount, sgst_total_amount, cgst_total_amount) " +
-                "	values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ? , ?)";
-        try (PreparedStatement preparedStatement = connectionForMultiTrans.prepareStatement(insertSql)){
+                " total_cost_gst, per_unit_cost_all, final_amount, sgst_rate, cgst_rate, sgst_amount, cgst_amount, sgst_total_amount, cgst_total_amount, gst_group_code) " +
+                "	values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ? , ?, ?)";
+        try (PreparedStatement preparedStatement = connection.prepareStatement(insertSql)){
             int index = 1;
             preparedStatement.setInt(index++, prdInvId);
-            preparedStatement.setInt(index++, productInventoryDetail.getProductId());
-            preparedStatement.setString(index++, productInventoryDetail.getBarCode());
-            preparedStatement.setInt(index++, productInventoryDetail.getInvoiceId());
-            preparedStatement.setDate(index++, new Date(productInventoryDetail.getExpiryDate().getTime()));
-            preparedStatement.setDouble(index++, productInventoryDetail.getQuantity());
-            preparedStatement.setDouble(index++, productInventoryDetail.getMRP());
-            preparedStatement.setInt(index++, productInventoryDetail.getStatus());
-            preparedStatement.setDouble(index++, productInventoryDetail.getPerUnitCost());
+            preparedStatement.setInt(index++, productInventory.getProductId());
+            preparedStatement.setString(index++, productInventory.getBarCode());
+            preparedStatement.setInt(index++, productInventory.getInvoiceId());
+            preparedStatement.setDate(index++, new Date(productInventory.getExpiryDate().getTime()));
+            preparedStatement.setDouble(index++, productInventory.getQuantity());
+            preparedStatement.setDouble(index++, productInventory.getMRP());
+            preparedStatement.setInt(index++, productInventory.getStatus());
+            preparedStatement.setDouble(index++, productInventory.getPerUnitCost());
             preparedStatement.setDate(index++, new Date(System.currentTimeMillis()));
-            preparedStatement.setDouble(index++, productInventoryDetail.getRemainingQuantity());
-            preparedStatement.setString(index++, productInventoryDetail.getQtyUOM());
-            preparedStatement.setDouble(index++, productInventoryDetail.getPerUnitCostIncludingGST());
-            preparedStatement.setDouble(index++, productInventoryDetail.getOtherCost());
-            preparedStatement.setDouble(index++, productInventoryDetail.getTotalCost());
-            preparedStatement.setDouble(index++, productInventoryDetail.getTotalCostIncludingGST());
-            preparedStatement.setDouble(index++, productInventoryDetail.getPerUnitCostIncludingAll());
-            preparedStatement.setDouble(index++, productInventoryDetail.getFinalAmountInclAll());
-            preparedStatement.setDouble(index++, productInventoryDetail.getSGSTRate());
-            preparedStatement.setDouble(index++, productInventoryDetail.getCGSTRate());
-            preparedStatement.setDouble(index++, productInventoryDetail.getPerUnitSGSTAmount());
-            preparedStatement.setDouble(index++, productInventoryDetail.getPerUnitCGSTAmount());
-            preparedStatement.setDouble(index++, productInventoryDetail.getTotalSGSTAmount());
-            preparedStatement.setDouble(index++, productInventoryDetail.getTotalCGSTAmount());
+            preparedStatement.setDouble(index++, productInventory.getRemainingQuantity());
+            preparedStatement.setString(index++, productInventory.getQtyUOM());
+            preparedStatement.setDouble(index++, productInventory.getPerUnitCostIncludingGST());
+            preparedStatement.setDouble(index++, productInventory.getOtherCost());
+            preparedStatement.setDouble(index++, productInventory.getTotalCost());
+            preparedStatement.setDouble(index++, productInventory.getTotalCostIncludingGST());
+            preparedStatement.setDouble(index++, productInventory.getPerUnitCostIncludingAll());
+            preparedStatement.setDouble(index++, productInventory.getFinalAmountInclAll());
+            preparedStatement.setDouble(index++, productInventory.getSGSTRate());
+            preparedStatement.setDouble(index++, productInventory.getCGSTRate());
+            preparedStatement.setDouble(index++, productInventory.getPerUnitSGSTAmount());
+            preparedStatement.setDouble(index++, productInventory.getPerUnitCGSTAmount());
+            preparedStatement.setDouble(index++, productInventory.getTotalSGSTAmount());
+            preparedStatement.setDouble(index++, productInventory.getTotalCGSTAmount());
+            preparedStatement.setString(index, productInventory.getGstGroupCode());
 
             preparedStatement.execute();
         }
@@ -731,9 +626,9 @@ public class StorageClientImpl implements StorageClient {
                 " remaining_qty = ?, inv_date = ?,  qty_uom_cd= ?, " +
                 " per_unit_cost_gst =? , other_cost = ?, total_cost = ? ," +
                 " total_cost_gst = ?, per_unit_cost_all = ?, final_amount = ?, sgst_rate = ?, " +
-                " cgst_rate = ?, sgst_amount = ?, cgst_amount = ?, sgst_total_amount = ?, cgst_total_amount = ?  " +
+                " cgst_rate = ?, sgst_amount = ?, cgst_amount = ?, sgst_total_amount = ?, cgst_total_amount = ? , gst_group_code=? " +
                 " where prd_inv_id = ?";
-        try (PreparedStatement preparedStatement = connectionForMultiTrans.prepareStatement(updateSql)){
+        try (PreparedStatement preparedStatement = connection.prepareStatement(updateSql)){
             int index = 1;
             preparedStatement.setInt(index++, productInventoryDetail.getProductId());
             preparedStatement.setString(index++, productInventoryDetail.getBarCode());
@@ -758,8 +653,8 @@ public class StorageClientImpl implements StorageClient {
             preparedStatement.setDouble(index++, productInventoryDetail.getPerUnitCGSTAmount());
             preparedStatement.setDouble(index++, productInventoryDetail.getTotalSGSTAmount());
             preparedStatement.setDouble(index++, productInventoryDetail.getTotalCGSTAmount());
-
-            preparedStatement.setInt(index++, productInventoryDetail.getPrdInvId());
+            preparedStatement.setString(index++, productInventoryDetail.getGstGroupCode());
+            preparedStatement.setInt(index, productInventoryDetail.getPrdInvId());
             preparedStatement.execute();
         }
         catch (SQLException sqlEx){

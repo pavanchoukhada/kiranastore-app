@@ -7,24 +7,15 @@ import java.util.List;
  */
 public class SupplierGSTReportDO {
 
-    private String invoiceRef;
     private String supplierCode;
-    private String invoiceDate;
-
+    private String supplierGSTNo;
     private double totalInvoiceAmt;
     private double totalCGSTAmount;
     private double totalSGSTAmount;
     private double totalGSTAmount;
 
-    List<ProductGSTReportDO> productGSTReportDOList;
-
-    public String getInvoiceRef() {
-        return invoiceRef;
-    }
-
-    public void setInvoiceRef(String invoiceRef) {
-        this.invoiceRef = invoiceRef;
-    }
+    List<InvoiceGSTReportDO> invoiceGSTReportDOList;
+    private double totalTaxableAmount;
 
     public String getSupplierCode() {
         return supplierCode;
@@ -32,14 +23,6 @@ public class SupplierGSTReportDO {
 
     public void setSupplierCode(String supplierCode) {
         this.supplierCode = supplierCode;
-    }
-
-    public String getInvoiceDate() {
-        return invoiceDate;
-    }
-
-    public void setInvoiceDate(String invoiceDate) {
-        this.invoiceDate = invoiceDate;
     }
 
     public double getTotalInvoiceAmt() {
@@ -74,11 +57,27 @@ public class SupplierGSTReportDO {
         this.totalGSTAmount = totalGSTAmount;
     }
 
-    public List<ProductGSTReportDO> getProductGSTReportDOList() {
-        return productGSTReportDOList;
+    public List<InvoiceGSTReportDO> getInvoiceGSTReportDOList() {
+        return invoiceGSTReportDOList;
     }
 
-    public void setProductGSTReportDOList(List<ProductGSTReportDO> productGSTReportDOList) {
-        this.productGSTReportDOList = productGSTReportDOList;
+    public void setInvoiceGSTReportDOList(List<InvoiceGSTReportDO> invoiceGSTReportDOList) {
+        this.invoiceGSTReportDOList = invoiceGSTReportDOList;
+    }
+
+    public void setTotalTaxableAmount(double totalTaxableAmount) {
+        this.totalTaxableAmount = totalTaxableAmount;
+    }
+
+    public double getTotalTaxableAmount() {
+        return totalTaxableAmount;
+    }
+
+    public String getSupplierGSTNo() {
+        return supplierGSTNo;
+    }
+
+    public void setSupplierGSTNo(String supplierGSTNo) {
+        this.supplierGSTNo = supplierGSTNo;
     }
 }

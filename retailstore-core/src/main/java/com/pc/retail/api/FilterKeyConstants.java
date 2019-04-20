@@ -17,7 +17,10 @@ public interface FilterKeyConstants {
     public static final String TO_INVOICE_DATE = "to_invoice_date";
     public static final String INVENTORY_TRANS_DATE = "inventory_trans_date";
     public static final String INVOICE_STATUS = "invoice_status";
-    public static final String SUPPLIER_ID = "supplier_code";
+    public static final String SUPPLIER_ID = "supplier_id";
+
+    String FROM_DATE = "from_date";
+    String TO_DATE = "to_date";
 
 
 }

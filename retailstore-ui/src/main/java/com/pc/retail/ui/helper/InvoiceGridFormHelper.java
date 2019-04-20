@@ -2,21 +2,15 @@ package com.pc.retail.ui.helper;
 
 import com.pc.retail.api.FilterKeyConstants;
 import com.pc.retail.client.services.*;
-import com.pc.retail.dao.DataAccessException;
 import com.pc.retail.dao.InvoiceStatus;
 import com.pc.retail.dao.util.FilterModel;
-import com.pc.retail.interactor.KiranaAppResult;
 import com.pc.retail.interactor.KiranaStoreException;
-import com.pc.retail.interactor.ResultType;
 import com.pc.retail.ui.controller.InvoiceGridFormController;
 import com.pc.retail.util.DataUtil;
-import com.pc.retail.vo.Product;
 import com.pc.retail.vo.ProductInvoiceMasterDO;
 import com.pc.retail.vo.ProductSupplier;
 
-import java.text.SimpleDateFormat;
 import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -24,6 +18,8 @@ import java.util.List;
  * Created by pavanc on 7/23/17.
  */
 public class InvoiceGridFormHelper {
+
+    private final ReferenceDataHelper referenceDataHelper = new ReferenceDataHelper();
 
     public List<String> getInvoiceStatusList() {
         List<String> invoiceStatusList = new ArrayList<>();
@@ -35,20 +31,7 @@ public class InvoiceGridFormHelper {
     }
 
     public List<ProductSupplier> getSupplierList() {
-        ReferenceDataService referenceDataService = new ReferenceDataServiceImpl();
-        try {
-            List<ProductSupplier> productSuppliers = new ArrayList<>();
-            ProductSupplier productSupplier = new ProductSupplier();
-            productSupplier.setCode("All");
-            productSupplier.setName("All");
-            productSupplier.setId(-1);
-            productSuppliers.add(productSupplier);
-            productSuppliers.addAll(referenceDataService.getSuppliers());
-            return productSuppliers;
-        } catch (DataAccessException e) {
-            e.printStackTrace();
-            return new ArrayList<>();
-        }
+        return referenceDataHelper.getSupplierList();
     }
 
     public List<ProductInvoiceMasterDO> getInvoiceMasterRecord(InvoiceGridFormController invoiceGridFormController) throws KiranaStoreException {

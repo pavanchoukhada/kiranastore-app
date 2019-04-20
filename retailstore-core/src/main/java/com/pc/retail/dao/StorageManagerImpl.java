@@ -52,6 +52,10 @@ public class StorageManagerImpl implements StorageManager{
        return new StorageClientImpl(this.retailDataSource);
     }
 
+    @Override
+    public ReportClientImpl getReportClient() {
+        return new ReportClientImpl(this.retailDataSource);
+    }
 
     @Override
     public ReferenceDataStorageClient getReferenceDataStorageClient(){

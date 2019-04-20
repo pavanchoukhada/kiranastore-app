@@ -31,17 +31,13 @@ public interface StorageClient {
 
     List<ProductInvoiceMaster> getProductInvoiceMasterList(FilterModel filterModel) throws DataAccessException;
 
-    ProductInvoiceMaster getInvoiceMasterWithDetail(int invoiceId) throws DataAccessException;
-
-    ProductInvoiceMaster getInvoiceMasterWithDetail(String invoiceRefId) throws DataAccessException;
+    ProductInvoiceMaster getInvoiceMasterWithDetail(List<SQLParameter> sqlParameterList) throws DataAccessException;
 
     List<Product> getProducts(int productId) throws DataAccessException;
 
-    List<ProductInvoiceDetail> getProductInvoiceDetails(int invoiceId) throws DataAccessException;
-
     int generateBarCode() throws DataAccessException;
 
-    List<ProductInventory> getProductInventoriesForProduct(int productId) throws DataAccessException;
+    List<ProductInventory> getProductInventoriesForProduct(List<SQLParameter> sqlParameterList) throws DataAccessException;
 
     void releaseConnection();
 

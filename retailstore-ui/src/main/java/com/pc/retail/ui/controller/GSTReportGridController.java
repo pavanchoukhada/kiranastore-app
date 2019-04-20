@@ -1,8 +1,10 @@
 package com.pc.retail.ui.controller;
 
 import com.pc.retail.api.GSTReportDO;
+import com.pc.retail.api.InvoiceGSTReportDO;
 import com.pc.retail.api.SupplierGSTReportDO;
 import com.pc.retail.interactor.KiranaStoreException;
+import com.pc.retail.vo.ProductSupplier;
 import com.pc.ui.vo.GSTReportTreeTableDO;
 import javafx.beans.value.ChangeListener;
 import javafx.collections.FXCollections;
@@ -14,6 +16,7 @@ import javafx.scene.control.*;
 import javafx.scene.control.cell.TreeItemPropertyValueFactory;
 
 import java.net.URL;
+import java.time.LocalDate;
 import java.util.*;
 
 /**
@@ -25,23 +28,41 @@ public class GSTReportGridController implements Initializable{
     private TreeTableView<GSTReportTreeTableDO> gstReportTreeTableView;
 
     @FXML
+    DatePicker fromGstReportDateDP;
+    @FXML
+    DatePicker toGstReportDateDP;
+    @FXML
+    ComboBox<ProductSupplier> supplierCB;
+    @FXML
     private ComboBox<String> groupByCB;
 
     private GSTReportDOClientHelper gstReportDOClientHelper = new GSTReportDOClientHelper();
-    private List<GSTReportDO> gstReportDataList;
 
+    private Collection<SupplierGSTReportDO> supplierGSTReportDOList;
+
+    private String currentSelectedGrid;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         try {
+            LocalDate currentDate = LocalDate.now();
+            fromGstReportDateDP.setValue(currentDate.withMonth(currentDate.getMonth().getValue()-3));
+            toGstReportDateDP.setValue(LocalDate.now());
             groupByCB.valueProperty().addListener(getChangeListenerForGroupBy());
             groupByCB.setItems( FXCollections.observableArrayList(Arrays.asList("GST", "Supplier")));
-            groupByCB.setValue("GST");
-            gstReportDataList = gstReportDOClientHelper.getGSTReportData();
+            groupByCB.setValue("Supplier");
+            populateSupplierCB();
+            currentSelectedGrid = "Supplier";
             regenerateTreeTableGrid();
         } catch (KiranaStoreException e) {
             e.printStackTrace();
         }
+    }
+
+    private void populateSupplierCB() {
+        ObservableList<ProductSupplier> supplierList
+                = FXCollections.observableArrayList(gstReportDOClientHelper.getSupplierList());
+        supplierCB.setItems(supplierList);
     }
 
     private ChangeListener<String> getChangeListenerForGroupBy() {
@@ -71,23 +92,28 @@ public class GSTReportGridController implements Initializable{
         ObservableList<TreeTableColumn<GSTReportTreeTableDO, ?>> productInvEntryGridColumns = gstReportTreeTableView.getColumns();
         productInvEntryGridColumns.add(createStringTableColumn("GST Code", 120, "gstCode", "gstCode"));
         productInvEntryGridColumns.add(createStringTableColumn("Counter Party", 120, "supplierCode", "supplierCode"));
+        productInvEntryGridColumns.add(createStringTableColumn("Product Code", 120, "productCode", "productCode"));
+        productInvEntryGridColumns.add(createStringTableColumn("Invoice Ref", 120, "invoiceRef", "invoiceRef"));
         productInvEntryGridColumns.add(createNumericTableColumn("CGST", 100, "totalCGSTAmount", "totalCGSTAmount"));
         productInvEntryGridColumns.add(createNumericTableColumn("SGST", 100, "totalSGSTAmount", "totalCGSTAmount"));
         productInvEntryGridColumns.add(createNumericTableColumn("GST Amount", 100, "totalGSTAmount", "totalGSTAmount"));
-        loadGSTReportDataInToGridGroupByGST();
+        //loadGSTReportDataInToGridGroupByGST();
     }
 
     private void initializeGSTReportGridTableAsPerSupplierGrouping() throws KiranaStoreException {
         ObservableList<TreeTableColumn<GSTReportTreeTableDO, ?>> productInvEntryGridColumns = gstReportTreeTableView.getColumns();
-        productInvEntryGridColumns.add(createStringTableColumn("Counter Party", 120, "supplierCode", "supplierCode"));
+        productInvEntryGridColumns.add(createStringTableColumn("Supplier", 120, "supplierCode", "supplierCode"));
+        productInvEntryGridColumns.add(createStringTableColumn("Invoice Ref", 120, "invoiceRef", "invoiceRef"));
         productInvEntryGridColumns.add(createStringTableColumn("GST Code", 120, "gstCode", "gstCode"));
+        productInvEntryGridColumns.add(createStringTableColumn("Product Code", 120, "productCode", "productCode"));
+        productInvEntryGridColumns.add(createStringTableColumn("Invoice Amount", 120, "totalInvoiceAmount", "totalInvoiceAmount"));
+        productInvEntryGridColumns.add(createStringTableColumn("Taxable Amount", 120, "totalTaxableAmount", "totalTaxableAmount"));
         productInvEntryGridColumns.add(createNumericTableColumn("CGST", 100, "totalCGSTAmount", "totalCGSTAmount"));
         productInvEntryGridColumns.add(createNumericTableColumn("SGST", 100, "totalSGSTAmount", "totalCGSTAmount"));
-        productInvEntryGridColumns.add(createNumericTableColumn("GST Amount", 100, "totalGSTAmount", "totalGSTAmount"));
-        loadGSTReportDataInToGridGroupBySupplier();
+        productInvEntryGridColumns.add(createNumericTableColumn("GST", 100, "totalGSTAmount", "totalGSTAmount"));
     }
 
-
+/*
     private void loadGSTReportDataInToGridGroupByGST() throws KiranaStoreException {
         TreeItem<GSTReportTreeTableDO> rootItem = new TreeItem<>();
         GSTReportTreeTableDO gstReportTreeTableDORootValue = new GSTReportTreeTableDO();
@@ -96,7 +122,7 @@ public class GSTReportGridController implements Initializable{
         rootItem.setExpanded(true);
         gstReportTreeTableView.setRoot(rootItem);
         double totalGSTAmount = 0.0d, totalCGSTAmount=  0.0d, totalSGSTAmount = 0.0d;
-        for(GSTReportDO gstReportDO : gstReportDataList){
+        for(GSTReportDO gstReportDO : supplierGSTReportDOList){
             TreeItem<GSTReportTreeTableDO> gstTreeItem = new TreeItem<>();
 
             GSTReportTreeTableDO gstReportTreeTableDO = new GSTReportTreeTableDO();
@@ -104,28 +130,45 @@ public class GSTReportGridController implements Initializable{
             gstReportTreeTableDO.setTotalCGSTAmount(gstReportDO.getTotalCGSTAmount());
             gstReportTreeTableDO.setTotalSGSTAmount(gstReportDO.getTotalSGSTAmount());
             gstReportTreeTableDO.setTotalGSTAmount(gstReportDO.getTotalGSTAmount());
+            gstTreeItem.setValue(gstReportTreeTableDO);
+            addSupplierToGSTGroupTreeNode(gstReportDO, gstTreeItem);
+            rootItem.getChildren().add(gstTreeItem);
             totalCGSTAmount += gstReportDO.getTotalCGSTAmount();
             totalSGSTAmount += gstReportDO.getTotalSGSTAmount();
             totalGSTAmount += gstReportDO.getTotalGSTAmount();
-            gstTreeItem.setValue(gstReportTreeTableDO);
-            for(SupplierGSTReportDO supplierGSTReportDO : gstReportDO.getSupplierGSTReportDOList()){
-                GSTReportTreeTableDO gstReportTreeTableDOSupplier = new GSTReportTreeTableDO();
-                gstReportTreeTableDOSupplier.setSupplierCode(supplierGSTReportDO.getSupplierCode());
-                gstReportTreeTableDOSupplier.setTotalCGSTAmount(supplierGSTReportDO.getTotalCGSTAmount());
-                gstReportTreeTableDOSupplier.setTotalSGSTAmount(supplierGSTReportDO.getTotalSGSTAmount());
-                gstReportTreeTableDOSupplier.setTotalGSTAmount(supplierGSTReportDO.getTotalGSTAmount());
-                TreeItem<GSTReportTreeTableDO> supplierTreeItem = new TreeItem<>();
-                supplierTreeItem.setValue(gstReportTreeTableDOSupplier);
-                gstTreeItem.getChildren().add(supplierTreeItem);
-            }
-            gstReportTreeTableDORootValue.setTotalCGSTAmount(totalCGSTAmount);
-            gstReportTreeTableDORootValue.setTotalSGSTAmount(totalSGSTAmount);
-            gstReportTreeTableDORootValue.setTotalGSTAmount(totalGSTAmount);
 
-            rootItem.getChildren().add(gstTreeItem);
+        }
+        gstReportTreeTableDORootValue.setTotalCGSTAmount(totalCGSTAmount);
+        gstReportTreeTableDORootValue.setTotalSGSTAmount(totalSGSTAmount);
+        gstReportTreeTableDORootValue.setTotalGSTAmount(totalGSTAmount);
+
+    }
+
+    private void addSupplierToGSTGroupTreeNode(GSTReportDO gstReportDO, TreeItem<GSTReportTreeTableDO> gstTreeItem) {
+        for(SupplierGSTReportDO supplierGSTReportDO : gstReportDO.getProductGSTReportDOList()){
+            GSTReportTreeTableDO gstReportTreeTableDOSupplier = new GSTReportTreeTableDO();
+            gstReportTreeTableDOSupplier.setSupplierCode(supplierGSTReportDO.getSupplierCode());
+            gstReportTreeTableDOSupplier.setTotalCGSTAmount(supplierGSTReportDO.getTotalCGSTAmount());
+            gstReportTreeTableDOSupplier.setTotalSGSTAmount(supplierGSTReportDO.getTotalSGSTAmount());
+            gstReportTreeTableDOSupplier.setTotalGSTAmount(supplierGSTReportDO.getTotalGSTAmount());
+            TreeItem<GSTReportTreeTableDO> supplierTreeItem = new TreeItem<>(gstReportTreeTableDOSupplier);
+            gstTreeItem.getChildren().add(supplierTreeItem);
+            addProductsToTreeItem(supplierGSTReportDO, supplierTreeItem);
         }
     }
 
+    private void addProductsToTreeItem(SupplierGSTReportDO supplierGSTReportDO, TreeItem<GSTReportTreeTableDO> gstTreeItem) {
+        for(ProductGSTReportDO productGSTReportDO : supplierGSTReportDO.getProductGSTReportDOList()){
+            GSTReportTreeTableDO gstReportTreeTableDO = new GSTReportTreeTableDO();
+            gstReportTreeTableDO.setProductCode(productGSTReportDO.getProductCode());
+            gstReportTreeTableDO.setTotalCGSTAmount(productGSTReportDO.getTotalCGSTAmount());
+            gstReportTreeTableDO.setTotalSGSTAmount(productGSTReportDO.getTotalSGSTAmount());
+            gstReportTreeTableDO.setTotalGSTAmount(productGSTReportDO.getTotalGSTAmount());
+            gstReportTreeTableDO.setInvoiceRef(productGSTReportDO.getInvoiceRef());
+            gstTreeItem.getChildren().add(new TreeItem<>(gstReportTreeTableDO));
+        }
+    }
+*/
     private void loadGSTReportDataInToGridGroupBySupplier(){
         TreeItem<GSTReportTreeTableDO> rootItem = new TreeItem<>();
         GSTReportTreeTableDO gstReportTreeTableDORootValue = new GSTReportTreeTableDO();
@@ -137,41 +180,54 @@ public class GSTReportGridController implements Initializable{
 
     }
     private Collection<TreeItem<GSTReportTreeTableDO>> transformGSTReportBySupplierGrouping(GSTReportTreeTableDO gstReportTreeTableDORootValue){
-        Map<String, TreeItem<GSTReportTreeTableDO>> gstReportTreeTableDOMap = new HashMap<>();
-        double totalGSTAmount = 0.0d, totalCGSTAmount=  0.0d, totalSGSTAmount = 0.0d;
-        for(GSTReportDO gstReportDO : gstReportDataList){
-            for(SupplierGSTReportDO supplierGSTReportDO : gstReportDO.getSupplierGSTReportDOList()){
-                TreeItem<GSTReportTreeTableDO> supplierTreeItem = gstReportTreeTableDOMap.get(supplierGSTReportDO.getSupplierCode());
-                if(supplierTreeItem == null){
-                    GSTReportTreeTableDO supplierGrpGSTReportTreeTableDO = new GSTReportTreeTableDO();
-                    supplierTreeItem = new TreeItem<>();
-                    supplierGrpGSTReportTreeTableDO.setSupplierCode(supplierGSTReportDO.getSupplierCode());
-                    gstReportTreeTableDOMap.put(supplierGSTReportDO.getSupplierCode(), supplierTreeItem);
-                    supplierTreeItem.setValue(supplierGrpGSTReportTreeTableDO);
+        Collection<TreeItem<GSTReportTreeTableDO>> gstReportTreeTableDOList = new ArrayList<>();
+        double totalCGSTAmount = 0.0d;
+        double totalSGSTAmount = 0.0d;
+        double totalGSTAmount = 0.0d;
+        double totalTaxableAmount = 0.0d;
+        for(SupplierGSTReportDO supplierGSTReportDO : supplierGSTReportDOList){
+            GSTReportTreeTableDO supplierGSTReportTreeTableDO = new GSTReportTreeTableDO();
+            supplierGSTReportTreeTableDO.setSupplierCode(supplierGSTReportDO.getSupplierCode());
+            supplierGSTReportTreeTableDO.setTotalCGSTAmount(supplierGSTReportDO.getTotalCGSTAmount());
+            supplierGSTReportTreeTableDO.setTotalSGSTAmount(supplierGSTReportDO.getTotalSGSTAmount());
+            supplierGSTReportTreeTableDO.setTotalGSTAmount(supplierGSTReportDO.getTotalGSTAmount());
+            supplierGSTReportTreeTableDO.setTotalInvoiceAmount(supplierGSTReportDO.getTotalInvoiceAmt());
+            supplierGSTReportTreeTableDO.setTotalTaxableAmount(supplierGSTReportDO.getTotalTaxableAmount());
+            TreeItem<GSTReportTreeTableDO> supplierTreeItem = new TreeItem<>(supplierGSTReportTreeTableDO);
+            gstReportTreeTableDOList.add(supplierTreeItem);
+            totalCGSTAmount += supplierGSTReportDO.getTotalCGSTAmount();
+            totalSGSTAmount += supplierGSTReportDO.getTotalSGSTAmount();
+            totalGSTAmount += supplierGSTReportDO.getTotalGSTAmount();
+            totalTaxableAmount += supplierGSTReportDO.getTotalTaxableAmount();
+            for(InvoiceGSTReportDO invoiceGSTReportDO : supplierGSTReportDO.getInvoiceGSTReportDOList()){
+                GSTReportTreeTableDO invoiceGSTReportTreeTableDO = new GSTReportTreeTableDO();
+                invoiceGSTReportTreeTableDO.setInvoiceRef(invoiceGSTReportDO.getInvoiceRef());
+                invoiceGSTReportTreeTableDO.setInvoiceDate(invoiceGSTReportDO.getInvoiceDate());
+                invoiceGSTReportTreeTableDO.setTotalCGSTAmount(invoiceGSTReportDO.getTotalCGSTAmount());
+                invoiceGSTReportTreeTableDO.setTotalSGSTAmount(invoiceGSTReportDO.getTotalSGSTAmount());
+                invoiceGSTReportTreeTableDO.setTotalGSTAmount(invoiceGSTReportDO.getTotalGSTAmount());
+                invoiceGSTReportTreeTableDO.setTotalInvoiceAmount(invoiceGSTReportDO.getInvoiceAmt());
+                invoiceGSTReportTreeTableDO.setTotalTaxableAmount(invoiceGSTReportDO.getTotalTaxableAmount());
+                TreeItem<GSTReportTreeTableDO> invoiceTreeItem = new TreeItem<>(invoiceGSTReportTreeTableDO);
+                supplierTreeItem.getChildren().add(invoiceTreeItem);
+                for(GSTReportDO gstReportDO : invoiceGSTReportDO.getGstReportDOList()){
+                    GSTReportTreeTableDO gstGSTReportTreeTableDO = new GSTReportTreeTableDO();
+                    gstGSTReportTreeTableDO.setGstCode(gstReportDO.getGstCode());
+                    gstGSTReportTreeTableDO.setTotalCGSTAmount(gstReportDO.getTotalCGSTAmount());
+                    gstGSTReportTreeTableDO.setTotalSGSTAmount(gstReportDO.getTotalSGSTAmount());
+                    gstGSTReportTreeTableDO.setTotalGSTAmount(gstReportDO.getTotalGSTAmount());
+                    gstGSTReportTreeTableDO.setTotalInvoiceAmount(gstReportDO.getTotalInvoiceAmt());
+                    gstGSTReportTreeTableDO.setTotalTaxableAmount(gstReportDO.getTotalTaxableAmt());
+                    TreeItem<GSTReportTreeTableDO> gstTreeItem = new TreeItem<>(gstGSTReportTreeTableDO);
+                    invoiceTreeItem.getChildren().add(gstTreeItem);
                 }
-                GSTReportTreeTableDO supplierGrpGSTReportTreeTableDO = supplierTreeItem.getValue();
-                TreeItem<GSTReportTreeTableDO> gstTreeItem = new TreeItem<>();
-                GSTReportTreeTableDO gstGroupGSTReportTreeTableDO = new GSTReportTreeTableDO();
-                gstGroupGSTReportTreeTableDO.setGstCode(gstReportDO.getGstCode());
-                gstTreeItem.setValue(gstGroupGSTReportTreeTableDO);
-                gstGroupGSTReportTreeTableDO.setTotalGSTAmount(supplierGSTReportDO.getTotalGSTAmount());
-                gstGroupGSTReportTreeTableDO.setTotalCGSTAmount(supplierGSTReportDO.getTotalCGSTAmount());
-                gstGroupGSTReportTreeTableDO.setTotalSGSTAmount(supplierGSTReportDO.getTotalSGSTAmount());
-                supplierGrpGSTReportTreeTableDO.setTotalGSTAmount(supplierGrpGSTReportTreeTableDO.getTotalGSTAmount() + supplierGSTReportDO.getTotalGSTAmount());
-                supplierGrpGSTReportTreeTableDO.setTotalCGSTAmount(supplierGrpGSTReportTreeTableDO.getTotalCGSTAmount() + supplierGSTReportDO.getTotalCGSTAmount());
-                supplierGrpGSTReportTreeTableDO.setTotalSGSTAmount(supplierGrpGSTReportTreeTableDO.getTotalSGSTAmount() + supplierGSTReportDO.getTotalSGSTAmount());
-                supplierTreeItem.getChildren().add(gstTreeItem);
-
-                totalCGSTAmount += supplierGSTReportDO.getTotalCGSTAmount();
-                totalSGSTAmount += supplierGSTReportDO.getTotalSGSTAmount();
-                totalGSTAmount += supplierGSTReportDO.getTotalGSTAmount();
-
             }
         }
         gstReportTreeTableDORootValue.setTotalCGSTAmount(totalCGSTAmount);
         gstReportTreeTableDORootValue.setTotalSGSTAmount(totalSGSTAmount);
         gstReportTreeTableDORootValue.setTotalGSTAmount(totalGSTAmount);
-        return gstReportTreeTableDOMap.values();
+        gstReportTreeTableDORootValue.setTotalTaxableAmount(totalTaxableAmount);
+        return gstReportTreeTableDOList;
     }
 
 
@@ -187,18 +243,17 @@ public class GSTReportGridController implements Initializable{
         TreeTableColumn<GSTReportTreeTableDO, String> gridColumn = new TreeTableColumn<>(columnText);
         gridColumn.setMinWidth(columnWidth);
         gridColumn.setCellValueFactory(new TreeItemPropertyValueFactory<>(propertyName));
-        /*gridColumn.setCellValueFactory((Callback<TreeTableColumn.CellDataFeatures<GSTReportTreeTableDO, String>, ObservableValue<String>>) p -> {
-            // p.getValue() returns the TreeItem instance for a particular
-            // TreeTableView row, and the second getValue() call returns the
-            // Person instance contained within the TreeItem.
-            return p.getValue().getValue().getSupplierCode();
-        });*/
         gridColumn.setId(columnId);
         return gridColumn;
     }
 
-    public void applyFilter(ActionEvent actionEvent) {
+    @FXML
+    public void applyFilter(ActionEvent actionEvent) throws KiranaStoreException {
+        supplierGSTReportDOList = gstReportDOClientHelper.getGSTReportData(this);
+        loadGSTReportDataInToGridGroupBySupplier();
     }
 
-
+    public ComboBox<ProductSupplier> getSupplierCB() {
+        return supplierCB;
+    }
 }

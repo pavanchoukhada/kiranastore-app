@@ -1,7 +1,6 @@
 package com.pc.retail.dao;
 
 import java.sql.SQLException;
-import java.time.LocalDate;
 import java.util.*;
 
 import com.pc.retail.cache.ProductCache;
@@ -12,7 +11,6 @@ import com.pc.retail.util.UOMConversionUtil;
 import com.pc.retail.vo.*;
 
 public class ProductInvDAOImpl implements ProductInvDAO {
-	
 
 	private StorageManager storageManager;
 
@@ -49,10 +47,6 @@ public class ProductInvDAOImpl implements ProductInvDAO {
 
     private void logError(Exception sqlEx) {
 	    sqlEx.printStackTrace();
-    }
-
-    public void saveProductInventory(ProductInventory productInventory) throws DataAccessException {
-
     }
 
 	public  List<ProductCurrentInvDetail> getProductInvDtlList(){
@@ -100,7 +94,11 @@ public class ProductInvDAOImpl implements ProductInvDAO {
         String invoiceRef = productAndInvDetail.getProductInventoryDetail().getInvoiceRef();
         ProductInvoiceMaster productInvoiceMaster = null;
         if(!DataUtil.isEmpty(invoiceRef)) {
-            productInvoiceMaster = storageClient.getInvoiceMasterWithDetail(invoiceRef);
+            SQLParameter sqlParameter = new SQLParameter();
+            sqlParameter.setParamName("invoice_ref");
+            sqlParameter.setParamValue(invoiceRef);
+            sqlParameter.setParamDataType(DataType.STRING);
+            productInvoiceMaster = storageClient.getInvoiceMasterWithDetail(Collections.singletonList(sqlParameter));
         }
         if (productInvoiceMaster == null) {
             productInvoiceMaster = generateInvoice(productAndInvDetail.getProductInventoryDetail());
@@ -126,7 +124,11 @@ public class ProductInvDAOImpl implements ProductInvDAO {
 
     @Override
     public ProductInvoiceMaster getProductInvoiceMasterWithDetail(int invoiceId) throws DataAccessException {
-        return storageManager.getStorageClient().getInvoiceMasterWithDetail(invoiceId);
+        SQLParameter sqlParameter = new SQLParameter();
+        sqlParameter.setParamName("invoice_id");
+        sqlParameter.setParamValue(invoiceId);
+        sqlParameter.setParamDataType(DataType.INTEGER);
+        return storageManager.getStorageClient().getInvoiceMasterWithDetail(Collections.singletonList(sqlParameter));
     }
 
 
@@ -183,7 +185,11 @@ public class ProductInvDAOImpl implements ProductInvDAO {
 
     @Override
     public List<ProductInventory> getProductInventories(int productId) throws DataAccessException {
-        return storageManager.getStorageClient().getProductInventoriesForProduct(productId);
+	    SQLParameter sqlParameter = new SQLParameter();
+	    sqlParameter.setParamName("product_id");
+	    sqlParameter.setParamValue(productId);
+	    sqlParameter.setParamDataType(DataType.INTEGER);
+        return storageManager.getStorageClient().getProductInventoriesForProduct(Collections.singletonList(sqlParameter));
     }
 
     @Override

@@ -89,10 +89,6 @@ public class StorageClientStub implements StorageClient {
         productCurrencyInvDtlMap.put( productCurrentInvDetail.getProductId(), productCurrentInvDetail);
     }
 
-    @Override
-    public ProductInvoiceMaster getInvoiceMasterWithDetail(String invoiceRef) throws DataAccessException {
-        return invoiceMasterMap.get( invoiceRef );
-    }
 
     @Override
     public List<Product> getProducts(int productId) throws DataAccessException {
@@ -110,15 +106,10 @@ public class StorageClientStub implements StorageClient {
     }
 
     @Override
-    public ProductInvoiceMaster getInvoiceMasterWithDetail(int invoiceId) throws DataAccessException {
+    public ProductInvoiceMaster getInvoiceMasterWithDetail(List<SQLParameter> sqlParameterList) throws DataAccessException {
         return null;
     }
 
-
-    @Override
-    public List<ProductInvoiceDetail> getProductInvoiceDetails(int invoiceId) throws DataAccessException {
-        return null;
-    }
 
     @Override
     public int generateBarCode() throws DataAccessException {
@@ -126,9 +117,10 @@ public class StorageClientStub implements StorageClient {
     }
 
     @Override
-    public List<ProductInventory> getProductInventoriesForProduct(int productId) throws DataAccessException {
+    public List<ProductInventory> getProductInventoriesForProduct(List<SQLParameter> sqlParameterList) throws DataAccessException {
         return null;
     }
+
 
     @Override
     public void releaseConnection() {

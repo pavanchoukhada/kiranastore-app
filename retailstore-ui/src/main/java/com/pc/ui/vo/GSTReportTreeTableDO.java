@@ -13,6 +13,8 @@ public class GSTReportTreeTableDO {
     private double totalCGSTAmount;
     private double totalSGSTAmount;
     private double totalGSTAmount;
+    private double totalTaxableAmount;
+    private String invoiceDate;
 
     public String getGstCode() {
         return gstCode;
@@ -58,7 +60,7 @@ public class GSTReportTreeTableDO {
         return totalInvoiceAmt;
     }
 
-    public void setTotalInvoiceAmt(double totalInvoiceAmt) {
+    public void setTotalInvoiceAmount(double totalInvoiceAmt) {
         this.totalInvoiceAmt = totalInvoiceAmt;
     }
 
@@ -84,5 +86,21 @@ public class GSTReportTreeTableDO {
 
     public void setTotalGSTAmount(double totalGSTAmount) {
         this.totalGSTAmount = totalGSTAmount;
+    }
+
+    public void setTotalTaxableAmount(double totalTaxableAmount) {
+        this.totalTaxableAmount = totalTaxableAmount;
+    }
+
+    public double getTotalTaxableAmount() {
+        return totalTaxableAmount;
+    }
+
+    public void setInvoiceDate(String invoiceDate) {
+        this.invoiceDate = invoiceDate;
+    }
+
+    public String getInvoiceDate() {
+        return invoiceDate;
     }
 }
