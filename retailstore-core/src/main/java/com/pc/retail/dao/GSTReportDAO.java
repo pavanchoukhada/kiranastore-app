@@ -53,6 +53,7 @@ public class GSTReportDAO {
         if(!DataUtil.isEmpty(supplierIdStr)) {
             SQLParameter sqlParameter = new SQLParameter();
             sqlParameter.setParamName(SUPPLIER_ID);
+            sqlParameter.setParamDataType(DataType.INTEGER);
             sqlParameter.setParamValue(DataUtil.getInteger(supplierIdStr));
             sqlParameterList.add(sqlParameter);
         }

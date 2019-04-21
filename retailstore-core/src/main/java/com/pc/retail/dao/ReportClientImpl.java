@@ -30,7 +30,7 @@ public class ReportClientImpl {
     private List<ProductInventory> getProductInventoryListForQuery(String selectQuery, List<SQLParameter> sqlParameterList) throws DataAccessException {
         ResultSet resultSet = null;
         try(Connection connection = getConnection();
-            PreparedStatement statement = connection.prepareStatement(selectQuery + appendWhereClause(sqlParameterList))) {
+            PreparedStatement statement = connection.prepareStatement(selectQuery + " AND " + appendWhereClause(sqlParameterList))) {
             QueryUtil.setParameter(sqlParameterList, statement);
             resultSet = statement.executeQuery();
             List<ProductInventory> productInventories = new ArrayList<>();
@@ -76,7 +76,7 @@ public class ReportClientImpl {
 
     private String appendWhereClause(List<SQLParameter> sqlParameterList) {
         if(!sqlParameterList.isEmpty()) {
-            return " WHERE " + QueryUtil.createWhereClause(sqlParameterList);
+            return QueryUtil.createWhereClause(sqlParameterList);
         }
         return "";
     }

@@ -154,6 +154,7 @@ public class ProductInventoryEntryGridFormController implements Initializable, U
         CGSTRateTxt.setDisable(true);
         SGSTRateTxt.setDisable(true);
         salePriceUOMTxt.setDisable(true);
+        qtyUOMCB.setDisable(true);
     }
 
     private ChangeListener<Boolean> perUnitCostIncGSTListener() {
@@ -307,6 +308,9 @@ public class ProductInventoryEntryGridFormController implements Initializable, U
         prdQtyTxt.setText(String.valueOf(productInventory.getQuantity()));
         if(!DataUtil.isEmpty(productInventory.getQtyUOM())) {
             qtyUOMCB.setValue(String.valueOf(productInventory.getQtyUOM()));
+        }else{
+            qtyUOMCB.setValue("");
+            qtyUOMCB.getEditor().setDisable(true);
         }
         salePriceTxt.setText(String.valueOf(productInventory.getSalePrice()));
         salePriceUOMTxt.setText(String.valueOf(productInventory.getSalePriceUOM()));

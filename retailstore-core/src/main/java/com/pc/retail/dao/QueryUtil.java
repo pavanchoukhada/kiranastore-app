@@ -15,6 +15,7 @@ public class QueryUtil {
              PreparedStatement preparedStatement) throws SQLException {
         int index = 0;
         for (SQLParameter sqlParameter : sqlParameterList) {
+            index++;
             switch (sqlParameter.getParamDataType()) {
                 case DATE:
                     preparedStatement.setDate(index, (Date) sqlParameter.getParamValue());
@@ -34,9 +35,9 @@ public class QueryUtil {
         StringBuilder stringBuilder = new StringBuilder();
         boolean first = true;
         for (SQLParameter sqlParameter : sqlParameterList) {
-            stringBuilder.append(!first?"":" AND ")
+            stringBuilder.append(first?"":" AND ")
                     .append(sqlParameter.getParamName())
-                    .append(sqlParameter.getSqlOperator()).append(" ? ");
+                    .append(sqlParameter.getSqlOperator().getOperator()).append(" ? ");
             first = false;
         }
         return stringBuilder.toString();

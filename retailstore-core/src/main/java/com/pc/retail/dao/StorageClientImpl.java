@@ -385,7 +385,7 @@ public class StorageClientImpl implements StorageClient {
     private List<ProductInvoiceMaster> getProductInvoiceMasters(String selectQuery, List<SQLParameter> sqlParameterList) throws DataAccessException {
         try(Connection connection = getConnection();
             PreparedStatement statement
-                    = connection.prepareStatement(selectQuery + appendWhereClause(sqlParameterList));
+                    = connection.prepareStatement(selectQuery + " WHERE " + appendWhereClause(sqlParameterList));
             ) {
             QueryUtil.setParameter(sqlParameterList, statement);
             ResultSet resultSet = statement.executeQuery();
@@ -413,7 +413,7 @@ public class StorageClientImpl implements StorageClient {
 
     private String appendWhereClause(List<SQLParameter> sqlParameterList) {
         if(!sqlParameterList.isEmpty()) {
-            return " WHERE " + QueryUtil.createWhereClause(sqlParameterList);
+            return QueryUtil.createWhereClause(sqlParameterList);
         }
         return "";
     }
@@ -433,24 +433,25 @@ public class StorageClientImpl implements StorageClient {
     }
 
     private List<ProductInventory> getProductInventories(List<SQLParameter> sqlParameterList) throws DataAccessException{
-        String selectQuery = "SELECT * FROM product_inv_record ";
+        String selectQuery = "SELECT * FROM product_inv_record " + (sqlParameterList.isEmpty() ? "" : " WHERE " + appendWhereClause(sqlParameterList));
         return getProductInventoryListForQuery(selectQuery, false, sqlParameterList);
     }
 
     public List<ProductInventory> getProductInventoriesForProduct(List<SQLParameter> sqlParameterList) throws DataAccessException{
 
         String selectQuery = "SELECT ir.*,im.invoice_date, im.supplier_id,im.invoice_ref FROM product_inv_record ir, product_invoice_master im " +
-                " where ir.invoice_id=im.invoice_id ";
+                " where ir.invoice_id=im.invoice_id " + (sqlParameterList.isEmpty() ? "" : " AND " + appendWhereClause(sqlParameterList));
         return getProductInventoryListForQuery(selectQuery, true, sqlParameterList);
     }
 
     private List<ProductInventory> getProductInventoryListForQuery(String selectQuery,
-                        boolean loadInvoiceDetail, List<SQLParameter> sqlParameterList) throws DataAccessException {
+                                                                   boolean loadInvoiceDetail,
+                                                                   List<SQLParameter> sqlParameterList) throws DataAccessException {
         ResultSet resultSet = null;
         try(Connection connection = getConnection();
-            PreparedStatement statement = connection.prepareStatement(selectQuery + appendWhereClause(sqlParameterList))) {
+            PreparedStatement statement = connection.prepareStatement(selectQuery)) {
             QueryUtil.setParameter(sqlParameterList, statement);
-            resultSet = statement.executeQuery(selectQuery);
+            resultSet = statement.executeQuery();
             List<ProductInventory> productInventories = new ArrayList<>();
             while(resultSet.next()){
                 ProductInventory productInventory = new ProductInventory();
