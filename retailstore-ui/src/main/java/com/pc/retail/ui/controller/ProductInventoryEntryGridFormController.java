@@ -155,6 +155,12 @@ public class ProductInventoryEntryGridFormController implements Initializable, U
         SGSTRateTxt.setDisable(true);
         salePriceUOMTxt.setDisable(true);
         qtyUOMCB.setDisable(true);
+        productCodeTxt.setOnKeyTyped(new EventHandler<KeyEvent>() {
+            @Override
+            public void handle(KeyEvent event) {
+
+            }
+        });
     }
 
     private ChangeListener<Boolean> perUnitCostIncGSTListener() {

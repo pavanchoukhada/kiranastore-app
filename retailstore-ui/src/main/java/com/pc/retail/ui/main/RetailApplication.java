@@ -20,14 +20,17 @@ public class RetailApplication extends Application {
     @Override
     public void start(Stage stage) throws Exception {
 
-        //Parent root = FXMLLoader.load(getClass().getClassLoader().getResource("InvoiceMasterGrid.fxml"));
+        Parent root = FXMLLoader.load(getClass().getClassLoader().getResource("BaseProductForm.fxml"));
         //Parent root = FXMLLoader.load(getClass().getClassLoader().getResource("ProductInventoryEntryGridForm.fxml"));
-        Parent root = FXMLLoader.load(getClass().getClassLoader().getResource("MainForm.fxml"));
+        //Parent root = FXMLLoader.load(getClass().getClassLoader().getResource("MainForm.fxml"));
         //Parent root = FXMLLoader.load(getClass().getClassLoader().getResource("ProductLookupForm.fxml"));
-        Scene scene = new Scene(root, 300, 275);
+        //Scene scene = new Scene(root, 300, 275);
+        Scene scene = new Scene(root, 300, 80);
         stage.setTitle("Welcome Screen");
         stage.setScene(scene);
-        stage.setMaximized(true);        
+        stage.setMaximized(false);
+        stage.setAlwaysOnTop(true);
+        stage.setResizable(false);
         stage.show();
     }
 }

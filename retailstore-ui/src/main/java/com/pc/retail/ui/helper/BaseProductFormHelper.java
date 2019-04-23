@@ -6,7 +6,6 @@ import com.pc.retail.client.services.ReferenceDataServiceImpl;
 import com.pc.retail.interactor.KiranaAppResult;
 import com.pc.retail.interactor.ResultType;
 import com.pc.retail.ui.controller.BaseProductFormController;
-import com.pc.retail.vo.GSTGroupModel;
 
 /**
  * Created by pavanc on 8/19/18.
@@ -17,7 +16,6 @@ public class BaseProductFormHelper {
         ReferenceDataService referenceDataService = new ReferenceDataServiceImpl();
         try {
             BaseProductInfo baseProductInfo = new BaseProductInfo();
-            baseProductInfo.setBaseProductName(baseProductFormController.getBaseProductCodeTxt().getText());
             return referenceDataService.saveBaseProductInfo(baseProductInfo);
         } catch (Exception e) {
             e.printStackTrace();
